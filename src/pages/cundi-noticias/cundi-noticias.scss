@@ -1,0 +1,62 @@
+page-cundi-noticias {
+
+}
+
+
+.header-noticia {
+	display: flex;
+	align-items: center;
+	padding: 8px;
+		background-color : #95c9e8 ;
+}
+
+.seccion-noticia h3 {
+	//font-family: 'gotham-light';
+	margin: 0px;
+	padding-top:  0%;
+	font-weight: normal;
+	font-size: 1.3rem;
+	color: #00CBB1;
+
+}
+
+
+.wrapper-perfil-noticias {
+	width: 17%;
+	height: 4rem;
+	//overflow: hidden;
+	border-radius: 50%;
+	position: relative;
+//  margin-left: 20%;
+	//background-color: red;
+	flex-shrink: 0;
+	//min-width: 30%;
+	//min-height: 30%;
+
+	//margin-right: 5%;
+	//background-color:red;
+	text-align:center;
+}
+
+
+
+.wrapper-perfil-noticias img {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.nombreNoticia{
+	align-items: left;
+}
+
+
+.img-circle-perfil-noticias {
+	border-radius: 50%;
+	width: 70%;
+	height: 90%;
+	//left :10% ;
+
+
+}

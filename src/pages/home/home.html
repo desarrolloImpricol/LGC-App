@@ -1,0 +1,84 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle icon-only>
+      <ion-icon name='menu'></ion-icon>
+    </button>
+    <ion-title>
+      Inicio
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-menu [content]="content" persistent="true">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <button ion-item (click)="irNoticias()">
+        Noticias
+      </button>
+      <button ion-item (click)="irEventos()">
+        Eventos
+      </button>
+      <button ion-item (click)="irAmarillas()">
+        Amarillas
+      </button>
+      <button ion-item (click)="irEmpleos()">
+        Empleos
+      </button>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+<ion-nav id="nav" #content [root]="rootPage"></ion-nav>
+
+<ion-content padding>
+
+
+  <div class="centrado">
+
+    <div class="wrapper-perfil">
+
+      <img class="img-circle-perfil" [src]="perfil.photoUrl">
+    </div>
+    <span class="fuente-10 fuente-centrado  "> {{perfil.nombreUsuario}} </span>
+
+
+    <div class="contenedor">
+      
+          <img  class="imagenLogo" (click)="irEmpleos()" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FEmpleos.jpg?alt=media&token=0d01ba71-cd11-46d7-9810-3d675f3ff7fd">
+      
+          <img class="imagenLogo" (click)="irNoticias()" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FNoticias.png?alt=media&token=0ddfa377-8706-4ab5-aef5-664acfae44bf">
+        
+    </div>
+
+
+    <div class="contenedor">
+      
+          <img  class="imagenLogo" (click)="irAmarillas()" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FAmarillas.png?alt=media&token=c868fd25-b6cd-42e0-b9ba-cedcb7b433b9">
+      
+          <img class="imagenLogo" (click)="irEventos()" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FEventos.png?alt=media&token=f568b51d-42b8-49ed-b0ec-e6492f860065">
+        
+    </div>
+
+
+    <div class="contenedor">
+      
+          <img  class="imagenLogo" (click)="irColombia()" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FColombia.png?alt=media&token=a7f69abf-d768-4090-82ad-1f93fad5a5cc">      
+        <!--  <img class="imagenLogo" (click)="cargarImagen('galeria')" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FNoticias.png?alt=media&token=0ddfa377-8706-4ab5-aef5-664acfae44bf">
+       --> 
+    </div>
+ 
+<!--
+
+    <img src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FCundinoticias.png?alt=media&token=59f0701f-91d0-4795-ab1e-7b2c08317f6b" (click)="irNoticias()">
+    <img src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FCundieventos.png?alt=media&token=f741dd23-d44b-48a0-85eb-6f359e96d8d7" (click)="irEventos()">
+    <img src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FCundiamarillas.png?alt=media&token=f4b9b296-68f8-499e-ba93-991f54add8c7" (click)="irAmarillas()">
+    <img src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FCundiempleo.png?alt=media&token=5ff95ad0-92df-4caf-892d-f494c3d294f2" (click)="irEmpleos()">-->
+    <button (click)="irPublicar()" full ion-button>Publicar</button>
+
+    <button (click)="cerrarSesion()" full ion-button>Cerrar sesion</button>
+  </div>
+</ion-content>

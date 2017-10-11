@@ -1,0 +1,30 @@
+page-crear-evento {
+
+}
+
+
+.imagenCargaPerfil {
+  width: 40%;
+  height: 30%;
+  margin-left: 10%;
+  padding-top: 10px;
+
+}
+
+.imagenCargaPerfil img{
+
+  width: 100%;
+  //padding: 10px;
+  height: 100%;
+
+}
+
+.contenedor{
+  width: 80%;
+  left: 1%;
+  display:flex;
+  flex-direction:row;
+  flex-grow:1;
+
+  align-items:center;
+}
