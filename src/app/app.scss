@@ -15,6 +15,26 @@
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
 
+.item-inner , ion-item {
+border-bottom-color: transparent !important;
+box-shadow: none !important;
+}
+
+.fondo-amarillo{
+
+	background-color:#ffcc29;
+
+}
+.fondo-gris-claro{
+
+	background-color:#ededed;
+
+}
+.contenedor-login{
+	 display: block;
+     margin: auto;
+     top:30% !important;
+}
 
 .wrapper-perfil {
 	width: 60%;

@@ -6,8 +6,8 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>Registro</ion-title>
+  <ion-navbar color="colorAmarillo">
+    <ion-title>Crear una cuenta</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -18,45 +18,44 @@
   <img class="imagenCargaPerfil" *ngIf="fotoCliente == '-'" (click)="cargarImagen()" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2Fcargar.png?alt=media&token=0abb191b-43b0-4d6f-83d6-e92de753b5bd">
   <!--  <img [src]="fotoCliente" > -->
 
+
   <div class="wrapper-perfil" *ngIf="fotoCliente != '-'">
     <img class="img-circle-perfil" [src]="fotoCliente">
   </div>
+  <br>
   <ion-list>
-    <ion-item>
-      <ion-label floating>Nombre usuario</ion-label>
-      <ion-input type="text" [(ngModel)]="usuario"></ion-input>
-    </ion-item>
+    
+    <br>
+    
+    <ion-input class="inputRegistro" type="text" [(ngModel)]="usuario" placeholder="Nombre de usuario"></ion-input>
+    <br>
+    
 
-    <ion-item>
-      <ion-label floating>Correo electronico</ion-label>
-      <ion-input type="text" [(ngModel)]="correo"></ion-input>
-    </ion-item>
+    
+      <ion-input class="inputRegistro" type="text" [(ngModel)]="correo" placeholder="Correo electronico"></ion-input>
+    <br>
 
-    <ion-item>
-      <ion-label floating>clave</ion-label>
-      <ion-input type="password" [(ngModel)]="clave"></ion-input>
-    </ion-item>
+   
+      <ion-input class="inputRegistro" type="password" [(ngModel)]="clave" placeholder="Clave"></ion-input>
+   <br>
 
-    <ion-item>
-      <ion-label floating>repetir clave</ion-label>
-      <ion-input type="password" [(ngModel)]="reclave"></ion-input>
-    </ion-item>
+   
+      <ion-input class="inputRegistro" type="password" [(ngModel)]="reclave" placeholder="repetirClave"></ion-input>
+   
+<br>
 
-    <ion-item>
-      <ion-label floating>Departamento</ion-label>
-      <ion-select multiple="false" [(ngModel)]="uidDepartamento" (ionChange)="onSelecDepartamento()">
+
+      
+      <ion-select full class="inputRegistro" multiple="false" placeholder="Departamento" [(ngModel)]="uidDepartamento" (ionChange)="onSelecDepartamento()">
         <ion-option *ngFor="let muni of departamentos " value="{{muni.uid}}">{{muni.nombreDepartamento}}</ion-option>
       </ion-select>
-    </ion-item>
 
-    <ion-item>
-      <ion-label floating>Municipio</ion-label>
-      <ion-select multiple="false" [(ngModel)]="uidMunicipio">
+<br>
+    
+      <ion-select full class="inputRegistro" multiple="false" placeholder="Municipio" [(ngModel)]="uidMunicipio">
         <ion-option *ngFor="let muni of municipios " value="{{muni.uid}}">{{muni.nombreMunicipio}}</ion-option>
       </ion-select>
-    </ion-item>
-
-
+    
 
   </ion-list>
 

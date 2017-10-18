@@ -45,4 +45,8 @@ export class RecuperarClavePage {
       });
   }
 
+  closeModal(){
+    this.navCtrl.pop();
+  }
+
 }

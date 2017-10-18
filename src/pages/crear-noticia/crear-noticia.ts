@@ -39,34 +39,21 @@ export class CrearNoticiaPage {
   fechaNoticia: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public af: AngularFireDatabase, public camera: Camera, public ng2ImgToolsService: Ng2ImgToolsService, public loadingCtrl: LoadingController, public storage: Storage) {
-
+    //inicializa  variable de foto de  noticia
     this.fotoNoticia = "-";
-    /*this.af.list('/municipios/' ,{ preserveSnapshot: true})
-        .subscribe(snapshots=>{
-            this.municipios = [];
-            snapshots.forEach(snapshot1 => {
-             let data = snapshot1.val();
-          //   console.log("uid creador = " + data.uidCreador);
-             console.log("departamento key  ="+snapshot1.key);
-             console.log("departamento Value ="+ JSON.stringify(snapshot1.val()));
-               this.municipios.push(data);
-            });
-        });*/
-
-    //veirfica si el usuario esta guardado
+    //obtiene informacion del usuario
     this.storage.get('userData')
       .then(
       data => {
         console.log(JSON.stringify(data)),
-
-          console.log("finaliza");
+        console.log("finaliza");
         console.log(data.uid);
-
+        //consulta informacion de perfil 
         this.item = this.af.object('/userProfile/' + data.uid, { preserveSnapshot: true });
         this.item.subscribe(snapshot => {
           console.log(snapshot.key);
           console.log(snapshot.val());
-
+          //carga informacion a las variables 
           this.perfil = snapshot.val();
           this.perfil.uid = data.uid;
 
@@ -74,14 +61,12 @@ export class CrearNoticiaPage {
       },
       error => { //si no esta guardado envia a la pagina de login
         console.error("error = " + error);
-
-
       }
       );
 
 
 
-
+    //consulta departamentos  
     this.af.list('/departamentos/', { preserveSnapshot: true })
       .subscribe(snapshots => {
         this.departamentos = [];
@@ -100,10 +85,10 @@ export class CrearNoticiaPage {
   }
   filtroMunicipios: any;
 
-
+  //funcion que  se llama cuando se elecciona un departamento
   onSelecDepartamento() {
-
-
+    
+     //reinicializa el arreglo demunicipios
     this.municipios = [];
     let subject = new Subject();
     const queryObservable = this.af.list('/municipios', {
@@ -113,10 +98,13 @@ export class CrearNoticiaPage {
 
       }
     });
+    //manjo de respuesta 
     // subscribe to changes
     queryObservable.subscribe(queriedItems => {
       console.log(JSON.stringify(queriedItems));
+      //alamaenca resultado del filtro en arreglo 
       this.filtroMunicipios = queriedItems;
+      //recorre arreglo para setelartl en la lista 
       this.filtroMunicipios.forEach((item, index) => {
 
         //         console.log("item municipio = " + JSON.stringify(item));
@@ -131,6 +119,7 @@ export class CrearNoticiaPage {
     subject.next(this.uidDepartamento);
   }
 
+  //funcion que publica una noticia 
   publicarNoticia() {
     console.log("tituo noticia = " + this.tituloNoticia);
     console.log("descripcion noticia = " + this.descripcionNoticia);
@@ -139,24 +128,27 @@ export class CrearNoticiaPage {
     console.log("uid departamento= " + this.uidDepartamento);
     console.log("uid creador= " + this.perfil.uid);
 
+    //valida que se tenga un nombre en la noticia
     if (this.tituloNoticia === null || this.tituloNoticia === "" || this.tituloNoticia === undefined) {
       alert("Falta titulo");
       return;
     }
+    //valida que se tenga un nombre en al descripcion
     if (this.descripcionNoticia === null || this.descripcionNoticia === "" || this.descripcionNoticia === undefined) {
       alert("Falta descripcion");
       return;
     }
+    //valida que se tenga foto de la noticia
     if (this.fotoNoticia === "-") {
       alert("Falta foto");
       return;
     }
-
+    //valida que se tenga la fecha de notica
     if (this.fechaNoticia === null || this.fechaNoticia === "0" || this.fechaNoticia === undefined) {
       alert("Falta fecha");
       return;
     }
-
+    //valida que se tenga seleccionado un municipio 
     if (this.uidMunicipio === null || this.uidMunicipio === "0" || this.uidMunicipio === undefined) {
       alert("Falta municipio");
       return;
@@ -165,7 +157,8 @@ export class CrearNoticiaPage {
       alert("Falta departamento");
       return;
     }
-
+    
+    //conslta noticias 
     const itemRef = this.af.list('Noticias');
     itemRef.push({
       tituloNoticia: this.tituloNoticia,
@@ -253,7 +246,7 @@ export class CrearNoticiaPage {
 
   }
 
-
+ //mostrar vendata modal
   presentLoadingDefault() {
     this.loading = this.loadingCtrl.create({
       content: 'Cargando...'
@@ -261,10 +254,6 @@ export class CrearNoticiaPage {
 
     this.loading.present();
 
-    /*setTimeout(() => {
-      loading.dismiss();
-    }, 5000);
-    */
   }
   promise: any;
   fotoComprimidaCliente: any;
@@ -318,13 +307,13 @@ export class CrearNoticiaPage {
 
 
   }
-
+  
+  //funcion que convierte el 
   blobToFile(theBlob: Blob, fileName: string) {
     var b: any = theBlob;
     //A Blob() is almost a File() - it's just missing the two properties below which we will add
     b.lastModifiedDate = new Date();
     b.name = fileName;
-
     //Cast to a File() type
     return <File>theBlob;
   }

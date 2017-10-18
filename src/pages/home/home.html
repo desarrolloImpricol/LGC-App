@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="colorAmarillo">
     <button ion-button menuToggle icon-only>
       <ion-icon name='menu'></ion-icon>
     </button>
@@ -11,7 +11,7 @@
 
 <ion-menu [content]="content" persistent="true">
   <ion-header>
-    <ion-toolbar>
+    <ion-toolbar  color="colorAmarillo">
       <ion-title>Menu</ion-title>
     </ion-toolbar>
   </ion-header>
@@ -36,6 +36,18 @@
 
 <ion-content padding>
 
+    <ion-fab top right edge>
+    <button ion-fab mini><ion-icon name="add"></ion-icon></button>
+    <ion-fab-list>
+      <button ion-fab (click)="irCrearNoticias()"><img  src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FNoticias.png?alt=media&token=0ddfa377-8706-4ab5-aef5-664acfae44bf" /></button>
+       <button ion-fab (click)="irCreaEventos()"><img  src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FEventos.png?alt=media&token=f568b51d-42b8-49ed-b0ec-e6492f860065" /></button>
+     <!-- <button ion-fab><ion-icon name="logo-facebook"></ion-icon></button>
+      <button ion-fab><ion-icon name="logo-twitter"></ion-icon></button>
+      <button ion-fab><ion-icon name="logo-vimeo"></ion-icon></button>
+      <button ion-fab><ion-icon name="logo-googleplus"></ion-icon></button>-->
+    </ion-fab-list>
+  </ion-fab>
+
 
   <div class="centrado">
 
@@ -45,31 +57,48 @@
     </div>
     <span class="fuente-10 fuente-centrado  "> {{perfil.nombreUsuario}} </span>
 
+     <ion-item>
+    <ion-label floating>Departamento</ion-label>
+    <ion-select multiple="false" [(ngModel)]="uidDepartamento" (ionChange)="onSelecDepartamento()">
+      <ion-option *ngFor="let muni of departamentos " value="{{muni.uid}}">{{muni.nombreDepartamento}}</ion-option>
+    </ion-select>
+  </ion-item>
+
+
+
+
+  <ion-item>
+    <ion-label floating>Municipio</ion-label>
+    <ion-select multiple="false" [(ngModel)]="uidMunicipio">
+      <ion-option *ngFor="let muni of municipios " value="{{muni.uid}}">{{muni.nombreMunicipio}}</ion-option>
+    </ion-select>
+  </ion-item>
+
+
 
     <div class="contenedor">
-      
-          <img  class="imagenLogo" (click)="irEmpleos()" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FEmpleos.jpg?alt=media&token=0d01ba71-cd11-46d7-9810-3d675f3ff7fd">
-      
-          <img class="imagenLogo" (click)="irNoticias()" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FNoticias.png?alt=media&token=0ddfa377-8706-4ab5-aef5-664acfae44bf">
+           <img  class="imagenLogo" (click)="irColombia()" src="assets/icon/Infomunicipios.png">     
+            
+           <img class="imagenLogo" (click)="irNoticias()" src="assets/icon/NoticiasIcon.png">
+
+           <img class="imagenLogo" (click)="irEventos()" src="assets/icon/EventosIcon.png">
         
     </div>
 
 
     <div class="contenedor">
+
+          <img  class="imagenLogo" (click)="irEmpleos()" src="assets/icon/Empleos.png">
       
-          <img  class="imagenLogo" (click)="irAmarillas()" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FAmarillas.png?alt=media&token=c868fd25-b6cd-42e0-b9ba-cedcb7b433b9">
+          <img  class="imagenLogo" (click)="irAmarillas()" src="assets/icon/AmarillasIcon.png">
+          
+          <img  class="imagenLogo" (click)="irPromociones()" src="assets/icon/Promociones.png">
       
-          <img class="imagenLogo" (click)="irEventos()" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FEventos.png?alt=media&token=f568b51d-42b8-49ed-b0ec-e6492f860065">
-        
+              
     </div>
 
 
-    <div class="contenedor">
-      
-          <img  class="imagenLogo" (click)="irColombia()" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FColombia.png?alt=media&token=a7f69abf-d768-4090-82ad-1f93fad5a5cc">      
-        <!--  <img class="imagenLogo" (click)="cargarImagen('galeria')" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FNoticias.png?alt=media&token=0ddfa377-8706-4ab5-aef5-664acfae44bf">
-       --> 
-    </div>
+   
  
 <!--
 

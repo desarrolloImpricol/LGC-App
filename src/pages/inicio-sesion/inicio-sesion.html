@@ -4,40 +4,55 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
-<ion-header>
-
-  <ion-navbar>
-    <ion-title>Inicio sesion</ion-title>
-  </ion-navbar>
-
-</ion-header>
 
 
-<ion-content padding>
+<ion-content padding >
+  <img class="imagenSuperior" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FinicioIcono.png?alt=media&token=e6c20944-61b6-4f1e-8e7b-843c05508cbf">
 
+  <p class="textoInicioSesion">Iniciar la sesion</p>
+  <hr class="style1">
+  <br>
+   
+       <button (click)="loginFacebook()" full ion-button>Facebook</button>
+       <button (click)="twLogin()" full ion-button>Twitter</button>
+  <br>
+ 
+
+ <h6><span>o</span></h6>
+
+
+<!--
   <img class="imagenSuperior" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FlogoInicio.png?alt=media&token=e7205f37-998c-42b0-83fe-f02527ee1b27">
+-->
 
   <ion-list>
 
-    <ion-item>
-      <ion-label floating>Email</ion-label>
-      <ion-input type="text" [(ngModel)]="email"></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-label floating>Clave</ion-label>
-      <ion-input type="password" [(ngModel)]="clave"></ion-input>
-    </ion-item>
+  
+      <!--<ion-label fixed>Email</ion-label>-->
+      <input class="inputLogin" type="text" [(ngModel)]="email" placeholder="Email"/>
+  
+  <br>  
+  
+      <!--<ion-label fixed>Clave</ion-label>-->
+      <input class="inputLogin" type="password" [(ngModel)]="clave" placeholder="Contraseña"/>
+  
 
 
 
 
   </ion-list>
-  <a (click)="irRecuperarClave()">Recuperar clave ? </a>
+  <a  class="linkOlvidoClave" (click)="irRecuperarClave()">¿ Ha olvidado su contraseña ? </a>
   <br>
-  <div class="centrado">
-    <button (click)="loginFacebook()" ion-button>Incio con facebook</button>
-    <button (click)="loginUser()" ion-button>Inicio sesion</button>
-  </div>
+  <button (click)="loginUser()" color="colorAmarillo" ion-button full>Entrar</button>
+  <br>
+
+  <hr class="style1">
+  
+  <p class="noRegistro">¿Aún no se ha registrado?</p>
+  <button (click)="irRegistro()" color="colorRojo" ion-button full>Registrarse</button>
+  
+    
+    
+  
 
 </ion-content>

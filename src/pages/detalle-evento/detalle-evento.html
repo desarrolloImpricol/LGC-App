@@ -6,8 +6,8 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>detalleEvento</ion-title>
+  <ion-navbar color="colorEvento">
+    <ion-title>Descripción evento</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -15,27 +15,71 @@
 
 <ion-content padding>
 
-
-  <div class="header-noticia  seccion-noticia content-noticia " style="justify-content:space-between; margin-bottom: 2px; ">
+<!--
+  <div class="header-evento  seccion-noticia content-noticia " style="justify-content:space-between; margin-bottom: 2px; ">
     <span class="titulo-blanco fuente-light fuente-15">{{tituloEvento}}</span>
   </div>
   <img [src]="urlImagen" />
 
-  <div class="header-noticia  seccion-noticia content-noticia " style="justify-content:space-between; margin-bottom: 2px; ">
+  <div class="header-evento  seccion-noticia content-noticia " style="justify-content:space-between; margin-bottom: 2px; ">
     <div class="wrapper-perfil-noticias">
       <img class="img-circle-perfil-noticias" [src]="imagenCreador">
     </div>
     <span class="titulo-blanco fuente-light fuente-15 nombreNoticia">{{nombreCreador}} </span>
     <div class="wrapper-perfil-noticias">
-      <img class="img-circle-perfil-noticias" (click)="compartir(noti.urlImagen)" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FFacebook.png?alt=media&token=8b18ce31-779c-4d24-a944-f1cbc688ede7">
+      <img class="img-circle-perfil-noticias" (click)="compartir(noti.urlImagen)" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FAdelante.png?alt=media&token=766ba620-d6b6-4f4c-9064-052156add930">
     </div>
   </div>
-  <br>
+  <br>-->
 
   <!--  <p>
     {{descripcion}}
   </p>-->
 
+
+
+  <ion-item>
+    <ion-avatar item-start>
+      <img [src]="imagenCreador">
+    </ion-avatar>
+    <h2>{{nombreCreador}}</h2>
+    <p>{{fechaInicio}} - {{fechaFin}}</p>
+  </ion-item>
+
+   
+   <img  [src]="urlImagen"/>
+    <ion-card-title>
+    {{tituloEvento}}
+      </ion-card-title>
+       <p>
+     {{descripcion}}
+   </p>
+   
+   
+
+  <!-- <div class="header-noticia  seccion-noticia content-noticia " style="justify-content:space-between; margin-bottom: 2px; ">
+    <div class="wrapper-perfil-noticias">
+      <img class="img-circle-perfil-noticias" [src]="imagenCreador">
+    </div>
+    <span class="titulo-blanco fuente-light fuente-15 nombreNoticia">{{nombreCreador}} </span>
+    
+  </div>-->
+   
+    
+   
+
+       <ion-row no-padding>
+      
+   
+      <ion-col text-right>
+        <button ion-button clear small color="danger" icon-start>
+          <ion-icon name='share-alt'></ion-icon>
+          Compartir
+        </button>
+      </ion-col>
+    </ion-row>
+
+<!--
   <ion-item>
     <ion-label floating>Descripción</ion-label>
     <ion-textarea disabled=true type="text" [(ngModel)]="descripcion"></ion-textarea>
@@ -49,7 +93,7 @@
   <ion-item>
     <ion-label floating>Fecha fin</ion-label>
     <ion-datetime disabled=true displayFormat="MM/DD/YYYY" [(ngModel)]="fechaFin"></ion-datetime>
-  </ion-item>
+  </ion-item>-->
 
 
 

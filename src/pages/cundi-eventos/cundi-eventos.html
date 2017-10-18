@@ -6,23 +6,23 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>Eventos</ion-title>
+  <ion-navbar color="colorEvento" >
+    <ion-title>Todos los eventos</ion-title>
   </ion-navbar>
 
-</ion-header>
+</ion-header>s
 
 
 <ion-content padding>
 
-
+<!--
   <div *ngFor="let noti of eventos ">
-    <div (click)="detalleNoticia(noti.urlImagen,noti.tituloEvento,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcionEvento,noti.index,noti.fechaInicio,noti.fechaFin)" class="header-noticia  seccion-noticia content-noticia " style="justify-content:space-between; margin-bottom: 2px; ">
+    <div (click)="detalleNoticia(noti.urlImagen,noti.tituloEvento,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcionEvento,noti.index,noti.fechaInicio,noti.fechaFin)" class="header-evento  seccion-noticia content-noticia " style="justify-content:space-between; margin-bottom: 2px; ">
       <span class="titulo-blanco fuente-light fuente-15">{{noti.tituloEvento}}</span>
     </div>
     <img (click)="detalleNoticia(noti.urlImagen,noti.tituloEvento,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcionEvento,noti.index,noti.fechaInicio,noti.fechaFin)" [src]="noti.urlImagen" />
 
-    <div class="header-noticia  seccion-noticia content-noticia " style="justify-content:space-between; margin-bottom: 2px; ">
+    <div class="header-evento  seccion-noticia content-noticia " style="justify-content:space-between; margin-bottom: 2px; ">
       <div (click)="detalleNoticia(noti.urlImagen,noti.tituloEvento,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcionEvento,noti.index,noti.fechaInicio,noti.fechaFin)" class="wrapper-perfil-noticias">
         <img class="img-circle-perfil-noticias" [src]="noti.urlImagenCreador">
       </div>
@@ -32,6 +32,33 @@
       </div>
     </div>
     <br>
+
+  </div>-->
+
+  <div *ngFor="let noti of eventos ">
+
+        <ion-card>
+
+         <img (click)="detalleNoticia(noti.urlImagen,noti.tituloEvento,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcionEvento,noti.index,noti.fechaInicio,noti.fechaFin)" [src]="noti.urlImagen" />
+         
+          <ion-item>
+            
+            <h2>{{noti.tituloEvento}}</h2>
+            <p>{{noti.fechaFin}} - {{noti.fechaInicio}}</p>
+          </ion-item>
+
+          <!--<ion-item>
+            <ion-icon name="wine" item-left large ></ion-icon>
+            <h2>Institute of Fine Cocktails</h2>
+            <p>14 S. Hop Avenue, Madison, WI 53703</p>
+          </ion-item>-->
+            <ion-col text-right>
+            <button (click)="compartir(noti.urlImagen)" ion-button clear small color="danger" icon-start>
+              <ion-icon name='share-alt'></ion-icon>
+              Compartir
+            </button>
+          </ion-col>
+        </ion-card>
 
   </div>
 

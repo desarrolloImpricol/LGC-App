@@ -41,11 +41,6 @@ export class CundiAmarillasPage {
   onSelecDepartamento() {
 
 
-    //  const size$ = new Subject<string>();
-    //  const queryObservable = size$.switchMap(size =>
-    //    this.af.list('/items', ref => ref.orderByChild('size').equalTo(size)).valueChanges();
-
-    //  );
     this.municipios = [];
     let subject = new Subject();
     const queryObservable = this.af.list('/municipios', {

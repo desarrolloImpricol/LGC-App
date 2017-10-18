@@ -74,7 +74,6 @@ export class CrearAmarillaPage {
         this.municipios.push(dataI);
       });
     });
-
     // trigger the query
     subject.next(this.uidDepartamento);
   }
@@ -197,7 +196,7 @@ subirImagen(uid) {
 
 
   }
-
+  //variable de creac
   nombreAmarilla:any;
   direccion:any;
   telefonos:any;

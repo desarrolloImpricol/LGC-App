@@ -6,35 +6,68 @@
 -->
 
 <ion-header>
-  <ion-navbar>
+  <ion-navbar  color="colorNoticias">
     <!--  <button ion-button menuToggle icon-only>
       <ion-icon name='menu'></ion-icon>
     </button> -->
     <ion-title>
-      Noticias
+      Todas las noticias
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 
-<ion-content padding>
-
+<ion-content  >
+<!--
   <ion-card *ngFor="let noti of noticias ">
-    <div (click)="detalleNoticia(noti.urlImagen,noti.tituloNoticia,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcion,noti.index)" class="header-noticia  seccion-noticia content-noticia " style="justify-content:space-between; margin-bottom: 2px; ">
+    <div (click)="detalleNoticia(noti.urlImagen,noti.tituloNoticia,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcion,noti.index,noti.fechaNoticia)" class="header-noticia  seccion-noticia content-noticia " style="justify-content:space-between; margin-bottom: 2px; ">
       <span class="titulo-blanco fuente-light fuente-15">{{noti.tituloNoticia}}</span>
     </div>
-    <img (click)="detalleNoticia(noti.urlImagen,noti.tituloNoticia,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcion,noti.index)" [src]="noti.urlImagen" />
+
+    <img (click)="detalleNoticia(noti.urlImagen,noti.tituloNoticia,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcion,noti.index,noti.fechaNoticia)"  [src]="noti.urlImagen" />
+
 
     <div class="header-noticia  seccion-noticia content-noticia " style="justify-content:space-between; margin-bottom: 2px; ">
+       <div (click)="detalleNoticia(noti.urlImagen,noti.tituloNoticia,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcion,noti.index,noti.fechaNoticia)"  class="wrapper-perfil-noticias">
+        <img class="img-circle-perfil-noticias" [src]="noti.urlImagenCreador">
+      </div>
+      <span (click)="detalleNoticia(noti.urlImagen,noti.tituloNoticia,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcion,noti.index,noti.fechaNoticia)"  class="titulo-blanco fuente-light fuente-15 nombreNoticia">{{noti.nombreUsuario}} </span>
 
       <div class="wrapper-perfil-noticias">
-        <img class="img-circle-perfil-noticias" (click)="compartir(noti.urlImagen)" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FFacebook.png?alt=media&token=8b18ce31-779c-4d24-a944-f1cbc688ede7">
+        <img class="img-circle-perfil-noticias" (click)="compartir(noti.urlImagen)" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FAdelante.png?alt=media&token=766ba620-d6b6-4f4c-9064-052156add930">
       </div>
     </div>
-    <br>
 
+    <br>
+    <label>Fecha {{noti.fechaNoticia}}</label>
   </ion-card>
 
+-->
+
+
+  <ion-card *ngFor="let noti of noticias ">
+   
+
+    <img (click)="detalleNoticia(noti.urlImagen,noti.tituloNoticia,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcion,noti.index,noti.fechaNoticia)"  [src]="noti.urlImagen" />
+
+     <ion-card-title>
+    {{noti.tituloNoticia}}
+      </ion-card-title>
+      <p>
+        Fecha: {{noti.fechaNoticia}} 
+      </p>
+        <ion-row no-padding>
+      
+   
+      <ion-col text-right>
+        <button (click)="compartir(noti.urlImagen)" ion-button clear small color="danger" icon-start>
+          <ion-icon name='share-alt'></ion-icon>
+          Compartir
+        </button>
+      </ion-col>
+    </ion-row>
+
+  </ion-card>
 
 
 </ion-content>

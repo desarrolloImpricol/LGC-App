@@ -6,7 +6,7 @@
 -->
 <ion-header>
 
-  <ion-navbar>
+  <ion-navbar color="colorColombia">
     <ion-title>Colombia</ion-title>
   </ion-navbar>
 
@@ -15,28 +15,20 @@
 
 	<ion-content class="card-background-page">
 
-		  <ion-card>
-		    <img src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/departamentos%2Ftolima%2Ftolima.jpeg?alt=media&token=face3bec-0c2a-4e3c-a5e4-ecfac0033fa3"/>
-		    <div class="card-title">São Paulo</div>
-		    <div class="card-subtitle">41 Listings</div>
+		<div *ngFor="let item of departamentos" >
+		  <ion-card (click)="abrirMunicipio(item.departamento)" 	>
+		    <!--<img [src]="item.urlImagen"/>-->
+		    <img src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/departamentos%2Fcundinamarca%2Fcundinamarca.jpeg?alt=media&token=9c003d2d-a317-4608-96f5-8b7978dcc1f3">
+		    <div class="card-title">{{item.departamento}}</div>
+		    <div class="card-subtitle">{{item.ciudades.length}} ciudades</div>
 		  </ion-card>
+		</div>
 
-		  <ion-card>
-		    <img src="img/card-amsterdam.png"/>
-		    <div class="card-title">Amsterdam</div>
-		    <div class="card-subtitle">64 Listings</div>
-		  </ion-card>
+		  <ion-infinite-scroll (ionInfinite)="cargarMasDepartamentos($event)">
+			   <ion-infinite-scroll-content></ion-infinite-scroll-content>
+		  </ion-infinite-scroll>
 
-		  <ion-card>
-		    <img src="img/card-sf.png"/>
-		    <div class="card-title">San Francisco</div>
-		    <div class="card-subtitle">72 Listings</div>
-		  </ion-card>
 
-		  <ion-card>
-		    <img src="img/card-madison.png"/>
-		    <div class="card-title">Madison</div>
-		    <div class="card-subtitle">28 Listings</div>
-		  </ion-card>
+		 
 
   </ion-content>

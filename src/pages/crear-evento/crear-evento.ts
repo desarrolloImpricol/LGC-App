@@ -23,6 +23,7 @@ import { Storage } from '@ionic/storage';
 })
 export class CrearEventoPage {
 
+
   municipios: any;
   departamentos: any;
   tituloEvento: any;
@@ -110,7 +111,7 @@ export class CrearEventoPage {
     subject.next(this.uidDepartamento);
   }
 
-  //Funcion que crea unn evento
+  //Funcion que crea un evento
   publicarEvento() {
     console.log("tituo noticia = " + this.tituloEvento);
     console.log("descripcion noticia = " + this.descripcionEvento);
@@ -229,7 +230,6 @@ export class CrearEventoPage {
     }
   }
 
-
   //muestra imagen de carga
   presentLoadingDefault() {
     this.loading = this.loadingCtrl.create({
@@ -282,7 +282,9 @@ export class CrearEventoPage {
       //  this.loading.dismiss();
     });
   }
+   
 
+   //convierte archivo blod  a file 
   blobToFile(theBlob: Blob, fileName: string) {
     var b: any = theBlob;
     //A Blob() is almost a File() - it's just missing the two properties below which we will add

@@ -6,6 +6,7 @@ import { RegistroPage } from '../../pages/registro/registro';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
 import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
 import { Storage } from '@ionic/storage';
+import { TwitterConnect } from '@ionic-native/twitter-connect';
 /**
  * Generated class for the InicioSesionPage page.
  *
@@ -21,7 +22,7 @@ export class InicioSesionPage {
 
   email: any;
   clave: any;
-  constructor(public navCtrl: NavController, public navParams: NavParams, private fb: Facebook, public af: AngularFireDatabase, public storage: Storage) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private fb: Facebook, public af: AngularFireDatabase, public storage: Storage,private twitter: TwitterConnect) {
   }
 
   ionViewDidLoad() {
@@ -35,7 +36,7 @@ export class InicioSesionPage {
 
 
   //evento de inicio de sesion con email
-  loginUser(): firebase.Promise<any> {
+  loginUser(): Promise<any> {
     return firebase.auth().signInWithEmailAndPassword(this.email, this.clave).then(loginResultado => {
 
       // alert("Email correcto");
@@ -145,6 +146,93 @@ export class InicioSesionPage {
     }).catch((error) => { console.log(error) });
   }
 
+
+  twLogin(): void {
+  this.twitter.login().then( response => {
+    const twitterCredential = firebase.auth.TwitterAuthProvider
+      .credential(response.token, response.secret);
+
+    firebase.auth().signInWithCredential(twitterCredential)
+    .then( userProfile => {
+      this.userProfile = userProfile;
+      this.userProfile.twName = response.userName;
+        let uidCliente = this.userProfile.uid;
+          let email = this.userProfile.email;
+          let fotoPerfil = this.userProfile.photoURL;
+          let nombreCliente = this.userProfile.displayName;
+          console.log("uidCliente =" + uidCliente);
+          console.log("foto perfil =" + fotoPerfil);
+          console.log("nombre cliente =" + nombreCliente);
+
+          this.item = this.af.object('/userProfile/' + uidCliente, { preserveSnapshot: true });
+          this.item.subscribe(snapshot => {
+            console.log("*****************");
+            console.log("*****************");
+            console.log("*****************");
+
+            console.log(snapshot.key);
+            console.log(snapshot.val());
+
+            // this.perfil =  snapshot.val();
+
+            if (snapshot.val() === undefined || snapshot.val() === null) {
+              console.log("usuario no existe");
+              firebase.database().ref('/userProfile').child(uidCliente)
+                .set(
+                {
+                  email: email,
+                  nombreUsuario: nombreCliente,
+                  tipoUsuario: 'persona',
+                  photoUrl: fotoPerfil
+                }
+                );
+
+              firebase.database().ref('/notificacionesUsuario').child(uidCliente)
+                .set(
+                {
+                  uid: uidCliente,
+                  uidMunicipio: '-',
+                  uidDepartamento: '-',
+                  interesSoloMunicipio: false
+                }
+                );
+              //   this.storage.set('userProfile')
+              this.storage.set('userData', this.userProfile)
+                .then(
+                () => {
+                  console.log('Stored item!');
+                  this.navCtrl.popToRoot();
+                },
+                error => console.error('Error storing item', error)
+                );
+            } else {
+              console.log("usuario  existe");
+              this.storage.set('userData', this.userProfile)
+                .then(
+                () => {
+                  console.log('Stored item!');
+                  this.navCtrl.popToRoot();
+                },
+
+                error => console.error('Error storing item', error)
+                );
+            }
+          });
+      console.log(this.userProfile);
+      console.log("resultado");
+      console.log(JSON.stringify(this.userProfile));
+    }, error => {
+      console.log(error);
+    });
+  }, error => {
+    console.log("Error connecting to twitter: ", error);
+  });
+}
+
+
+closeLogin(){
+  this.navCtrl.pop();
+}
 
 
   //Direccion a pagina de registro

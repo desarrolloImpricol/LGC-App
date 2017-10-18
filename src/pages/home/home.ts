@@ -7,10 +7,14 @@ import { CundiEventosPage } from '../../pages/cundi-eventos/cundi-eventos';
 import { CundiNoticiasPage } from '../../pages/cundi-noticias/cundi-noticias';
 import { SecureStorage, SecureStorageObject } from '@ionic-native/secure-storage';
 import { LoginPage } from '../../pages/login/login';
+import { InicioSesionPage } from '../../pages/inicio-sesion/inicio-sesion';
 import { Deeplinks } from '@ionic-native/deeplinks';
 import { PublicarPage } from '../../pages/publicar/publicar';
 import { Storage } from '@ionic/storage';
 import { ColombiaPage } from '../../pages/colombia/colombia';
+import { CrearNoticiaPage } from '../../pages/crear-noticia/crear-noticia';
+import { CrearEventoPage } from '../../pages/crear-evento/crear-evento';
+import { Subject } from 'rxjs/Subject';
 
 
 
@@ -22,7 +26,10 @@ export class HomePage {
 
   //info de perfil
   perfil: any = [];
-
+  departamentos:any;
+  municipios:any;
+  filtroMunicipios:any;
+  uidDepartamento:any;
   constructor(public navCtrl: NavController, public af: AngularFireDatabase, public secureStorage: SecureStorage, private deeplinks: Deeplinks, public platform: Platform, public storage: Storage) {
 
     this.platform = platform;
@@ -61,6 +68,54 @@ export class HomePage {
     //setea  un valor de inicio para la foto
     this.perfil.photoUrl = "-";
 
+     //consulta departamentos  
+    this.af.list('/departamentos/', { preserveSnapshot: true })
+      .subscribe(snapshots => {
+        this.departamentos = [];
+        snapshots.forEach(snapshot1 => {
+          let data = snapshot1.val();
+          data.uid = snapshot1.key;
+          //   console.log("uid creador = " + data.uidCreador);
+          console.log("departamento key  =" + snapshot1.key);
+          console.log("departamento Value =" + JSON.stringify(snapshot1.val()));
+          this.departamentos.push(data);
+        });
+      });
+
+  }
+
+    //funcion que  se llama cuando se elecciona un departamento
+  onSelecDepartamento() {
+    
+     //reinicializa el arreglo demunicipios
+    this.municipios = [];
+    let subject = new Subject();
+    const queryObservable = this.af.list('/municipios', {
+      query: {
+        orderByChild: 'uidDepartamento',
+        equalTo: subject
+
+      }
+    });
+    //manjo de respuesta 
+    // subscribe to changes
+    queryObservable.subscribe(queriedItems => {
+      console.log(JSON.stringify(queriedItems));
+      //alamaenca resultado del filtro en arreglo 
+      this.filtroMunicipios = queriedItems;
+      //recorre arreglo para setelartl en la lista 
+      this.filtroMunicipios.forEach((item, index) => {
+
+        //         console.log("item municipio = " + JSON.stringify(item));
+
+        let dataI = item;
+
+        this.municipios.push(dataI);
+      });
+    });
+
+    // trigger the query
+    subject.next(this.uidDepartamento);
   }
 
   //elimina los datos guardados del usuario
@@ -71,7 +126,7 @@ export class HomePage {
         console.log("eliminado = " + data);
         //    this.platform.exitApp();
         //luego de eliminado envia a pantalla de  login
-        this.navCtrl.push(LoginPage);
+        this.navCtrl.push(InicioSesionPage);
       },
       error => console.error(error)
       );
@@ -96,13 +151,13 @@ export class HomePage {
             this.perfil = snapshot.val();
           });
         } else {
-          this.navCtrl.push(LoginPage);
+          this.navCtrl.push(InicioSesionPage);
         }
       },
       error => {
         //si no esta guardado envia a la pagina de login
         console.error("error = " + error);
-        this.navCtrl.push(LoginPage);
+        this.navCtrl.push(InicioSesionPage);
       }
       );
   }
@@ -130,6 +185,14 @@ export class HomePage {
   //redireccion a publicar
   irPublicar() {
     this.navCtrl.push(PublicarPage);
+  }
+
+    irCrearNoticias() {
+    this.navCtrl.push(CrearNoticiaPage);
+  }
+
+  irCreaEventos() {
+    this.navCtrl.push(CrearEventoPage);
   }
 
 }

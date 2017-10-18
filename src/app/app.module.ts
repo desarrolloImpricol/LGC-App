@@ -16,6 +16,7 @@ import { DetalleNoticiaPage } from '../pages/detalle-noticia/detalle-noticia';
 import { DetalleEventoPage } from '../pages/detalle-evento/detalle-evento';
 import { RecuperarClavePage } from '../pages/recuperar-clave/recuperar-clave';
 import { LoginPage } from '../pages/login/login';
+import { DetalleDepartamentoPage } from '../pages/detalle-departamento/detalle-departamento';
 import { ColombiaPage } from '../pages/colombia/colombia';
 import { PublicarPage } from '../pages/publicar/publicar';
 import { RegistroPage } from '../pages/registro/registro';
@@ -37,6 +38,9 @@ import { Deeplinks } from '@ionic-native/deeplinks';
 import firebase from 'firebase';
 import { IonicStorageModule } from '@ionic/storage';
 import { ListasProvider } from '../providers/listas/listas';
+import { TwitterConnect } from '@ionic-native/twitter-connect';
+
+
 
 
 //configuracion firebase
@@ -69,7 +73,8 @@ firebase.initializeApp(firebaseConfig)
     DetalleEventoPage,
     CrearAmarillaPage,
     MunicipiosPage,
-    ColombiaPage
+    ColombiaPage,
+    DetalleDepartamentoPage
   ],
   imports: [
     BrowserModule,
@@ -99,7 +104,8 @@ firebase.initializeApp(firebaseConfig)
     DetalleEventoPage,
     CrearAmarillaPage,
     MunicipiosPage,
-    ColombiaPage
+    ColombiaPage,
+    DetalleDepartamentoPage
   ],
   providers: [
     StatusBar,
@@ -114,7 +120,8 @@ firebase.initializeApp(firebaseConfig)
     File,
     FileTransfer,
     Deeplinks,
-    ListasProvider
+    ListasProvider,
+    TwitterConnect
   ]
 })
 export class AppModule { }

@@ -1,3 +1,59 @@
 page-inicio-sesion {
 
 }
+
+  .text-input {
+            
+    border-radius :5px;
+   }
+    
+
+.textoInicioSesion{
+  font-weight: bold;
+  text-align:center;
+  font-size: 2rem;
+
+}
+h6 {
+   width: 100%; 
+   text-align: center; 
+   border-bottom: 1px solid #000; 
+   line-height: 0.1em;
+   margin: 10px 0 20px; 
+} 
+
+h6 span { 
+    background:#fff; 
+    padding:0 10px; 
+}
+
+    hr.style1{
+	border-top: 1px solid #8c8b8b;
+	//padding:5px;
+	margin:5px;
+   }
+   .inputLogin {
+    width: 100%;
+    height : 7%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box; 
+    border:1px solid #838383;
+    border-radius:7px;
+  }
+
+  .linkOlvidoClave{
+       text-decoration:underline;
+       font-size:2rem;
+
+  }
+  .noRegistro{
+  	text-align :center;
+  	font-size :1.8rem;
+  }
+
+  .imagenSuperior {
+  height: 10%;
+  width: 18%;
+  margin-left: 42.5%;
+}

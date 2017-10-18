@@ -22,7 +22,7 @@ export class CundiNoticiasPage {
   noticias:any = [] ;
   itemRef :any ;
   constructor(public navCtrl: NavController, public navParams: NavParams , public af: AngularFireDatabase ,private socialSharing: SocialSharing  ,private transfer: FileTransfer, private file: File) {
-
+    //consulta la informacion de tdas las noticias 
     this.af.list('/Noticias/' ,{ preserveSnapshot: true})
         .subscribe(snapshots=>{
             this.noticias = [];
@@ -37,6 +37,7 @@ export class CundiNoticiasPage {
                     data.urlImagenCreador  = snapshot.val().photoUrl;
                     data.nombreUsuario = snapshot.val().nombreUsuario;
                     data.index =  snapshot1.key ;
+                    console.log("add noticia");
                     this.noticias.push(data);
                   });
              console.log("key ="+snapshot1.key);
@@ -46,7 +47,7 @@ export class CundiNoticiasPage {
 
   }
 
-
+    //funcion que comparte las imagenes de la notica 
     compartir(urlImg){
 
 
@@ -79,14 +80,15 @@ export class CundiNoticiasPage {
     }
 
 
-  detalleNoticia(urlImagen,tituloNoticia , nombreCreador , imagenCreador , descripcion ,uidNoticia){
+  detalleNoticia(urlImagen,tituloNoticia , nombreCreador , imagenCreador , descripcion ,uidNoticia,fechaCreacion){
       console.log("url imagen = " + urlImagen);
       console.log("titulo noticia = " + tituloNoticia);
       console.log("nombre creador = " + nombreCreador);
       console.log("imagen creador = " + imagenCreador);
       console.log("descripcion = " + descripcion);
       console.log("uid noticia = " + uidNoticia);
-      this.navCtrl.push(DetalleNoticiaPage , {urlImagen  :urlImagen ,tituloNoticia :tituloNoticia ,  nombreCreador :nombreCreador , descripcion :descripcion  , imagenCreador :imagenCreador  ,uidNoticia:uidNoticia });
+      console.log("fecha noticia = " + fechaCreacion);
+      this.navCtrl.push(DetalleNoticiaPage , {urlImagen  :urlImagen ,tituloNoticia :tituloNoticia ,  nombreCreador :nombreCreador , descripcion :descripcion  , imagenCreador :imagenCreador  ,uidNoticia:uidNoticia,fechaCreacion:fechaCreacion });
   }
 
   ionViewDidLoad() {

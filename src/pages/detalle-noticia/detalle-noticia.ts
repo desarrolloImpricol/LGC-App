@@ -20,6 +20,7 @@ export class DetalleNoticiaPage {
   imagenCreador:any;
   descripcion:any;
   uidNoticia:any;
+  fechaCreacion:any ; 
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
     console.log("Nombre " + this.navParams.data.nombre);
@@ -29,7 +30,11 @@ export class DetalleNoticiaPage {
     this.imagenCreador =  this.navParams.data.imagenCreador;
     this.descripcion=  this.navParams.data.descripcion;
     this.uidNoticia = this.navParams.data.uidNoticia;
+    this.fechaCreacion = this.navParams.data.fechaCreacion;
+    
   }
+
+
 
 
 
