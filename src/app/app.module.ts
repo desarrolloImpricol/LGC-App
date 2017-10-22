@@ -22,6 +22,8 @@ import { PublicarPage } from '../pages/publicar/publicar';
 import { RegistroPage } from '../pages/registro/registro';
 import { MunicipiosPage } from '../pages/municipios/municipios';
 import { InicioSesionPage } from '../pages/inicio-sesion/inicio-sesion';
+import { PerfilClientePage } from '../pages/perfil-cliente/perfil-cliente';
+import { BusquedaAvanzadaPage } from '../pages/busqueda-avanzada/busqueda-avanzada';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
@@ -39,8 +41,7 @@ import firebase from 'firebase';
 import { IonicStorageModule } from '@ionic/storage';
 import { ListasProvider } from '../providers/listas/listas';
 import { TwitterConnect } from '@ionic-native/twitter-connect';
-
-
+import { GooglePlus } from '@ionic-native/google-plus';
 
 
 //configuracion firebase
@@ -74,7 +75,9 @@ firebase.initializeApp(firebaseConfig)
     CrearAmarillaPage,
     MunicipiosPage,
     ColombiaPage,
-    DetalleDepartamentoPage
+    DetalleDepartamentoPage,
+    BusquedaAvanzadaPage,
+    PerfilClientePage
   ],
   imports: [
     BrowserModule,
@@ -105,7 +108,9 @@ firebase.initializeApp(firebaseConfig)
     CrearAmarillaPage,
     MunicipiosPage,
     ColombiaPage,
-    DetalleDepartamentoPage
+    DetalleDepartamentoPage,
+    BusquedaAvanzadaPage,
+    PerfilClientePage
   ],
   providers: [
     StatusBar,
@@ -121,7 +126,8 @@ firebase.initializeApp(firebaseConfig)
     FileTransfer,
     Deeplinks,
     ListasProvider,
-    TwitterConnect
+    TwitterConnect,
+    GooglePlus
   ]
 })
 export class AppModule { }

@@ -50,7 +50,6 @@ export class CundiEventosPage {
           console.log("Value =" + JSON.stringify(snapshot1.val()));
         });
       });
-
   }
 
   //comparte la imagen 

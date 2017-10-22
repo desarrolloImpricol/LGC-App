@@ -15,6 +15,7 @@ import { ColombiaPage } from '../../pages/colombia/colombia';
 import { CrearNoticiaPage } from '../../pages/crear-noticia/crear-noticia';
 import { CrearEventoPage } from '../../pages/crear-evento/crear-evento';
 import { Subject } from 'rxjs/Subject';
+import { BusquedaAvanzadaPage } from '../../pages/busqueda-avanzada/busqueda-avanzada';
 
 
 
@@ -30,6 +31,10 @@ export class HomePage {
   municipios:any;
   filtroMunicipios:any;
   uidDepartamento:any;
+  eventos :any ; 
+  itemRef:any ;
+  noticias:any = [] ;
+  itemRefNoticias:any;
   constructor(public navCtrl: NavController, public af: AngularFireDatabase, public secureStorage: SecureStorage, private deeplinks: Deeplinks, public platform: Platform, public storage: Storage) {
 
     this.platform = platform;
@@ -82,7 +87,61 @@ export class HomePage {
         });
       });
 
+
+       //recibe informacion de los eventos
+    this.af.list('/Eventos/', { preserveSnapshot: true })
+      .subscribe(snapshots => {
+        //reinicializa eventos
+        this.eventos = [];
+        //recorre resultado de la consulta 
+        snapshots.forEach(snapshot1 => {
+          let data = snapshot1.val();
+          // console.log("uid creador = " + data.uidCreador);
+          console.log("EVENTOS");
+          //consulta informacion del creador del evento
+          this.itemRef = this.af.object('userProfile/' + data.uidCreador, { preserveSnapshot: true });
+          this.itemRef.subscribe(snapshot => {
+            //console.log(action.type);
+
+            console.log("llave" + snapshot.key)
+            console.log('data ' + JSON.stringify(snapshot.val()));
+            data.urlImagenCreador = snapshot.val().photoUrl;
+            data.nombreUsuario = snapshot.val().nombreUsuario;
+            data.index = snapshot1.key;
+            //setea eventos 
+            this.eventos.push(data);
+          });
+          console.log("key =" + snapshot1.key);
+          console.log("Value =" + JSON.stringify(snapshot1.val()));
+        });
+      });
+
+      //consulta la informacion de tdas las noticias 
+    this.af.list('/Noticias/' ,{ preserveSnapshot: true})
+        .subscribe(snapshots=>{
+            this.noticias = [];
+            snapshots.forEach(snapshot1 => {
+             let data = snapshot1.val();
+             //console.log("uid creador = " + data.uidCreador);
+             console.log("NOTICIAS");
+                  this.itemRefNoticias = this.af.object('userProfile/'+data.uidCreador,  { preserveSnapshot: true });
+                  this.itemRefNoticias.subscribe(snapshot => {
+                    //console.log(action.type);
+                    console.log("llave" + snapshot.key)
+                    console.log('data ' + JSON.stringify(snapshot.val()));
+                    data.urlImagenCreador  = snapshot.val().photoUrl;
+                    data.nombreUsuario = snapshot.val().nombreUsuario;
+                    data.index =  snapshot1.key ;
+                    console.log("add noticia");
+                    this.noticias.push(data);
+                  });
+             console.log("key ="+snapshot1.key);
+             console.log("Value ="+ JSON.stringify(snapshot1.val()));
+            });
+        });
+
   }
+
 
     //funcion que  se llama cuando se elecciona un departamento
   onSelecDepartamento() {
@@ -187,12 +246,16 @@ export class HomePage {
     this.navCtrl.push(PublicarPage);
   }
 
-    irCrearNoticias() {
+  irCrearNoticias() {
     this.navCtrl.push(CrearNoticiaPage);
   }
 
   irCreaEventos() {
     this.navCtrl.push(CrearEventoPage);
+  }
+
+  irBusquedaAvanzada() {
+    this.navCtrl.push(BusquedaAvanzadaPage);
   }
 
 }

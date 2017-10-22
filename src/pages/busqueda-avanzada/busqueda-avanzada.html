@@ -1,0 +1,56 @@
+<!--
+  Generated template for the BusquedaAvanzadaPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Busqueda avanzada</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+	 <ion-item>
+    <ion-label floating>Departamento</ion-label>
+    <ion-select multiple="false" [(ngModel)]="uidDepartamento" (ionChange)="onSelecDepartamento()">
+      <ion-option *ngFor="let muni of departamentos " value="{{muni.uid}}">{{muni.nombreDepartamento}}</ion-option>
+    </ion-select>
+  </ion-item>
+
+
+  <ion-item>
+    <ion-label floating>Municipio</ion-label>
+    <ion-select multiple="false" [(ngModel)]="uidMunicipio">
+      <ion-option *ngFor="let muni of municipios " value="{{muni.uid}}">{{muni.nombreMunicipio}}</ion-option>
+    </ion-select>
+  </ion-item>
+
+
+
+    <div class="contenedor">
+
+           <img  class="imagenLogo" (click)="irColombia()" src="assets/icon/Infomunicipios.png">     
+            
+           <img class="imagenLogo" (click)="irNoticias()" src="assets/icon/NoticiasIcon.png">
+
+           <img class="imagenLogo" (click)="irEventos()" src="assets/icon/EventosIcon.png">
+        
+    </div>
+
+
+    <div class="contenedor">
+
+          <img  class="imagenLogo" (click)="irEmpleos()" src="assets/icon/Empleos.png">
+      
+          <img  class="imagenLogo" (click)="irAmarillas()" src="assets/icon/AmarillasIcon.png">
+          
+          <img  class="imagenLogo" (click)="irPromociones()" src="assets/icon/Promociones.png">
+                    
+    </div>
+
+</ion-content>

@@ -40,11 +40,13 @@ export class RegistroPage {
   loading: any;
   uidCliente: any;
   entra: any;
-  departamentos: any;
+  
   municipios: any;
   filtroMunicipios: any;
   uidDepartamento: any;
   uidMunicipio: any;
+  deptos:any;
+
 
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public af: AngularFireDatabase, private _auth: AuthServiceProvider, public afu: AngularFireAuthModule, public camera: Camera, public ng2ImgToolsService: Ng2ImgToolsService, public loadingCtrl: LoadingController) {
@@ -53,21 +55,17 @@ export class RegistroPage {
     //inicializa obejto foto cliente
     this.fotoCliente = "-";
     //Consume lista de departamentos
+    //consulta departamentos  
     this.af.list('/departamentos/', { preserveSnapshot: true })
       .subscribe(snapshots => {
-        //reinicializa para que al actualizar no esten elemento en la lista
-        this.departamentos = [];
-        //recorre la respuesta
+        this.deptos = [];
         snapshots.forEach(snapshot1 => {
-          //captura valor
           let data = snapshot1.val();
-          //se asigna id al valor
           data.uid = snapshot1.key;
           //   console.log("uid creador = " + data.uidCreador);
           console.log("departamento key  =" + snapshot1.key);
           console.log("departamento Value =" + JSON.stringify(snapshot1.val()));
-          //asigna el objeto al arreglo de departamentos
-          this.departamentos.push(data);
+          this.deptos.push(data);
         });
       });
   }

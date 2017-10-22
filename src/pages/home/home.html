@@ -15,24 +15,39 @@
       <ion-title>Menu</ion-title>
     </ion-toolbar>
   </ion-header>
-  <ion-content>
-    <ion-list>
-      <button ion-item (click)="irNoticias()">
+  <ion-content class="fondoMenu">
+    <br>
+    <span class="fuente-blanco texto-margen-izquierda ">Editar perfil</span>
+    <br>
+     <div class="wrapper-perfil">
+      <img class="img-circle-perfil" [src]="perfil.photoUrl">
+    </div>
+    <br>
+    <div style="text-align: center;">
+      <span class="fuente-10 fuente-centrado  fuente-blanco "> {{perfil.nombreUsuario}} </span>
+    </div>
+    <br>
+    <ion-list >
+      <button  class="fondoMenu fuente-blanco" ion-item (click)="irNoticias()">
         Noticias
       </button>
-      <button ion-item (click)="irEventos()">
+      <button  class="fondoMenu fuente-blanco" ion-item (click)="irEventos()">
         Eventos
       </button>
-      <button ion-item (click)="irAmarillas()">
+      <button  class="fondoMenu fuente-blanco" ion-item (click)="irAmarillas()">
         Amarillas
       </button>
-      <button ion-item (click)="irEmpleos()">
+      <button   class="fondoMenu fuente-blanco" ion-item (click)="irEmpleos()">
         Empleos
+      </button>
+      <button   class="fondoMenu fuente-blanco" ion-item (click)="irBusquedaAvanzada()">
+        Busqueda avanzada
       </button>
     </ion-list>
   </ion-content>
 </ion-menu>
 <ion-nav id="nav" #content [root]="rootPage"></ion-nav>
+
 
 <ion-content padding>
 
@@ -46,10 +61,62 @@
       <button ion-fab><ion-icon name="logo-vimeo"></ion-icon></button>
       <button ion-fab><ion-icon name="logo-googleplus"></ion-icon></button>-->
     </ion-fab-list>
-  </ion-fab>
+  </ion-fab> 
 
 
   <div class="centrado">
+
+    <h2 class="fuente-amarilla">Noticias</h2>
+
+    <ion-slides pager color="colorAmarillo">
+      <ion-slide  *ngFor="let noti of noticias ">
+           <ion-card >
+            <div class="contenedor-foto-info">
+              <img (click)="detalleNoticia(noti.urlImagen,noti.tituloNoticia,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcion,noti.index,noti.fechaNoticia)"  [src]="noti.urlImagen" />
+             </div>
+
+               <ion-item>          
+                  <h2 class="tituloNoticia" >{{noti.tituloNoticia}}</h2>
+                  <p>Fecha: {{noti.fechaNoticia}} </p>
+                </ion-item>
+
+             <ion-row no-padding>
+              <ion-col text-right>
+                <button (click)="compartir(noti.urlImagen)" ion-button clear small color="danger" icon-start>
+                  <ion-icon name='share-alt'></ion-icon>
+                  Compartir
+                </button>
+              </ion-col>
+            </ion-row>
+          </ion-card>
+      </ion-slide>
+    </ion-slides>
+
+    <h2 class="fuente-amarilla" >Eventos</h2>
+
+       <ion-slides pager>   
+         <ion-slide  *ngFor="let noti of eventos">
+              <ion-card >
+                <div class="contenedor-foto-info">
+                    <img (click)="detalleNoticia(noti.urlImagen,noti.tituloEvento,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcionEvento,noti.index,noti.fechaInicio,noti.fechaFin)" [src]="noti.urlImagen" />
+                </div>
+               
+                <ion-item>   
+                  <h2 class="tituloNoticia" >{{noti.tituloEvento}}</h2>
+                  <p>{{noti.fechaFin}} - {{noti.fechaInicio}}</p>
+                </ion-item>
+               
+                <ion-row no-padding>              
+                  <ion-col text-right>
+                    <button (click)="compartir(noti.urlImagen)" ion-button clear small color="danger" icon-start>
+                      <ion-icon name='share-alt'></ion-icon>
+                      Compartir
+                    </button>
+                  </ion-col>
+                </ion-row>
+              </ion-card>
+          </ion-slide>
+      </ion-slides>
 
     <div class="wrapper-perfil">
 
@@ -63,8 +130,6 @@
       <ion-option *ngFor="let muni of departamentos " value="{{muni.uid}}">{{muni.nombreDepartamento}}</ion-option>
     </ion-select>
   </ion-item>
-
-
 
 
   <ion-item>
