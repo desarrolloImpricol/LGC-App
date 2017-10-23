@@ -24,7 +24,7 @@ export class RecuperarClavePage {
   }
 
 
-  resetPassword(): firebase.Promise<void> {
+  resetPassword() {
     return firebase.auth().sendPasswordResetEmail(this.email.trim()).then( newUser => {
 
         alert("Email enviado");

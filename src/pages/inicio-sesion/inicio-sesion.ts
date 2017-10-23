@@ -4,7 +4,7 @@ import { RecuperarClavePage } from '../../pages/recuperar-clave/recuperar-clave'
 import firebase from 'firebase';
 import { RegistroPage } from '../../pages/registro/registro';
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook';
-import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
+import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database-deprecated';
 import { Storage } from '@ionic/storage';
 import { TwitterConnect } from '@ionic-native/twitter-connect';
 import { GooglePlus } from '@ionic-native/google-plus';

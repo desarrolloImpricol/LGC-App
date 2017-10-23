@@ -25,7 +25,7 @@ import { InicioSesionPage } from '../pages/inicio-sesion/inicio-sesion';
 import { PerfilClientePage } from '../pages/perfil-cliente/perfil-cliente';
 import { BusquedaAvanzadaPage } from '../pages/busqueda-avanzada/busqueda-avanzada';
 import { AngularFireModule } from 'angularfire2';
-import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { AngularFireDatabaseModule } from 'angularfire2/database-deprecated';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { SecureStorage } from '@ionic-native/secure-storage';
 import { NativeStorage } from '@ionic-native/native-storage';

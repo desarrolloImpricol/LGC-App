@@ -23,7 +23,7 @@ export class AuthServiceProvider {
     return this.currentUser !== null;
   }
 
-  signInWithFacebook(): firebase.Promise<any> {
+  signInWithFacebook() {
     return this.afAuth.auth.signInWithPopup(new firebase.auth.FacebookAuthProvider());
   }
 

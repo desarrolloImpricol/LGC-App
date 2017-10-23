@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams ,LoadingController} from 'ionic-angular';
-import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
+import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database-deprecated';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Ng2ImgToolsService } from 'ng2-img-tools';
 import { Subject } from 'rxjs/Subject';
+import firebase from 'firebase';
 /**
  * Generated class for the CrearAmarillaPage page.
  *

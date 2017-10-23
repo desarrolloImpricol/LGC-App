@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, Platform } from 'ionic-angular';
-import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
+import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database-deprecated';
 import { CundiAmarillasPage } from '../../pages/cundi-amarillas/cundi-amarillas';
 import { CundiEmpleosPage } from '../../pages/cundi-empleos/cundi-empleos';
 import { CundiEventosPage } from '../../pages/cundi-eventos/cundi-eventos';

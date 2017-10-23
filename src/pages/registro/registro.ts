@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
 import { AuthServiceProvider } from '../../providers/auth-service/auth-service';
 import firebase from 'firebase';
-import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
+import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database-deprecated';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Ng2ImgToolsService } from 'ng2-img-tools';
@@ -107,7 +107,7 @@ export class RegistroPage {
 
 
   //registro via email
-  signupUser(email: string, password: string): firebase.Promise<any> {
+  signupUser(email: string, password: string) {
     //funcion que registra un usuario apartir de un email  y de una clave
     return firebase.auth().createUserWithEmailAndPassword(this.correo.trim(), this.clave.trim())
       .then(newUser => {
