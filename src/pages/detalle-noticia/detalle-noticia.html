@@ -14,24 +14,28 @@
 
 
 <ion-content padding>
+  <ion-card>
 
-  <ion-item>
+  <ion-item  color="colorNoticias" >
     <ion-avatar item-start>
       <img [src]="imagenCreador">
     </ion-avatar>
-    <h2>{{nombreCreador}}</h2>
-    <p>Publicada el {{fechaCreacion}}</p>
+    <p class="fuenteDetalleNoticia" >{{nombreCreador}}</p>
+    <p>{{fechaCreacion}}</p>
   </ion-item>
 
    
    <img  [src]="urlImagen"/>
-    <ion-card-title>
-    {{tituloNoticia}}
-      </ion-card-title>
-       <p>
-     {{descripcion  }}
-   </p>
-   
+    <div class="divContenido">
+      <span class="tituloNoticia">
+        {{tituloNoticia}}
+      </span>
+    
+      
+      <span class="municipioNoticia">Bogota</span>
+      <span class="descripcionNoticiaDetalle">{{descripcion}} </span>
+
+      </div>
    
 
   <!-- <div class="header-noticia  seccion-noticia content-noticia " style="justify-content:space-between; margin-bottom: 2px; ">
@@ -45,23 +49,28 @@
     
    
 
-       <ion-row no-padding>
-      
-   
-      <ion-col text-right>
-        <button ion-button clear small color="danger" icon-start>
-          <ion-icon name='share-alt'></ion-icon>
-          Compartir
-        </button>
-      </ion-col>
-    </ion-row>
+      <ion-row no-padding class="centrado">
+          <!--  <ion-col text-right>
+              <button (click)="compartir(noti.urlImagen)" ion-button clear small color="colorNoticias" icon-start>
+                <img  class="iconoGuardado" />
+                Me interesa
+              </button>
+              
+            </ion-col>-->
+            <ion-col>
+            <button (click)="compartir(noti.urlImagen)" ion-button clear small color="colorNoticias" icon-start>
+               <img class="iconoCompartir" />
+                Compartir
+              </button>
+            </ion-col>
+          </ion-row>
 
  
    <br>
   
 
 
-
+</ion-card>
 
 
 </ion-content>

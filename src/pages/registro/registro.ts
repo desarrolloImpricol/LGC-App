@@ -46,7 +46,8 @@ export class RegistroPage {
   uidDepartamento: any;
   uidMunicipio: any;
   deptos:any;
-
+  
+  departamentoApp :any = "/Cundinamarca";
 
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public af: AngularFireDatabase, private _auth: AuthServiceProvider, public afu: AngularFireAuthModule, public camera: Camera, public ng2ImgToolsService: Ng2ImgToolsService, public loadingCtrl: LoadingController) {
@@ -56,7 +57,7 @@ export class RegistroPage {
     this.fotoCliente = "-";
     //Consume lista de departamentos
     //consulta departamentos  
-    this.af.list('/departamentos/', { preserveSnapshot: true })
+    this.af.list(this.departamentoApp+'/departamentos/', { preserveSnapshot: true })
       .subscribe(snapshots => {
         this.deptos = [];
         snapshots.forEach(snapshot1 => {
@@ -81,7 +82,7 @@ export class RegistroPage {
     //objeto rxjs
     let subject = new Subject();
     //crea consulta
-    const queryObservable = this.af.list('/municipios', {
+    const queryObservable = this.af.list(this.departamentoApp+'/municipios', {
       query: {
         orderByChild: 'uidDepartamento',
         equalTo: subject
@@ -117,7 +118,7 @@ export class RegistroPage {
           tipo = "empresa";
         }
         //guarda datos en la tabla
-        firebase.database().ref('/userProfile').child(newUser.uid)
+        firebase.database().ref(this.departamentoApp+'/userProfile').child(newUser.uid)
           .set(
           {
             email: this.correo,
@@ -126,12 +127,12 @@ export class RegistroPage {
           }
           );
         //actualiza notificaciones de usuario
-        firebase.database().ref('/notificacionesUsuario').child(newUser.uid)
+        firebase.database().ref(this.departamentoApp+'/notificacionesUsuario').child(newUser.uid)
           .set(
           {
             uid: newUser.uid,
-            uidMunicipio: this.uidMunicipio,
-            uidDepartamento: this.uidDepartamento,
+           // uidMunicipio: this.uidMunicipio,
+           // uidDepartamento: this.uidDepartamento,
             interesSoloMunicipio: true
           }
           );
@@ -294,7 +295,7 @@ export class RegistroPage {
   //funcion  que asinga la foto de eprfil del usuario que se rgistra
   updateFotoPerfil(uid, url) {
     //actualiza foto en tabla de perfil
-    firebase.database().ref('/userProfile').child(uid)
+    firebase.database().ref(this.departamentoApp+'/userProfile').child(uid)
       .update(
       { photoUrl: url }
       );

@@ -48,7 +48,9 @@ $colors: (
   colorGoogle: #dd4b39,
   colorTwitter :#00aced,
   colorFacebook:#3B5998,
-  colorFondoMenu:#252932
+  colorFondoMenu:#252932,
+  colorNegroMenu:#1F242E,
+  colorNegroMenuOpciones:#131A21
 );
 
 
@@ -57,7 +59,9 @@ $colors: (
 // iOS only Sass variables can go here
 
 
-
+$toolbar-md-active-color:                 #ffcc29;
+$toolbar-md-inactive-color:               #fff;
+$segment-button-md-text-color-activated:  #ffcc29;
 
 // App Material Design Variables
 // --------------------------------------------------

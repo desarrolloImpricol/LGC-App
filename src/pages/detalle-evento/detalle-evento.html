@@ -36,66 +36,47 @@
     {{descripcion}}
   </p>-->
 
+  <ion-card>
 
-
-  <ion-item>
+  <ion-item color="colorEvento">
     <ion-avatar item-start>
       <img [src]="imagenCreador">
     </ion-avatar>
-    <h2>{{nombreCreador}}</h2>
+    <h2 class="fuenteDetalleNoticia">{{nombreCreador}}</h2>
     <p>{{fechaInicio}} - {{fechaFin}}</p>
   </ion-item>
 
    
    <img  [src]="urlImagen"/>
-    <ion-card-title>
-    {{tituloEvento}}
-      </ion-card-title>
-       <p>
-     {{descripcion}}
-   </p>
-   
-   
+    <div class="divContenido">
+                <span class="tituloNoticia">
+                  {{tituloEvento}}
+                </span>
+                
+                <span class="municipioNoticia">Bogota</span><span class="descripcionNoticia">{{descripcion}} </span>
 
-  <!-- <div class="header-noticia  seccion-noticia content-noticia " style="justify-content:space-between; margin-bottom: 2px; ">
-    <div class="wrapper-perfil-noticias">
-      <img class="img-circle-perfil-noticias" [src]="imagenCreador">
-    </div>
-    <span class="titulo-blanco fuente-light fuente-15 nombreNoticia">{{nombreCreador}} </span>
-    
-  </div>-->
-   
-    
-   
+              </div>
 
-       <ion-row no-padding>
-      
-   
-      <ion-col text-right>
-        <button ion-button clear small color="danger" icon-start>
-          <ion-icon name='share-alt'></ion-icon>
-          Compartir
-        </button>
-      </ion-col>
-    </ion-row>
-
-<!--
-  <ion-item>
-    <ion-label floating>Descripción</ion-label>
-    <ion-textarea disabled=true type="text" [(ngModel)]="descripcion"></ion-textarea>
-  </ion-item>
-
-  <ion-item>
-    <ion-label floating>Fecha inicio</ion-label>
-    <ion-datetime disabled=true displayFormat="MM/DD/YYYY" [(ngModel)]="fechaInicio"></ion-datetime>
-  </ion-item>
-
-  <ion-item>
-    <ion-label floating>Fecha fin</ion-label>
-    <ion-datetime disabled=true displayFormat="MM/DD/YYYY" [(ngModel)]="fechaFin"></ion-datetime>
-  </ion-item>-->
-
-
-
+          <!--<ion-item>
+            <ion-icon name="wine" item-left large ></ion-icon>
+            <h2>Institute of Fine Cocktails</h2>
+            <p>14 S. Hop Avenue, Madison, WI 53703</p>
+          </ion-item>-->
+          <ion-row no-padding class="centrado">
+                <!--  <ion-col text-right>
+                    <button (click)="compartir(noti.urlImagen)" ion-button clear small color="colorEvento" icon-start>
+                      <img  class="iconoGuardadoEvento" />
+                      Me interesa
+                    </button>
+                    
+                  </ion-col>-->
+                  <ion-col>
+                  <button (click)="compartir(noti.urlImagen)" ion-button clear small color="colorEvento" icon-start>
+                     <img class="iconoCompartirEvento" />
+                      Compartir
+                    </button>
+                  </ion-col>
+                </ion-row>
+ </ion-card>
 
 </ion-content>

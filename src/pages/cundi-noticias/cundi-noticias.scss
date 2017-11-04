@@ -58,6 +58,23 @@ page-cundi-noticias {
 	width: 70%;
 	height: 90%;
 	//left :10% ;
-
-
 }
+
+.iconoGuardado {
+	width:20px;
+	height:20px;
+	content : url('../assets/icon/Morado/guardado.png');
+}
+
+
+.iconoNoGuardado {
+	width:20px;
+	height:20px;
+	content : url('../assets/icon/Morado/noGuardado.png');
+}
+.iconoCompartir {
+	width:20px;
+	height:20px;
+	content : url('../assets/icon/Morado/compartir.png');
+}
+

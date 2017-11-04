@@ -5,6 +5,7 @@ import { DetalleNoticiaPage } from '../../pages/detalle-noticia/detalle-noticia'
 import { SocialSharing } from '@ionic-native/social-sharing';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
 import { File } from '@ionic-native/file';
+import { Storage } from '@ionic/storage';
 
 /**
  * Generated class for the CundiNoticiasPage page.
@@ -18,32 +19,78 @@ import { File } from '@ionic-native/file';
   selector: 'page-cundi-noticias',
   templateUrl: 'cundi-noticias.html',
 })
+
 export class CundiNoticiasPage {
   noticias:any = [] ;
   itemRef :any ;
-  constructor(public navCtrl: NavController, public navParams: NavParams , public af: AngularFireDatabase ,private socialSharing: SocialSharing  ,private transfer: FileTransfer, private file: File) {
-    //consulta la informacion de tdas las noticias 
-    this.af.list('/Noticias/' ,{ preserveSnapshot: true})
-        .subscribe(snapshots=>{
-            this.noticias = [];
-            snapshots.forEach(snapshot1 => {
-             let data = snapshot1.val();
-             console.log("uid creador = " + data.uidCreador);
-                  this.itemRef = this.af.object('userProfile/'+data.uidCreador,  { preserveSnapshot: true });
-                  this.itemRef.subscribe(snapshot => {
-                    //console.log(action.type);
-                    console.log("llave" + snapshot.key)
-                    console.log('data ' + JSON.stringify(snapshot.val()));
-                    data.urlImagenCreador  = snapshot.val().photoUrl;
-                    data.nombreUsuario = snapshot.val().nombreUsuario;
-                    data.index =  snapshot1.key ;
-                    console.log("add noticia");
-                    this.noticias.push(data);
+  departamentoApp :any = "/Cundinamarca";
+  item:any ; 
+  perfil :any  = []; 
+  constructor(public navCtrl: NavController, public navParams: NavParams , public af: AngularFireDatabase ,private socialSharing: SocialSharing  ,private transfer: FileTransfer, private file: File ,public storage: Storage) {
+    //obtiene informacion del usuario
+    this.storage.get('userData')
+      .then(
+      data => {
+        console.log(JSON.stringify(data)),
+        console.log("finaliza");
+        console.log(data.uid);
+        //consulta informacion de perfil 
+        this.item = this.af.object(this.departamentoApp+'/userProfile/' + data.uid, { preserveSnapshot: true });
+        this.item.subscribe(snapshot => {
+          console.log(snapshot.key);
+          console.log(snapshot.val());
+          //carga informacion a las variables 
+          this.perfil = snapshot.val();
+          this.perfil.uid = data.uid;
+
+
+              //consulta la informacion de tdas las noticias 
+              this.af.list(this.departamentoApp+'/Noticias/' ,{ preserveSnapshot: true})
+                  .subscribe(snapshots=>{
+                      this.noticias = [];
+                      snapshots.forEach(snapshot1 => {
+                       let data = snapshot1.val();
+                       console.log("uid creador = " + data.uidCreador);
+                            this.itemRef = this.af.object(this.departamentoApp+'/userProfile/'+data.uidCreador,  { preserveSnapshot: true });
+                            this.itemRef.subscribe(snapshot => {
+                              //console.log(action.type);
+                              console.log("llave" + snapshot.key)
+                              console.log('data ' + JSON.stringify(snapshot.val()));
+                              data.urlImagenCreador  = snapshot.val().photoUrl;
+                              data.nombreUsuario = snapshot.val().nombreUsuario;
+                              data.index =  snapshot1.key ;
+                                //verifica si esa noticia esta guardada  como favorita 
+                               const infoGuardado1 = this.af.object(this.departamentoApp+'/NoticiasGuardadasUsuario/'+this.perfil.uid+"/"+ snapshot1.key, { preserveSnapshot: true });
+                                infoGuardado1.subscribe(snapshot3 => {
+                                 console.log("entra consulta si guardo noticia ");
+                                  console.log(this.departamentoApp+'/NoticiasGuardadasUsuario/'+this.perfil.uid+"/"+ snapshot1.key);
+                                  console.log(snapshot3.val());
+                                //  console.log(snapshot.val());
+                                  if(snapshot3.val() === null ){
+                                     console.log("noticia no guardada");
+                                      data.guardado = false ;
+                                  }else{
+                                    console.log("noticia guardada");
+                                      data.guardado  = true ;
+                                  }
+                                 });
+                              console.log("add noticia");
+                              this.noticias.push(data);
+                            });
+                       console.log("key ="+snapshot1.key);
+                       console.log("Value ="+ JSON.stringify(snapshot1.val()));
+                      });
                   });
-             console.log("key ="+snapshot1.key);
-             console.log("Value ="+ JSON.stringify(snapshot1.val()));
-            });
+
+
         });
+      },
+      error => { //si no esta guardado envia a la pagina de login
+        console.error("error = " + error);
+      }
+      );
+
+
 
   }
 
@@ -93,6 +140,39 @@ export class CundiNoticiasPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad CundiNoticiasPage');
+  }
+
+
+
+  guardarNoticia(noticia){
+ 
+    console.log("id  = " +  noticia.index);
+    console.log("id  perfil= " +  this.perfil.uid);
+
+     if(noticia.guardado){
+       const itemsTattoo = this.af.object(this.departamentoApp+'/NoticiasGuardadasUsuario/'+this.perfil.uid+"/"+noticia.index);
+        itemsTattoo.remove();
+        noticia.guardado = false;
+        //this.tatuajeGuardado = false ;
+     }else{
+       const itemsTattoo = this.af.object(this.departamentoApp+'/NoticiasGuardadasUsuario/'+this.perfil.uid+"/"+noticia.index);
+       const promise1 =   itemsTattoo.set(
+                                     {
+                                        noticia : noticia,
+                                        uid : noticia.index          
+                                     }
+                                   );
+        promise1.then(_ =>
+          console.log('Noticia guardaa !!!')
+
+
+        ).catch(err => console.log(err, 'You dont have access!'));
+       // this.tatuajeGuardado = true;
+       noticia.guardado = true;
+
+
+     }
+
   }
 
 }

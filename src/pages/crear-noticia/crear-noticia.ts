@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, LoadingController ,ToastController } from 'ionic-angular';
 import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database-deprecated';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/observable/of';
@@ -8,7 +8,9 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Ng2ImgToolsService } from 'ng2-img-tools';
 import firebase from 'firebase';
 import { Storage } from '@ionic/storage';
-
+import { FileChooser } from '@ionic-native/file-chooser';
+import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
+import { FilePath } from '@ionic-native/file-path';
 
 
 /**
@@ -38,7 +40,7 @@ export class CrearNoticiaPage {
   perfil: any;
   fechaNoticia: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public af: AngularFireDatabase, public camera: Camera, public ng2ImgToolsService: Ng2ImgToolsService, public loadingCtrl: LoadingController, public storage: Storage) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public af: AngularFireDatabase, public camera: Camera, public ng2ImgToolsService: Ng2ImgToolsService, public loadingCtrl: LoadingController, public storage: Storage,private fileChooser: FileChooser,private transfer: FileTransfer,private Toast:ToastController,private filePath: FilePath) {
     //inicializa  variable de foto de  noticia
     this.fotoNoticia = "-";
     //obtiene informacion del usuario
@@ -347,5 +349,91 @@ export class CrearNoticiaPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad CrearNoticiaPage');
   }
+
+  seleccionarArchivo(){
+
+    this.fileChooser.open()
+        .then(uri => {
+             console.log(uri) ;
+             let data = uri.split("/");
+             console.log("cantidad = " + data.length);
+             console.log(data[data.length-1]);
+             let data22  = data[data.length-1] ; 
+               this.filePath.resolveNativePath(uri)
+                .then(filePath =>{ 
+                  console.log("file ok");
+                  console.log(filePath);
+                })
+                .catch(err => {
+                  console.log("file path error");
+                  console.log(err);
+
+                });
+
+            
+            // this.readimage(uri);
+
+          })
+        .catch(e => {
+          console.log(e)
+        });
+  }
+
+
+
+
+
+
+
+ filee:any;
+  /*upload2() {
+
+
+this.filee = { name: "copoutrecording.mp3" };
+
+   File.readAsDataURL(cordova.file.externalRootDirectory, this.filee.name).then((data: any) => {
+   if (data) {
+   var blob = new Blob([data], { type: "audio/mp3" }); 
+   this.fbd.uploadrecording(blob);
+  }
+});
+}*/
+
+
+readimage(url) {
+    (<any>window).resolveLocalFileSystemURL(url, (res) => {
+      res.file((resFile) => {
+        var reader = new FileReader();
+        reader.readAsArrayBuffer(resFile);
+        reader.onloadend = (evt: any) => {
+          var imgBlob = new Blob([evt.target.result], { type: 'image/jpeg'});
+          //do what you want to do with the file
+        }
+      })
+    })
+  }
+
+   upload(url) {
+  let options: FileUploadOptions = {
+     fileKey: 'file',
+     fileName: 'name.mp3',
+     headers: {}
+    
+  }
+  const fileTransfer: FileTransferObject = this.transfer.create();
+
+
+  fileTransfer.upload(url, '<api endpoint>', options)
+   .then((data) => {
+     console.log("pasa");
+     console.log(data);
+     // success
+   }, (err) => {
+     console.log("error");
+     console.log(JSON.stringify(err));
+     // error
+   })
+}
+
 
 }

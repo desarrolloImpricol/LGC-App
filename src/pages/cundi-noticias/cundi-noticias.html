@@ -47,21 +47,42 @@
 
   <ion-card *ngFor="let noti of noticias ">
    
-
+   <ion-item>
+                <ion-avatar item-start>
+                  <img [src]="noti.urlImagenCreador">
+                </ion-avatar>
+                <h2>{{noti.nombreUsuario}}</h2>
+                <p>{{noti.fechaNoticia}}</p>
+              </ion-item>
+  <div class="contenedor-foto-info">
     <img (click)="detalleNoticia(noti.urlImagen,noti.tituloNoticia,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcion,noti.index,noti.fechaNoticia)"  [src]="noti.urlImagen" />
-
-     <ion-card-title>
+</div>
+     <!--<ion-card-title>
     {{noti.tituloNoticia}}
-      </ion-card-title>
-      <p>
-        Fecha: {{noti.fechaNoticia}} 
-      </p>
-        <ion-row no-padding>
+      </ion-card-title>-->
+      <div class="divContenido">
+      <span class="tituloNoticia">
+        {{noti.tituloNoticia}}
+      </span>
+    
       
-   
+      <span class="municipioNoticia">Bogota</span><span class="descripcionNoticia">{{noti.descripcion}} </span>
+
+      </div>
+      
+    
+    <ion-row no-padding>
       <ion-col text-right>
-        <button (click)="compartir(noti.urlImagen)" ion-button clear small color="danger" icon-start>
-          <ion-icon name='share-alt'></ion-icon>
+        <button (click)="guardarNoticia(noti)" ion-button clear small color="colorNoticias" icon-start>
+           <img  *ngIf="noti.guardado" class="iconoGuardado" />
+                <img  *ngIf="!noti.guardado" class="iconoNoGuardado" />
+          Me interesa
+        </button>
+        
+      </ion-col>
+      <ion-col>
+      <button (click)="compartir(noti.urlImagen)" ion-button clear small color="colorNoticias" icon-start>
+         <img class="iconoCompartir" />
           Compartir
         </button>
       </ion-col>

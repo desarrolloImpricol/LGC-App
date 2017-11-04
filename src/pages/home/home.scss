@@ -9,14 +9,23 @@ page-home {
 }
 
 .fuente-blanco{
-	color:#ededed;
+	color:white;
+}
+.fuenteMenu{
+
+	color: #93959B ; 
 }
 .fondoMenu{
-	background-color: #252932;
+	background-color: #131a21;
 }
 .texto-margen-izquierda{
 
 	margin-left:1.5rem;
+}
+
+.bordeMenu{
+   border-style: solid !important;
+    border-color: red !important;
 }
 
 .card {
@@ -35,15 +44,89 @@ page-home {
     padding: 2px 16px;
 }
 
+
+.divContenido {
+	text-align: justify !important;
+    text-justify: inter-word !important;
+    margin: 14px !important;
+}
+
 .tituloNoticia {
-    height: 3.2rem ;
-    overflow: hidden;
-	margin: 0px;
-	list-style: none;
-	padding: 0px;
+
+	padding-left : 10px !important;
+	font-weight: bold;
+	font-size:9pt;
+	display:flex;
+	overflow :hidden !important;
+
+}
+
+.municipioNoticia {
+
+	padding-left : 10px !important;
+	font-weight: bold;
+	font-size:7pt;
+
+}
+
+.descripcionNoticia{
+
+	padding-left : 10px !important;
+	//font-weight: bold;
+	justify-text:center;
+	font-size:7pt;
+
 	display: flex;
 	flex-wrap: wrap;
 	align-items: flex-start;
+	overflow: hidden;
+	height: 32pt;
+}
 
 
+.descripcionNoticiaDetalle{
+
+	padding-left : 10px !important;
+	//font-weight: bold;
+	justify-text:center;
+	font-size:7pt;
+
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	
+	//height: 32pt;
+}
+
+.iconoPerfil {
+	content :url('../assets/icon/');
+}
+
+.iconoFavoritos {
+    padding:2px;
+	width:25px;
+	height:25px;
+	content :url('../assets/icon/Gris/favoritos.png');
+}
+
+.iconoBusqueda{
+    padding:2px;
+	width:25px;
+	height:25px;
+	content :url('../assets/icon/Gris/buscar.png');
+}
+
+.iconoCerrarSesion{
+    padding:2px;
+	width:25px;
+	height:25px;
+	content :url('../assets/icon/Gris/cerrar.png');
+}
+
+
+.iconoPerfil{
+    padding:2px;
+	width:25px;
+	height:25px;
+	content :url('../assets/icon/Gris/perfil.png');
 }

@@ -1,0 +1,27 @@
+page-favoritos {
+
+}
+
+
+/*---------------botones artistas PERFIL------------------*/
+.content-botones-perfil {
+	display:flex;
+	width:100%;
+	flex-wrap: wrap;
+}
+.content-botones-perfil button {
+	width:33.3%;  //original
+	//width:50%;
+	flex-shrink: 0;
+	border: 1px solid #ffcc29 ;
+	padding: 9pt  7pt 7pt 7pt ;
+	color: #97999C;
+	font-family: 'gotham-light';
+	font-size: 1.3rem;
+	line-height: 1.5rem;
+	background-color: white;
+}
+.content-botones-perfil button.activo {
+    background-color: #ffcc29;
+    color: #fff;
+}

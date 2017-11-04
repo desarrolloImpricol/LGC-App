@@ -39,25 +39,46 @@
 
         <ion-card>
 
+          <ion-item>
+                <ion-avatar item-start>
+                  <img [src]="noti.urlImagenCreador">
+                </ion-avatar>
+                <h2 class="fuente-naranja">{{noti.nombreUsuario}}</h2>
+                <p>{{noti.fechaInicio}} - {{noti.fechaFin}}</p>
+              </ion-item>
+
          <img (click)="detalleNoticia(noti.urlImagen,noti.tituloEvento,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcionEvento,noti.index,noti.fechaInicio,noti.fechaFin)" [src]="noti.urlImagen" />
          
-          <ion-item>
-            
-            <h2>{{noti.tituloEvento}}</h2>
-            <p>{{noti.fechaFin}} - {{noti.fechaInicio}}</p>
-          </ion-item>
+          <div class="divContenido">
+                <span class="tituloNoticia">
+                  {{noti.tituloEvento}}
+                </span>
+                
+                <span class="municipioNoticia">Bogota</span><span class="descripcionNoticia">{{noti.descripcionEvento}} </span>
+
+              </div>
 
           <!--<ion-item>
             <ion-icon name="wine" item-left large ></ion-icon>
             <h2>Institute of Fine Cocktails</h2>
-            <p>14 S. Hop Avenue, Madison, WI 53703</p>
+            <p>14 S. Hop Avenue, Madison, WI 453703</p>
           </ion-item>-->
-            <ion-col text-right>
-            <button (click)="compartir(noti.urlImagen)" ion-button clear small color="danger" icon-start>
-              <ion-icon name='share-alt'></ion-icon>
-              Compartir
-            </button>
-          </ion-col>
+          <ion-row no-padding>
+                  <ion-col text-right>
+                    <button (click)="guardarEvento(noti)" ion-button clear small color="colorEvento" icon-start>
+                      <img  *ngIf="noti.guardado"  class="iconoGuardadoEvento" />
+                      <img  *ngIf="!noti.guardado" class="iconoNoGuardadoEvento" />
+                      Me interesa
+                    </button>
+                    
+                  </ion-col>
+                  <ion-col>
+                  <button (click)="compartir(noti.urlImagen)" ion-button clear small color="colorEvento" icon-start>
+                     <img class="iconoCompartirEvento" />
+                      Compartir
+                    </button>
+                  </ion-col>
+                </ion-row>
         </ion-card>
 
   </div>

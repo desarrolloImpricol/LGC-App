@@ -15,10 +15,14 @@
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
 
+
+
 .item-inner , ion-item {
 border-bottom-color: transparent !important;
 box-shadow: none !important;
 }
+
+
 .fuente-amarilla{
 	font-color:#ffcc29;
 	color: #ffcc29;
@@ -28,12 +32,31 @@ box-shadow: none !important;
 	background-color:#ffcc29;
 
 }
+.fuente-morada{
+    font-color:#8a2e96 !important;
+	color:#8a2e96 !important;
 
-
-.swiper-pagination-bullet-active {
-	background: #ffcc29;
-	opacity: 1;
 }
+.fuente-naranja{
+	color:#eb8636 !important;
+}
+.fuenteDetalleNoticia{
+
+	color:white !important;
+}
+.noticias {
+	.swiper-pagination-bullet-active {
+		background: #8a2e96;
+		opacity: 1;
+	}
+}
+.eventos{
+	.swiper-pagination-bullet-active  {
+	background: #eb8636;
+	opacity: 1;
+ }	
+}
+
 .fondo-gris-claro{
 
 	background-color:#ededed;
@@ -51,7 +74,7 @@ box-shadow: none !important;
 	//overflow: hidden;
 	border-radius: 50%;
 	position: relative;
-  margin-left: 20%;
+    margin-left: 20%;
 	//background-color: red;
 	flex-shrink: 0;
 	//min-width: 30%;
@@ -69,7 +92,7 @@ box-shadow: none !important;
 	bottom: -2.2rem;
 	z-index :10;
 	font-size:1.0rem;
-  text-align: center;
+    text-align: center;
 
 }
 
@@ -86,8 +109,6 @@ box-shadow: none !important;
 	height: 90%;
 	//left :10% ;
 }
-
-
 
 .contenedor-foto-info {
  width: 100%;

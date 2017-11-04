@@ -11,38 +11,130 @@
 
 <ion-menu [content]="content" persistent="true">
   <ion-header>
-    <ion-toolbar  color="colorAmarillo">
+    <ion-toolbar  color="colorNegroMenu">
       <ion-title>Menu</ion-title>
     </ion-toolbar>
   </ion-header>
   <ion-content class="fondoMenu">
-    <br>
-    <span class="fuente-blanco texto-margen-izquierda ">Editar perfil</span>
+    <!--<br>
+    <span class="fuenteMenu texto-margen-izquierda ">Editar perfil</span>
     <br>
      <div class="wrapper-perfil">
       <img class="img-circle-perfil" [src]="perfil.photoUrl">
     </div>
     <br>
     <div style="text-align: center;">
-      <span class="fuente-10 fuente-centrado  fuente-blanco "> {{perfil.nombreUsuario}} </span>
+      <span class="fuente-10 fuente-centrado  fuenteMenu "> {{perfil.nombreUsuario}} </span>
     </div>
-    <br>
+    <br>-->
     <ion-list >
-      <button  class="fondoMenu fuente-blanco" ion-item (click)="irNoticias()">
-        Noticias
+      <button  class="fondoMenu fuenteMenu bordeMenu" ion-item (click)="openPerfilMenu()">
+        <img class="iconoPerfil" />
+        Mi perfil
       </button>
-      <button  class="fondoMenu fuente-blanco" ion-item (click)="irEventos()">
-        Eventos
+
+      <div *ngIf="mostrarMenuPerfil">
+          <button  class="fondoMenu fuenteMenu bordeMenu" ion-item (click)="irPerfilCliente()">
+              Ver perfil
+          </button>
+          <button  class="fondoMenu fuenteMenu bordeMenu" ion-item >
+              Editar perfil
+          </button>
+          <button  class="fondoMenu fuenteMenu bordeMenu" ion-item >
+              Publicaciones
+          </button>
+          <button  class="fondoMenu fuenteMenu bordeMenu" ion-item (click)="irPublicar()">
+              Publicar
+          </button>
+      </div>
+
+      <button  class="fondoMenu fuenteMenu" ion-item (click)="irFavoritos()">
+        <img class="iconoFavoritos" />
+        Favoritos
       </button>
-      <button  class="fondoMenu fuente-blanco" ion-item (click)="irAmarillas()">
-        Amarillas
-      </button>
-      <button   class="fondoMenu fuente-blanco" ion-item (click)="irEmpleos()">
-        Empleos
-      </button>
-      <button   class="fondoMenu fuente-blanco" ion-item (click)="irBusquedaAvanzada()">
+      <button  class="fondoMenu fuenteMenu" ion-item (click)="openBusquedaMenu()">
+        <img class="iconoBusqueda" />
         Busqueda avanzada
       </button>
+      <div class="fondoMenu" *ngIf="mostrarBusqueda">
+        <ion-list>
+          <ion-item class="fondoMenu fuente-blanco bordeMenu">
+            <ion-label class="fuente-blanco">¿Qué busca?</ion-label>
+            <ion-select [(ngModel)]="queBusca">
+              <ion-option value="noticias">Noticias</ion-option>
+              <ion-option value="eventos">Eventos</ion-option>
+            <!--  <ion-option value="empleos">Empleos</ion-option>
+              <ion-option value="amarillas">Amarillas</ion-option>-->
+              
+              
+            </ion-select>
+          </ion-item>
+
+           <ion-item class="fondoMenu">
+            <ion-label class="fuente-blanco">¿Donde lo busca?</ion-label>
+            <ion-select [(ngModel)]="dondebusca">
+             
+              <ion-option *ngFor="let muni of municipios " value="{{muni.uid}}">{{muni.nombreMunicipio}}</ion-option>                                          
+            </ion-select>
+          </ion-item>
+
+           <ion-item class="fondoMenu" *ngIf="queBusca === 'eventos'">
+            <ion-label class="fuente-blanco">Tipo publicación?</ion-label>
+            <ion-select [(ngModel)]="tipoPublicacion">
+         
+
+              <ion-option *ngFor="let muni of categoriasEventos " value="{{muni.uid}}">{{muni.nombre}}</ion-option>                                               
+            </ion-select>
+          </ion-item>
+
+           <ion-item class="fondoMenu"  *ngIf="queBusca === 'eventos'">
+            <ion-label class="fuente-blanco" >Fecha publicacion evento</ion-label>
+            <ion-select [(ngModel)]="fechaFiltroEvento">
+              <ion-option value="enero">Enero</ion-option>
+              <ion-option value="febrero">Febrero</ion-option>
+              <ion-option value="marzo">Marzo</ion-option>                                          
+              <ion-option value="abril">Abril</ion-option>                                          
+              <ion-option value="mayo">Mayo</ion-option>                                          
+              <ion-option value="junio">Junio</ion-option>                                          
+              <ion-option value="julio">Julio</ion-option>                                          
+              <ion-option value="agosto">Agosto</ion-option>                                          
+              <ion-option value="septiembre">Septiembre</ion-option>                                          
+              <ion-option value="octubre">Octubre</ion-option>                                          
+              <ion-option value="noviembre">Noviembre</ion-option>                                          
+              <ion-option value="diciembre">Diciembre</ion-option>                                          
+            </ion-select>
+          </ion-item>
+          <ion-item class="fondoMenu"  *ngIf="queBusca === 'noticias'">
+            <ion-label class="fuente-blanco" >Fecha publicacion noticia</ion-label>
+            <ion-select [(ngModel)]="fechaFiltroNoticia">
+               <ion-option value="enero">Enero</ion-option>
+              <ion-option value="febrero">Febrero</ion-option>
+              <ion-option value="marzo">Marzo</ion-option>                                          
+              <ion-option value="abril">Abril</ion-option>                                          
+              <ion-option value="mayo">Mayo</ion-option>                                          
+              <ion-option value="junio">Junio</ion-option>                                          
+              <ion-option value="julio">Julio</ion-option>                                          
+              <ion-option value="agosto">Agosto</ion-option>                                          
+              <ion-option value="septiembre">Septiembre</ion-option>                                          
+              <ion-option value="octubre">Octubre</ion-option>                                          
+              <ion-option value="noviembre">Noviembre</ion-option>                                          
+              <ion-option value="diciembre">Diciembre</ion-option>                                          
+            </ion-select>
+          </ion-item>
+        </ion-list>
+        <button [disabled]="queBusca === '-'" ion-button full color="colorNegroMenuOpciones" (click)="buscarMenu()">BUSCAR</button>
+
+      </div>
+      <button   class="fondoMenu fuenteMenu" ion-item (click)="cerrarSesion()" >
+        <img class="iconoCerrarSesion" />
+        Cerrar sesion
+      </button>
+       <!--<button   class="fondoMenu fuenteMenu" ion-item (click)="irColombia()">
+        Municipios
+      </button>
+      <button   class="fondoMenu fuenteMenu" ion-item (click)="irBusquedaAvanzada()">
+        Busqueda avanzada
+      </button>-->
     </ion-list>
   </ion-content>
 </ion-menu>
@@ -51,80 +143,28 @@
 
 <ion-content padding>
 
-    <ion-fab top right edge>
+    <!--<ion-fab top right edge>
     <button ion-fab mini><ion-icon name="add"></ion-icon></button>
     <ion-fab-list>
       <button ion-fab (click)="irCrearNoticias()"><img  src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FNoticias.png?alt=media&token=0ddfa377-8706-4ab5-aef5-664acfae44bf" /></button>
        <button ion-fab (click)="irCreaEventos()"><img  src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FEventos.png?alt=media&token=f568b51d-42b8-49ed-b0ec-e6492f860065" /></button>
-     <!-- <button ion-fab><ion-icon name="logo-facebook"></ion-icon></button>
-      <button ion-fab><ion-icon name="logo-twitter"></ion-icon></button>
-      <button ion-fab><ion-icon name="logo-vimeo"></ion-icon></button>
-      <button ion-fab><ion-icon name="logo-googleplus"></ion-icon></button>-->
+    
     </ion-fab-list>
-  </ion-fab> 
+  </ion-fab> -->
 
+
+
+   
 
   <div class="centrado">
 
-    <h2 class="fuente-amarilla">Noticias</h2>
-
-    <ion-slides pager color="colorAmarillo">
-      <ion-slide  *ngFor="let noti of noticias ">
-           <ion-card >
-            <div class="contenedor-foto-info">
-              <img (click)="detalleNoticia(noti.urlImagen,noti.tituloNoticia,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcion,noti.index,noti.fechaNoticia)"  [src]="noti.urlImagen" />
-             </div>
-
-               <ion-item>          
-                  <h2 class="tituloNoticia" >{{noti.tituloNoticia}}</h2>
-                  <p>Fecha: {{noti.fechaNoticia}} </p>
-                </ion-item>
-
-             <ion-row no-padding>
-              <ion-col text-right>
-                <button (click)="compartir(noti.urlImagen)" ion-button clear small color="danger" icon-start>
-                  <ion-icon name='share-alt'></ion-icon>
-                  Compartir
-                </button>
-              </ion-col>
-            </ion-row>
-          </ion-card>
-      </ion-slide>
-    </ion-slides>
-
-    <h2 class="fuente-amarilla" >Eventos</h2>
-
-       <ion-slides pager>   
-         <ion-slide  *ngFor="let noti of eventos">
-              <ion-card >
-                <div class="contenedor-foto-info">
-                    <img (click)="detalleNoticia(noti.urlImagen,noti.tituloEvento,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcionEvento,noti.index,noti.fechaInicio,noti.fechaFin)" [src]="noti.urlImagen" />
-                </div>
-               
-                <ion-item>   
-                  <h2 class="tituloNoticia" >{{noti.tituloEvento}}</h2>
-                  <p>{{noti.fechaFin}} - {{noti.fechaInicio}}</p>
-                </ion-item>
-               
-                <ion-row no-padding>              
-                  <ion-col text-right>
-                    <button (click)="compartir(noti.urlImagen)" ion-button clear small color="danger" icon-start>
-                      <ion-icon name='share-alt'></ion-icon>
-                      Compartir
-                    </button>
-                  </ion-col>
-                </ion-row>
-              </ion-card>
-          </ion-slide>
-      </ion-slides>
-
-    <div class="wrapper-perfil">
+     <div class="wrapper-perfil">
 
       <img class="img-circle-perfil" [src]="perfil.photoUrl">
     </div>
     <span class="fuente-10 fuente-centrado  "> {{perfil.nombreUsuario}} </span>
 
-     <ion-item>
+   <!--  <ion-item>
     <ion-label floating>Departamento</ion-label>
     <ion-select multiple="false" [(ngModel)]="uidDepartamento" (ionChange)="onSelecDepartamento()">
       <ion-option *ngFor="let muni of departamentos " value="{{muni.uid}}">{{muni.nombreDepartamento}}</ion-option>
@@ -137,7 +177,7 @@
     <ion-select multiple="false" [(ngModel)]="uidMunicipio">
       <ion-option *ngFor="let muni of municipios " value="{{muni.uid}}">{{muni.nombreMunicipio}}</ion-option>
     </ion-select>
-  </ion-item>
+  </ion-item>-->
 
 
 
@@ -163,6 +203,108 @@
     </div>
 
 
+    <!--<button (click)="audioPlay()" full ion-button>play</button>
+    <button (click)="audioStop()" full ion-button>stop</button>-->
+
+    <!--<h2 class="fuente-amarilla">Noticias</h2>-->
+    
+
+    <!--<h2 class="fuente-amarilla" >Eventos</h2>-->
+
+       <ion-slides pager class="eventos">   
+         <ion-slide  *ngFor="let noti of eventos">
+              <ion-card >
+              <ion-item>
+                <ion-avatar item-start>
+                  <img [src]="noti.urlImagenCreador">
+                </ion-avatar>
+                <h2 class="fuente-naranja">{{noti.nombreUsuario}}</h2>
+                <p>{{noti.fechaInicio}} - {{noti.fechaFin}}</p>
+              </ion-item>
+                <div class="contenedor-foto-info">
+                    <img (click)="detalleEvento(noti.urlImagen,noti.tituloEvento,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcionEvento,noti.index,noti.fechaInicio,noti.fechaFin)" [src]="noti.urlImagen" />
+                </div>
+               
+                <!--<ion-item>   
+                  <h2 class="tituloNoticia" >{{noti.tituloEvento}}</h2>
+                  <p>{{noti.descripcionEvento}}</p>
+                </ion-item> -->
+               
+
+              <div class="divContenido">
+                <span class="tituloNoticia">
+                  {{noti.tituloEvento}}
+                </span>
+                
+                <span class="municipioNoticia">Bogota</span><span class="descripcionNoticia">{{noti.descripcionEvento}} </span>
+
+              </div>
+
+                  <ion-row no-padding>
+                    <ion-col text-right>
+                    <button (click)="guardarEvento(noti)" ion-button clear small color="colorEvento" icon-start>
+                      <img  *ngIf="noti.guardado"  class="iconoGuardadoEvento" />
+                      <img  *ngIf="!noti.guardado" class="iconoNoGuardadoEvento" />
+                      Me interesa
+                    </button>
+                    
+                  </ion-col>
+                  <ion-col>
+                  <button (click)="compartir(noti.urlImagen)" ion-button clear small color="colorEvento" icon-start>
+                     <img class="iconoCompartirEvento" />
+                      Compartir
+                    </button>
+                  </ion-col>
+                </ion-row>
+              </ion-card>
+          </ion-slide>
+      </ion-slides>
+
+      <ion-slides pager class="noticias">
+      <ion-slide  *ngFor="let noti of noticias ">
+           <ion-card >
+            <ion-item>
+                <ion-avatar item-start>
+                  <img [src]="noti.urlImagenCreador">
+                </ion-avatar>
+                <h2 class="fuente-morada">{{noti.nombreUsuario}}</h2>
+                <p> {{noti.fechaNoticia}}</p>
+              </ion-item>
+            <div class="contenedor-foto-info">
+              <img (click)="detalleNoticia(noti.urlImagen,noti.tituloNoticia,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcion,noti.index,noti.fechaNoticia)"  [src]="noti.urlImagen" />
+             </div>
+
+              <div class="divContenido">
+                <span class="tituloNoticia">
+                  {{noti.tituloNoticia}}
+                </span>
+                
+                <span class="municipioNoticia">Bogota</span><span class="descripcionNoticia">{{noti.descripcion}} </span>
+
+              </div>
+
+           <ion-row no-padding>
+            <ion-col text-right>
+              <button (click)="guardarNoticia(noti)" ion-button clear small color="colorNoticias" icon-start>
+                <img  *ngIf="noti.guardado" class="iconoGuardado" />
+                <img  *ngIf="!noti.guardado" class="iconoNoGuardado" />
+                Me interesa
+              </button>
+              
+            </ion-col>
+            <ion-col>
+            <button (click)="compartir(noti.urlImagen)" ion-button clear small color="colorNoticias" icon-start>
+               <img class="iconoCompartir" />
+                Compartir
+              </button>
+            </ion-col>
+          </ion-row>
+          </ion-card>
+      </ion-slide>
+    </ion-slides>
+
+
+
    
  
 <!--
@@ -171,8 +313,8 @@
     <img src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FCundieventos.png?alt=media&token=f741dd23-d44b-48a0-85eb-6f359e96d8d7" (click)="irEventos()">
     <img src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FCundiamarillas.png?alt=media&token=f4b9b296-68f8-499e-ba93-991f54add8c7" (click)="irAmarillas()">
     <img src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FCundiempleo.png?alt=media&token=5ff95ad0-92df-4caf-892d-f494c3d294f2" (click)="irEmpleos()">-->
-    <button (click)="irPublicar()" full ion-button>Publicar</button>
+   <!-- <button (click)="irPublicar()" full ion-button>Publicar</button>
 
-    <button (click)="cerrarSesion()" full ion-button>Cerrar sesion</button>
+    <button (click)="cerrarSesion()" full ion-button>Cerrar sesion</button>-->
   </div>
 </ion-content>

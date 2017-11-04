@@ -49,24 +49,12 @@
    
     <br>
 
-    <span *ngFor="let depto of deptos" >{{depto.nombreDepartamento}} </span>
-     <ion-item>
-        <ion-select [(ngModel)]="uidDepartamento" (ionChange)="onSelecDepartamento()">
-          <ion-option *ngFor="let depto of deptos" >{{depto.nombreDepartamento}}</ion-option>
-        </ion-select>
-
-        </ion-item> 
-
+   
     </ion-list>
        
    
-     <br>
     
-      <ion-select full class="inputRegistro" multiple="false" placeholder="Municipio" [(ngModel)]="uidMunicipio">
-        <ion-option *ngFor="let muni of municipios" value="{{muni.uid}}">
-          {{muni.nombreMunicipio}}
-        </ion-option>
-      </ion-select>
+  
 
   <ion-item>
     <ion-label>Soy una empresa</ion-label>

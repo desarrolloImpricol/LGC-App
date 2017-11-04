@@ -16,8 +16,12 @@ import { CrearNoticiaPage } from '../../pages/crear-noticia/crear-noticia';
 import { CrearEventoPage } from '../../pages/crear-evento/crear-evento';
 import { Subject } from 'rxjs/Subject';
 import { BusquedaAvanzadaPage } from '../../pages/busqueda-avanzada/busqueda-avanzada';
-
-
+import { DetalleNoticiaPage } from '../../pages/detalle-noticia/detalle-noticia';
+import { DetalleEventoPage } from '../../pages/detalle-evento/detalle-evento';
+import { Media, MediaObject } from '@ionic-native/media'; 
+import { NativeAudio } from '@ionic-native/native-audio';
+import { PerfilClientePage } from '../../pages/perfil-cliente/perfil-cliente';
+import { FavoritosPage } from '../../pages/favoritos/favoritos';
 
 @Component({
   selector: 'page-home',
@@ -35,8 +39,16 @@ export class HomePage {
   itemRef:any ;
   noticias:any = [] ;
   itemRefNoticias:any;
-  constructor(public navCtrl: NavController, public af: AngularFireDatabase, public secureStorage: SecureStorage, private deeplinks: Deeplinks, public platform: Platform, public storage: Storage) {
+  departamentoApp :any = "/Cundinamarca";
+  mostrarBusqueda :any =false ;
+  categoriasEventos:any;
+  queBusca :any ; 
+  mostrarMenuPerfil :any = false  ;
+ // file:MediaObject;
+  constructor(public navCtrl: NavController, public af: AngularFireDatabase, public secureStorage: SecureStorage, private deeplinks: Deeplinks, public platform: Platform, public storage: Storage ,private media: Media ,private nativeAudio: NativeAudio) {
 
+  this.queBusca  = '-'; 
+   this.nativeAudio.preloadSimple('uniqueId12', 'assets/sounds/inicio1.mp3');
     this.platform = platform;
     //acceso a links  con enlaces profundos
     this.deeplinks.route({
@@ -74,7 +86,7 @@ export class HomePage {
     this.perfil.photoUrl = "-";
 
      //consulta departamentos  
-    this.af.list('/departamentos/', { preserveSnapshot: true })
+    this.af.list(this.departamentoApp+'/departamentos/', { preserveSnapshot: true })
       .subscribe(snapshots => {
         this.departamentos = [];
         snapshots.forEach(snapshot1 => {
@@ -87,9 +99,22 @@ export class HomePage {
         });
       });
 
+     this.af.list(this.departamentoApp+'/CategoriasEventos/', { preserveSnapshot: true })
+      .subscribe(snapshots => {
+        this.categoriasEventos = [];
+        snapshots.forEach(snapshot1 => {
+          let data = snapshot1.val();
+          data.uid = snapshot1.key;
+          //   console.log("uid creador = " + data.uidCreador);
+          console.log("departamento key  =" + snapshot1.key);
+          console.log("departamento Value =" + JSON.stringify(snapshot1.val()));
+          this.categoriasEventos.push(data);
+        });
+      });
+
 
        //recibe informacion de los eventos
-    this.af.list('/Eventos/', { preserveSnapshot: true })
+    this.af.list(this.departamentoApp+'/Eventos/', { preserveSnapshot: true })
       .subscribe(snapshots => {
         //reinicializa eventos
         this.eventos = [];
@@ -99,7 +124,7 @@ export class HomePage {
           // console.log("uid creador = " + data.uidCreador);
           console.log("EVENTOS");
           //consulta informacion del creador del evento
-          this.itemRef = this.af.object('userProfile/' + data.uidCreador, { preserveSnapshot: true });
+          this.itemRef = this.af.object(this.departamentoApp+'/userProfile/' + data.uidCreador, { preserveSnapshot: true });
           this.itemRef.subscribe(snapshot => {
             //console.log(action.type);
 
@@ -108,6 +133,21 @@ export class HomePage {
             data.urlImagenCreador = snapshot.val().photoUrl;
             data.nombreUsuario = snapshot.val().nombreUsuario;
             data.index = snapshot1.key;
+
+             //verifica si esa noticia esta guardada  como favorita 
+             let infoGuardado = this.af.object(this.departamentoApp+'/EventosGuardadosUsuario/'+this.perfil.uid+"/"+ snapshot1.key, { preserveSnapshot: true });
+              infoGuardado.subscribe(snapshot => {
+                console.log("entra consulta si guardo evento ");
+              //  console.log(snapshot.key);
+              //  console.log(snapshot.val());
+                if(snapshot.val() === null ){
+                   console.log("evento no guardada");
+                    data.guardado = false ;
+                }else{
+                  console.log("evento guardada");
+                    data.guardado  = true ;
+                }
+               });
             //setea eventos 
             this.eventos.push(data);
           });
@@ -117,14 +157,14 @@ export class HomePage {
       });
 
       //consulta la informacion de tdas las noticias 
-    this.af.list('/Noticias/' ,{ preserveSnapshot: true})
+    this.af.list(this.departamentoApp+'/Noticias/' ,{ preserveSnapshot: true})
         .subscribe(snapshots=>{
             this.noticias = [];
             snapshots.forEach(snapshot1 => {
              let data = snapshot1.val();
              //console.log("uid creador = " + data.uidCreador);
              console.log("NOTICIAS");
-                  this.itemRefNoticias = this.af.object('userProfile/'+data.uidCreador,  { preserveSnapshot: true });
+                  this.itemRefNoticias = this.af.object(this.departamentoApp+'/userProfile/'+data.uidCreador,  { preserveSnapshot: true });
                   this.itemRefNoticias.subscribe(snapshot => {
                     //console.log(action.type);
                     console.log("llave" + snapshot.key)
@@ -132,6 +172,22 @@ export class HomePage {
                     data.urlImagenCreador  = snapshot.val().photoUrl;
                     data.nombreUsuario = snapshot.val().nombreUsuario;
                     data.index =  snapshot1.key ;
+                    //verifica si esa noticia esta guardada  como favorita 
+                     let infoGuardado = this.af.object(this.departamentoApp+'/NoticiasGuardadasUsuario/'+this.perfil.uid+"/"+ snapshot1.key, { preserveSnapshot: true });
+                      infoGuardado.subscribe(snapshot => {
+                        console.log("entra consulta si guardo noticia ");
+                      //  console.log(snapshot.key);
+                      //  console.log(snapshot.val());
+                        if(snapshot.val() === null ){
+                           console.log("noticia no guardada");
+                            data.guardado = false ;
+                        }else{
+                          console.log("noticia guardada");
+                            data.guardado  = true ;
+                        }
+                       });
+
+
                     console.log("add noticia");
                     this.noticias.push(data);
                   });
@@ -139,6 +195,8 @@ export class HomePage {
              console.log("Value ="+ JSON.stringify(snapshot1.val()));
             });
         });
+
+        this.onSelecDepartamento(); 
 
   }
 
@@ -149,10 +207,9 @@ export class HomePage {
      //reinicializa el arreglo demunicipios
     this.municipios = [];
     let subject = new Subject();
-    const queryObservable = this.af.list('/municipios', {
+    const queryObservable = this.af.list(this.departamentoApp+'/municipios', {
       query: {
-        orderByChild: 'uidDepartamento',
-        equalTo: subject
+        orderByKey: true
 
       }
     });
@@ -208,6 +265,7 @@ export class HomePage {
             console.log(snapshot.key);
             console.log(snapshot.val());
             this.perfil = snapshot.val();
+            this.perfil.uid =snapshot.key ;
           });
         } else {
           this.navCtrl.push(InicioSesionPage);
@@ -219,6 +277,29 @@ export class HomePage {
         this.navCtrl.push(InicioSesionPage);
       }
       );
+  }
+  
+  detalleNoticia(urlImagen,tituloNoticia , nombreCreador , imagenCreador , descripcion ,uidNoticia,fechaCreacion){
+      console.log("url imagen = " + urlImagen);
+      console.log("titulo noticia = " + tituloNoticia);
+      console.log("nombre creador = " + nombreCreador);
+      console.log("imagen creador = " + imagenCreador);
+      console.log("descripcion = " + descripcion);
+      console.log("uid noticia = " + uidNoticia);
+      console.log("fecha noticia = " + fechaCreacion);
+      this.navCtrl.push(DetalleNoticiaPage , {urlImagen  :urlImagen ,tituloNoticia :tituloNoticia ,  nombreCreador :nombreCreador , descripcion :descripcion  , imagenCreador :imagenCreador  ,uidNoticia:uidNoticia,fechaCreacion:fechaCreacion });
+  }
+
+  //funcon que envia a la pantalla de detalle de evento con su respecitva inv
+  detalleEvento(urlImagen, tituloEvento, nombreCreador, imagenCreador, descripcion, uidNoticia, fechaInicio, fechaFin) {
+    console.log("url imagen = " + urlImagen);
+    console.log("titulo noticia = " + tituloEvento);
+    console.log("nombre creador = " + nombreCreador);
+    console.log("imagen creador = " + imagenCreador);
+    console.log("descripcion = " + descripcion);
+    console.log("uid noticia = " + uidNoticia);
+    //envia a la pantalla  
+    this.navCtrl.push(DetalleEventoPage, { urlImagen: urlImagen, tituloEvento: tituloEvento, nombreCreador: nombreCreador, descripcion: descripcion, imagenCreador: imagenCreador, uidNoticia: uidNoticia, fechaInicio: fechaInicio, fechaFin: fechaFin });
   }
   //redireccion a colombia
   irColombia(){
@@ -257,5 +338,142 @@ export class HomePage {
   irBusquedaAvanzada() {
     this.navCtrl.push(BusquedaAvanzadaPage);
   }
+  irPerfilCliente() {
+    this.navCtrl.push(PerfilClientePage);
+  }
+  irFavoritos() {
+    this.navCtrl.push(FavoritosPage);
+  }
+
+
+ playSonido(){
+   console.log("play sonido");
+       //this.file = this.media.create('/assets/sounds/inicio1.mp3');
+    const file: MediaObject = this.media.create('./assets/sounds/inicio1.mp3');
+     console.log("creado");
+     // get file duration
+    let duration = file.getDuration();
+    console.log("duracion = " + duration);
+    // to listen to plugin events:
+
+    file.onStatusUpdate.subscribe(status => console.log(status)); // fires when file status changes
+
+    file.onSuccess.subscribe(() => console.log('Action is successful'));
+
+    file.onError.subscribe(error => console.log('Error!', JSON.stringify(error)));
+
+    // play the file
+    file.play();
+
+
+
+ }
+
+ file1:any ;
+  audioPlay() {
+    console.log("audio play");
+   
+   this.nativeAudio.play('uniqueId12', () => console.log('uniqueId1 is done playing'));
+
+  }
+
+  audioStop(){
+    console.log("stop");
+    //this.nativeAudio.stop('uniqueId1') ;
+    
+    this.nativeAudio.stop('uniqueId12');
+  }
+   
+  openBusquedaMenu(){
+    if(this.mostrarBusqueda){
+       this.mostrarBusqueda = false ;
+    }else{
+       this.mostrarBusqueda = true ;
+    }
+  }
+
+  openPerfilMenu(){
+    if(this.mostrarMenuPerfil){
+       this.mostrarMenuPerfil = false ;
+    }else{
+       this.mostrarMenuPerfil = true ;
+    }
+  }
+
+
+
+  guardarNoticia(noticia){
+ 
+    console.log("id  = " +  noticia.index);
+    console.log("id  perfil= " +  this.perfil.uid);
+
+     if(noticia.guardado){
+       const itemsTattoo = this.af.object(this.departamentoApp+'/NoticiasGuardadasUsuario/'+this.perfil.uid+"/"+noticia.index);
+        itemsTattoo.remove();
+        noticia.guardado = false;
+        //this.tatuajeGuardado = false ;
+     }else{
+       const itemsTattoo = this.af.object(this.departamentoApp+'/NoticiasGuardadasUsuario/'+this.perfil.uid+"/"+noticia.index);
+       const promise1 =   itemsTattoo.set(
+                                     {
+                                        noticia : noticia,
+                                        uid : noticia.index          
+                                     }
+                                   );
+        promise1.then(_ =>
+          console.log('Noticia guardaa !!!')
+
+
+        ).catch(err => console.log(err, 'You dont have access!'));
+       // this.tatuajeGuardado = true;
+       noticia.guardado = true;
+
+
+     }
+
+  }
+
+   guardarEvento(evento){
+ 
+    console.log("id  = " +  evento.index);
+    console.log("id  perfil= " +  this.perfil.uid);
+
+     if(evento.guardado){
+       const itemsTattoo = this.af.object(this.departamentoApp+'/EventosGuardadosUsuario/'+this.perfil.uid+"/"+evento.index);
+        itemsTattoo.remove();
+        evento.guardado = false;
+        //this.tatuajeGuardado = false ;
+     }else{
+       const itemsTattoo = this.af.object(this.departamentoApp+'/EventosGuardadosUsuario/'+this.perfil.uid+"/"+evento.index);
+       const promise1 =   itemsTattoo.set(
+                                     {
+                                        evento : evento,
+                                        uid : evento.index          
+                                     }
+                                   );
+        promise1.then(_ =>
+          console.log('Noticia guardaa !!!')
+
+
+        ).catch(err => console.log(err, 'You dont have access!'));
+       // this.tatuajeGuardado = true;
+       evento.guardado = true;
+
+
+     }
+
+  }
+
+  buscarMenu(){
+    if(this.queBusca === 'noticias'){
+      this.navCtrl.push(CundiNoticiasPage);
+    }
+    if(this.queBusca === 'eventos'){
+      this.navCtrl.push(CundiEventosPage);
+    }
+  }
+
+
+
 
 }

@@ -20,6 +20,7 @@ import { DetalleDepartamentoPage } from '../pages/detalle-departamento/detalle-d
 import { ColombiaPage } from '../pages/colombia/colombia';
 import { PublicarPage } from '../pages/publicar/publicar';
 import { RegistroPage } from '../pages/registro/registro';
+import { FavoritosPage } from '../pages/favoritos/favoritos';
 import { MunicipiosPage } from '../pages/municipios/municipios';
 import { InicioSesionPage } from '../pages/inicio-sesion/inicio-sesion';
 import { PerfilClientePage } from '../pages/perfil-cliente/perfil-cliente';
@@ -42,6 +43,13 @@ import { IonicStorageModule } from '@ionic/storage';
 import { ListasProvider } from '../providers/listas/listas';
 import { TwitterConnect } from '@ionic-native/twitter-connect';
 import { GooglePlus } from '@ionic-native/google-plus';
+import { Media, MediaObject } from '@ionic-native/media';
+import { NativeAudio } from '@ionic-native/native-audio';
+import { FileChooser } from '@ionic-native/file-chooser';
+import { FilePath } from '@ionic-native/file-path';
+
+
+
 
 
 //configuracion firebase
@@ -77,7 +85,8 @@ firebase.initializeApp(firebaseConfig)
     ColombiaPage,
     DetalleDepartamentoPage,
     BusquedaAvanzadaPage,
-    PerfilClientePage
+    PerfilClientePage,
+    FavoritosPage
   ],
   imports: [
     BrowserModule,
@@ -88,6 +97,7 @@ firebase.initializeApp(firebaseConfig)
     AngularFireAuthModule,
     IonicStorageModule.forRoot()
   ],
+
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
@@ -110,7 +120,8 @@ firebase.initializeApp(firebaseConfig)
     ColombiaPage,
     DetalleDepartamentoPage,
     BusquedaAvanzadaPage,
-    PerfilClientePage
+    PerfilClientePage,
+    FavoritosPage
   ],
   providers: [
     StatusBar,
@@ -127,7 +138,12 @@ firebase.initializeApp(firebaseConfig)
     Deeplinks,
     ListasProvider,
     TwitterConnect,
-    GooglePlus
+    GooglePlus,
+    Media,
+    NativeAudio,
+    FileChooser,
+    FilePath
+
   ]
 })
 export class AppModule { }
