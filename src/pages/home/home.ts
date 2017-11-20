@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, Platform } from 'ionic-angular';
+import { NavController, Platform , MenuController } from 'ionic-angular';
 import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database-deprecated';
 import { CundiAmarillasPage } from '../../pages/cundi-amarillas/cundi-amarillas';
 import { CundiEmpleosPage } from '../../pages/cundi-empleos/cundi-empleos';
@@ -11,6 +11,7 @@ import { InicioSesionPage } from '../../pages/inicio-sesion/inicio-sesion';
 import { Deeplinks } from '@ionic-native/deeplinks';
 import { PublicarPage } from '../../pages/publicar/publicar';
 import { Storage } from '@ionic/storage';
+import { DepartamentoPage } from '../../pages/departamento/departamento';
 import { ColombiaPage } from '../../pages/colombia/colombia';
 import { CrearNoticiaPage } from '../../pages/crear-noticia/crear-noticia';
 import { CrearEventoPage } from '../../pages/crear-evento/crear-evento';
@@ -22,6 +23,7 @@ import { Media, MediaObject } from '@ionic-native/media';
 import { NativeAudio } from '@ionic-native/native-audio';
 import { PerfilClientePage } from '../../pages/perfil-cliente/perfil-cliente';
 import { FavoritosPage } from '../../pages/favoritos/favoritos';
+
 
 @Component({
   selector: 'page-home',
@@ -45,12 +47,16 @@ export class HomePage {
   queBusca :any ; 
   mostrarMenuPerfil :any = false  ;
  // file:MediaObject;
-  constructor(public navCtrl: NavController, public af: AngularFireDatabase, public secureStorage: SecureStorage, private deeplinks: Deeplinks, public platform: Platform, public storage: Storage ,private media: Media ,private nativeAudio: NativeAudio) {
+  constructor(public navCtrl: NavController, public af: AngularFireDatabase, public secureStorage: SecureStorage, private deeplinks: Deeplinks, public platform: Platform, public storage: Storage ,private media: Media ,private nativeAudio: NativeAudio,public menuCtrl :MenuController) {
 
-  this.queBusca  = '-'; 
-   this.nativeAudio.preloadSimple('uniqueId12', 'assets/sounds/inicio1.mp3');
-    this.platform = platform;
-    //acceso a links  con enlaces profundos
+  
+
+
+    this.queBusca  = '-'; 
+   //this.nativeAudio.preloadSimple('uniqueId12', 'assets/sounds/inicio1.mp3');
+    //this.platform = this.platform;
+
+     //acceso a links  con enlaces profundos
     this.deeplinks.route({
       '/noticias': CundiNoticiasPage,
       '/eventos': CundiEventosPage,
@@ -82,8 +88,79 @@ export class HomePage {
       // nomatch.$link - the full link data
       console.error('Got a deeplink that didn\'t match', nomatch);
     });
-    //setea  un valor de inicio para la foto
-    this.perfil.photoUrl = "-";
+  }
+
+
+    //funcion que  se llama cuando se elecciona un departamento
+  onSelecDepartamento() {
+    
+     //reinicializa el arreglo demunicipios
+    this.municipios = [];
+    let subject = new Subject();
+    const queryObservable = this.af.list(this.departamentoApp+'/municipios', {
+      query: {
+        orderByKey: true
+
+      }
+    });
+    //manjo de respuesta 
+    // subscribe to changes
+    queryObservable.subscribe(queriedItems => {
+      console.log(JSON.stringify(queriedItems));
+      //alamaenca resultado del filtro en arreglo 
+      this.filtroMunicipios = queriedItems;
+      //recorre arreglo para setelartl en la lista 
+      this.filtroMunicipios.forEach((item, index) => {
+
+        //         console.log("item municipio = " + JSON.stringify(item));
+
+        let dataI = item;
+
+        this.municipios.push(dataI);
+      });
+    });
+
+    // trigger the query
+    subject.next(this.uidDepartamento);
+  }
+
+  //elimina los datos guardados del usuario
+  cerrarSesion() {
+    this.storage.remove('userData')
+      .then(
+      data => {
+        console.log("eliminado = " + data);
+        //    this.platform.exitApp();
+        //luego de eliminado envia a pantalla de  login
+        this.navCtrl.push(InicioSesionPage);
+      },
+      error => console.error(error)
+      );
+
+  }
+  item: any;
+  //evento que se ejecuta cada vez que se ingres a ala pantalla
+  ionViewWillEnter() {
+
+          //veirfica si el usuario esta guardado
+    this.storage.get('userData')
+      .then(
+      data => {
+        console.log(JSON.stringify(data)),
+          console.log("finaliza");
+        //existe usuario
+        if (data != null) {
+          console.log(data.uid);
+          this.item = this.af.object(this.departamentoApp+'/userProfile/' + data.uid, { preserveSnapshot: true });
+          this.item.subscribe(snapshot => {
+            console.log(snapshot.key);
+            console.log(snapshot.val());
+            this.perfil = snapshot.val();
+            this.perfil.uid =snapshot.key ;
+
+
+                  //setea  un valor de inicio para la foto
+    //this.perfil.photoUrl = "-";
 
      //consulta departamentos  
     this.af.list(this.departamentoApp+'/departamentos/', { preserveSnapshot: true })
@@ -111,7 +188,6 @@ export class HomePage {
           this.categoriasEventos.push(data);
         });
       });
-
 
        //recibe informacion de los eventos
     this.af.list(this.departamentoApp+'/Eventos/', { preserveSnapshot: true })
@@ -169,10 +245,12 @@ export class HomePage {
                     //console.log(action.type);
                     console.log("llave" + snapshot.key)
                     console.log('data ' + JSON.stringify(snapshot.val()));
-                    data.urlImagenCreador  = snapshot.val().photoUrl;
+                    let url = snapshot.val().photoUrl ; 
+                    data.urlImagenCreador  = url;
                     data.nombreUsuario = snapshot.val().nombreUsuario;
                     data.index =  snapshot1.key ;
                     //verifica si esa noticia esta guardada  como favorita 
+                    console.log("url="+this.departamentoApp+'/NoticiasGuardadasUsuario/'+this.perfil.uid+"/"+ snapshot1.key);
                      let infoGuardado = this.af.object(this.departamentoApp+'/NoticiasGuardadasUsuario/'+this.perfil.uid+"/"+ snapshot1.key, { preserveSnapshot: true });
                       infoGuardado.subscribe(snapshot => {
                         console.log("entra consulta si guardo noticia ");
@@ -198,74 +276,6 @@ export class HomePage {
 
         this.onSelecDepartamento(); 
 
-  }
-
-
-    //funcion que  se llama cuando se elecciona un departamento
-  onSelecDepartamento() {
-    
-     //reinicializa el arreglo demunicipios
-    this.municipios = [];
-    let subject = new Subject();
-    const queryObservable = this.af.list(this.departamentoApp+'/municipios', {
-      query: {
-        orderByKey: true
-
-      }
-    });
-    //manjo de respuesta 
-    // subscribe to changes
-    queryObservable.subscribe(queriedItems => {
-      console.log(JSON.stringify(queriedItems));
-      //alamaenca resultado del filtro en arreglo 
-      this.filtroMunicipios = queriedItems;
-      //recorre arreglo para setelartl en la lista 
-      this.filtroMunicipios.forEach((item, index) => {
-
-        //         console.log("item municipio = " + JSON.stringify(item));
-
-        let dataI = item;
-
-        this.municipios.push(dataI);
-      });
-    });
-
-    // trigger the query
-    subject.next(this.uidDepartamento);
-  }
-
-  //elimina los datos guardados del usuario
-  cerrarSesion() {
-    this.storage.remove('userData')
-      .then(
-      data => {
-        console.log("eliminado = " + data);
-        //    this.platform.exitApp();
-        //luego de eliminado envia a pantalla de  login
-        this.navCtrl.push(InicioSesionPage);
-      },
-      error => console.error(error)
-      );
-
-  }
-  item: any;
-  //evento que se ejecuta cada vez que se ingres a ala pantalla
-  ionViewWillEnter() {
-    //veirfica si el usuario esta guardado
-    this.storage.get('userData')
-      .then(
-      data => {
-        console.log(JSON.stringify(data)),
-          console.log("finaliza");
-        //existe usuario
-        if (data != null) {
-          console.log(data.uid);
-          this.item = this.af.object('/userProfile/' + data.uid, { preserveSnapshot: true });
-          this.item.subscribe(snapshot => {
-            console.log(snapshot.key);
-            console.log(snapshot.val());
-            this.perfil = snapshot.val();
-            this.perfil.uid =snapshot.key ;
           });
         } else {
           this.navCtrl.push(InicioSesionPage);
@@ -276,9 +286,9 @@ export class HomePage {
         console.error("error = " + error);
         this.navCtrl.push(InicioSesionPage);
       }
-      );
+    );
   }
-  
+
   detalleNoticia(urlImagen,tituloNoticia , nombreCreador , imagenCreador , descripcion ,uidNoticia,fechaCreacion){
       console.log("url imagen = " + urlImagen);
       console.log("titulo noticia = " + tituloNoticia);
@@ -303,43 +313,52 @@ export class HomePage {
   }
   //redireccion a colombia
   irColombia(){
-    this.navCtrl.push(ColombiaPage);
+    this.navCtrl.setRoot(DepartamentoPage);
+
   }
   //redirecciona a noticias
   irNoticias() {
     //this.navCtrl.setRoot(CundiNoticiasPage);
-    this.navCtrl.push(CundiNoticiasPage);
+    this.navCtrl.setRoot(CundiNoticiasPage);
   }
   //redirecciona a eventos
   irEventos() {
-    this.navCtrl.push(CundiEventosPage);
+    //this.navCtrl.push(CundiEventosPage);
+    this.navCtrl.setRoot(CundiEventosPage);
   }
   //redireccion a empleos
   irEmpleos() {
-    this.navCtrl.push(CundiEmpleosPage);
+    alert("Proximamente");
+    //this.navCtrl.setRoot(CundiEmpleosPage);
   }
   //redireccion a amarillas
   irAmarillas() {
-    this.navCtrl.push(CundiAmarillasPage);
+    alert("Proximamente");
+    //this.navCtrl.setRoot(CundiAmarillasPage);
+  }
+  irPromociones(){
+    alert("Proximamente");
   }
   //redireccion a publicar
   irPublicar() {
-    this.navCtrl.push(PublicarPage);
+    this.navCtrl.setRoot(PublicarPage);
   }
 
   irCrearNoticias() {
-    this.navCtrl.push(CrearNoticiaPage);
+    this.navCtrl.setRoot(CrearNoticiaPage);
   }
 
   irCreaEventos() {
-    this.navCtrl.push(CrearEventoPage);
+    this.navCtrl.setRoot(CrearEventoPage);
   }
 
   irBusquedaAvanzada() {
     this.navCtrl.push(BusquedaAvanzadaPage);
   }
   irPerfilCliente() {
-    this.navCtrl.push(PerfilClientePage);
+
+   //this.navCtrl.push(PerfilClientePage);
+    this.navCtrl.setRoot(PerfilClientePage);
   }
   irFavoritos() {
     this.navCtrl.push(FavoritosPage);
@@ -464,6 +483,7 @@ export class HomePage {
 
   }
 
+  
   buscarMenu(){
     if(this.queBusca === 'noticias'){
       this.navCtrl.push(CundiNoticiasPage);

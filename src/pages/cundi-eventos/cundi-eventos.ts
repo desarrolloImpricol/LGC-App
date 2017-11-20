@@ -7,6 +7,7 @@ import { SocialSharing } from '@ionic-native/social-sharing';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
 import { File } from '@ionic-native/file';
 import { Storage } from '@ionic/storage';
+import { Subject } from 'rxjs/Subject';
 
 /**
  * Generated class for the CundiEventosPage page.
@@ -27,8 +28,71 @@ export class CundiEventosPage {
   departamentoApp :any = "/Cundinamarca";
   item:any;
   perfil :any = [];
+  filtroMunicipios :any  ; 
+  municipios :any ; 
+  mostrarBusqueda :any;
+  categoriasEventos:any ;
+  filtroEventos:any;
+  uidCategoria:any;
+  uidMunicipio:any;
+
   constructor(public navCtrl: NavController, public navParams: NavParams, public af: AngularFireDatabase, private socialSharing: SocialSharing, private transfer: FileTransfer, private file: File,public storage: Storage) {
       //obtiene informacion del usuario
+console.log("Valor inicial  categoria " + this.uidCategoria);
+console.log("Valor inicial  municipio " + this.uidMunicipio);
+//arreglo de municipios
+    this.municipios = [];
+    let subject = new Subject();
+    const queryObservable = this.af.list(this.departamentoApp+'/Municipios', {
+      query: {
+        orderByKey: true
+      }
+    });
+    //manjo de respuesta 
+    // subscribe to changes
+    queryObservable.subscribe(queriedItems => {
+     // console.log(JSON.stringify(queriedItems));
+      //alamaenca resultado del filtro en arreglo 
+      this.filtroMunicipios = queriedItems;
+      //recorre arreglo para setelartl en la lista 
+      this.filtroMunicipios.forEach((item, index) => {
+        //         console.log("item municipio = " + JSON.stringify(item));
+
+        let dataI = item;
+
+        this.municipios.push(dataI);
+      });
+    });
+
+
+
+   //arreglo de tipo evento
+    this.categoriasEventos = [];
+    //let subject = new Subject();
+    const queryObservableCategorias = this.af.list(this.departamentoApp+'/CategoriasEventos', {
+      query: {
+        orderByKey: true
+      }
+    });
+    //manjo de respuesta 
+    // subscribe to changes
+    queryObservableCategorias.subscribe(queriedItems => {
+      console.log(JSON.stringify(queriedItems));
+      //alamaenca resultado del filtro en arreglo 
+      this.filtroEventos = queriedItems;
+      //recorre arreglo para setelartl en la lista 
+      this.filtroEventos.forEach((item, index) => {
+        //         console.log("item municipio = " + JSON.stringify(item));
+
+        let dataI = item;
+
+        this.categoriasEventos.push(dataI);
+      });
+    });
+
+
+                  // trigger the query
+                //  subject.next(this.uidDepartamento);
     this.storage.get('userData')
       .then(
       data => {
@@ -44,7 +108,22 @@ export class CundiEventosPage {
           this.perfil = snapshot.val();
           this.perfil.uid = data.uid;
 
-           //recibe informacion de los eventos
+          this.cargarTodosEventos();
+
+        });
+      },
+      error => { //si no esta guardado envia a la pagina de login
+        console.error("error = " + error);
+      }
+      );
+
+
+
+
+  }
+
+  cargarTodosEventos(){
+     //recibe informacion de los eventos
               this.af.list(this.departamentoApp+'/Eventos/', { preserveSnapshot: true })
                 .subscribe(snapshots => {
                   //reinicializa eventos
@@ -85,17 +164,6 @@ export class CundiEventosPage {
                     console.log("Value =" + JSON.stringify(snapshot1.val()));
                   });
                 });
-
-        });
-      },
-      error => { //si no esta guardado envia a la pagina de login
-        console.error("error = " + error);
-      }
-      );
-
-
-
-
   }
 
   //comparte la imagen 
@@ -133,6 +201,16 @@ export class CundiEventosPage {
   }
 
 
+  mostrarFiltro(){
+      if(this.mostrarBusqueda){
+        this.mostrarBusqueda = false;
+      }else{
+        this.mostrarBusqueda = true;
+      }
+    
+  }
+
+
   //funcon que envia a la pantalla de detalle de evento con su respecitva inv
   detalleNoticia(urlImagen, tituloEvento, nombreCreador, imagenCreador, descripcion, uidNoticia, fechaInicio, fechaFin) {
     console.log("url imagen = " + urlImagen);
@@ -150,7 +228,7 @@ export class CundiEventosPage {
   }
 
   guardarEvento(evento){
- 
+   console.log("entra a guardar");
     console.log("id  = " +  evento.index);
     console.log("id  perfil= " +  this.perfil.uid);
 
@@ -179,5 +257,191 @@ export class CundiEventosPage {
      }
 
   }
+
+  filtraMunicipios(){
+
+    if(this.uidCategoria === undefined){
+
+            let newMunicipio =this.uidMunicipio-1; 
+            console.log("id municipio " +newMunicipio);
+            //arreglo de municipios
+            this.eventos=[];
+            let subject = new Subject();
+            const queryObservable = this.af.list(this.departamentoApp+'/Eventos', {
+              query: {
+                orderByChild: 'uidMunicipio',
+                equalTo : subject
+              }
+            });
+            //manjo de respuesta 
+            // subscribe to changes
+            queryObservable.subscribe(queriedItems => {
+              console.log(JSON.stringify(queriedItems));
+              //alamaenca resultado del filtro en arreglo 
+              this.filtroMunicipios = queriedItems;
+              //recorre arreglo para setelartl en la lista 
+              this.filtroMunicipios.forEach((item, index) => {
+                //         console.log("item municipio = " + JSON.stringify(item));
+
+                //let dataI = item;
+
+        //        this.eventos.push(dataI);
+                 let data =item;
+                            console.log("uid creador = " + data.uidCreador);
+                            //consulta informacion del creador del evento
+                            this.itemRef = this.af.object(this.departamentoApp+'/userProfile/' + data.uidCreador, { preserveSnapshot: true });
+                            this.itemRef.subscribe(snapshot => {
+                              //console.log(action.type);
+
+                              console.log("llave" + snapshot.key)
+                              console.log('data ' + JSON.stringify(snapshot.val()));
+                              data.urlImagenCreador = snapshot.val().photoUrl;
+                              data.nombreUsuario = snapshot.val().nombreUsuario;
+                              data.index = index;
+
+                              //verifica si esa noticia esta guardada  como favorita 
+                               let infoGuardado = this.af.object(this.departamentoApp+'/EventosGuardadosUsuario/'+this.perfil.uid+"/"+ index, { preserveSnapshot: true });
+                                infoGuardado.subscribe(snapshot => {
+                                  console.log("entra consulta si guardo evento ");
+                                //  console.log(snapshot.key);
+                                //  console.log(snapshot.val());
+                                  if(snapshot.val() === null ){
+                                     console.log("evento no guardada");
+                                      data.guardado = false ;
+                                  }else{
+                                    console.log("evento guardada");
+                                      data.guardado  = true ;
+                                  }
+                                 });
+                              //setea eventos 
+                              this.eventos.push(data);
+                            });
+                           // console.log("key =" + snapshot1.key);
+                            //console.log("Value =" + JSON.stringify(snapshot1.val()));
+
+              });
+            });
+
+            subject.next(newMunicipio.toString());
+
+    }else{ //anidado
+      console.log("entra consulta anidad");
+      this.busquedaAnidada('municipio');
+
+    }
+
+
+  }
+
+
+   filtraCategoria(){
+    console.log("id categoria " + this.uidCategoria);
+    //arreglo de municipios
+    this.eventos=[];
+    let subject = new Subject();
+    const queryObservable = this.af.list(this.departamentoApp+'/Eventos', {
+      query: {
+        orderByChild: 'uidCategoriaEvento',
+        equalTo : subject
+      }
+    });
+    //manjo de respuesta 
+    // subscribe to changes
+    queryObservable.subscribe(queriedItems => {
+      console.log(JSON.stringify(queriedItems));
+      //alamaenca resultado del filtro en arreglo 
+      this.filtroMunicipios = queriedItems;
+      //recorre arreglo para setelartl en la lista 
+      this.filtroMunicipios.forEach((item, index) => {
+        //         console.log("item municipio = " + JSON.stringify(item));
+
+        //let dataI = item;
+
+//        this.eventos.push(dataI);
+         let data =item;
+                    console.log("uid creador = " + data.uidCreador);
+                    //consulta informacion del creador del evento
+                    this.itemRef = this.af.object(this.departamentoApp+'/userProfile/' + data.uidCreador, { preserveSnapshot: true });
+                    this.itemRef.subscribe(snapshot => {
+                      //console.log(action.type);
+
+                      console.log("llave" + snapshot.key)
+                      console.log('data ' + JSON.stringify(snapshot.val()));
+                      data.urlImagenCreador = snapshot.val().photoUrl;
+                      data.nombreUsuario = snapshot.val().nombreUsuario;
+                      data.index = index;
+
+                      //verifica si esa noticia esta guardada  como favorita 
+                       let infoGuardado = this.af.object(this.departamentoApp+'/EventosGuardadosUsuario/'+this.perfil.uid+"/"+ index, { preserveSnapshot: true });
+                        infoGuardado.subscribe(snapshot => {
+                          console.log("entra consulta si guardo evento ");
+                        //  console.log(snapshot.key);
+                        //  console.log(snapshot.val());
+                          if(snapshot.val() === null ){
+                             console.log("evento no guardada");
+                              data.guardado = false ;
+                          }else{
+                            console.log("evento guardada");
+                              data.guardado  = true ;
+                          }
+                         });
+                      //setea eventos 
+                      this.eventos.push(data);
+                    });
+                   // console.log("key =" + snapshot1.key);
+                    //console.log("Value =" + JSON.stringify(snapshot1.val()));
+
+
+
+      });
+    });
+
+    subject.next(this.uidCategoria);
+  }
+
+reiniciarBusqueda(){
+
+  this.uidCategoria = undefined;
+  this.uidMunicipio = undefined;
+  this.mostrarBusqueda = false ;
+  this.cargarTodosEventos();
+}
+
+
+ busquedaAnidada(anidaPor){
+   if(anidaPor === "municipio") {
+     let nuevoData = [] ;
+     this.filtroMunicipios.forEach((item, index) => {
+
+       console.log("itera  = " + JSON.stringify(item));
+       if(item.uidMunicipio === (this.uidMunicipio-1)){
+         console.log("entra if  de filtro anidado  municipio ");
+           nuevoData.push(item);
+       }
+
+     });
+
+     this.eventos=[];
+     this.eventos=nuevoData;
+   }//end  if 
+    if(anidaPor === "tipoEvento") {
+       let nuevoData = [] ;
+       this.filtroMunicipios.forEach((item, index) => {
+
+         console.log("itera  = " + JSON.stringify(item));
+         if(item.uidCategoriaEvento === this.uidCategoria){
+           console.log("entra if  de filtro anidado  cateogoria");
+             nuevoData.push(item);
+         }
+
+       });
+
+       this.eventos=[];
+       this.eventos=nuevoData;
+   }//end if 
+   
+ }
+
+
 
 }

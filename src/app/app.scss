@@ -15,7 +15,9 @@
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
 
-
+.fondo{
+	background-color: #ededed;
+}
 
 .item-inner , ion-item {
 border-bottom-color: transparent !important;
@@ -24,14 +26,16 @@ box-shadow: none !important;
 
 
 .fuente-amarilla{
-	font-color:#ffcc29;
-	color: #ffcc29;
+	font-color:#ffcc29 !important;
+	color: #ffcc29 !important;
 }
+
 .fondo-amarillo{
 
 	background-color:#ffcc29;
 
 }
+
 .fuente-morada{
     font-color:#8a2e96 !important;
 	color:#8a2e96 !important;
@@ -53,6 +57,13 @@ box-shadow: none !important;
 .eventos{
 	.swiper-pagination-bullet-active  {
 	background: #eb8636;
+	opacity: 1;
+ }	
+}
+
+.sitios{
+	.swiper-pagination-bullet-active  {
+	background: #ffcc29;
 	opacity: 1;
  }	
 }

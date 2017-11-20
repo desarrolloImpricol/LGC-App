@@ -18,10 +18,19 @@
 
 
 
- <span  *ngFor="let depto of departamentos1 " >--{{depto.nombreDepartamento}}</span>
+ 
 
-  <img class="imagenCargaPerfil" *ngIf="fotoCliente == '-'" (click)="cargarImagen()" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2Fcargar.png?alt=media&token=0abb191b-43b0-4d6f-83d6-e92de753b5bd">
+<!--  <img class="imagenCargaPerfil" *ngIf="fotoCliente == '-'"  src="">-->
   <!--  <img [src]="fotoCliente" > -->
+
+  <div class="centrado"  *ngIf="fotoCliente == '-'" (click)="cargarImagen()">
+
+     <div class="wrapper-perfil">
+
+      <img class="img-circle-perfil" src="assets/icon/perfilSubir.jpg">
+
+    </div>
+  </div>
 
 
   <div class="wrapper-perfil" *ngIf="fotoCliente != '-'">
@@ -49,20 +58,35 @@
    
     <br>
 
+    <ion-item class="fondo">
+      <ion-label >Municipio</ion-label>
+      <ion-select multiple="false" [(ngModel)]="uidMunicipio" >
+        <ion-option *ngFor="let muni of municipios" value="{{muni.id}}">{{muni.municipio}}
+        </ion-option>
+      </ion-select>
+    </ion-item>
+    <br>
+
+    <ion-item class="fondo">
+      <ion-label >Tipo perfil</ion-label>
+      <ion-select multiple="false" [(ngModel)]="tipoPerfil">
+        <ion-option  value="Empresa">Empresa</ion-option>
+        <ion-option  value="Persona">Persona</ion-option>
+      </ion-select>
+    </ion-item>
+
    
     </ion-list>
        
    
-    
-  
 
   <ion-item>
-    <ion-label>Soy una empresa</ion-label>
-    <ion-checkbox color="dark" [(ngModel)]="tipoUsuario" checked="true"></ion-checkbox>
+    <ion-label>Acepto terminos y condiciones de uso</ion-label>
+    <ion-checkbox color="dark" [(ngModel)]="terminos" checked="true"></ion-checkbox>
   </ion-item>
   <br>
   <div class="centrado">
-    <button center (click)="validarRegistro()" ion-button>Registrarse</button>
+    <button center (click)="validarRegistro()"  color="colorRojo" full ion-button>Registrarse</button>
     <!--<button center (click)="subirImagen()" ion-button>subir imagen</button>-->
   </div>
 </ion-content>

@@ -5,63 +5,154 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-  <ion-navbar color="colorNoticias">
-    <ion-title>Nueva noticia</ion-title>
+ 
+  
+  <ion-navbar color="colorNoticias" >
+  <ion-buttons left >
+        <button ion-button menuToggle icon-only>
+          <ion-icon name='menu'></ion-icon>
+        </button>
+    </ion-buttons>
+
+    <ion-title>Crear noticia</ion-title>
+    
+    <ion-buttons end>
+        <button ion-button  icon-only (click)="mostrarFiltro()">
+          <ion-icon name='search'></ion-icon>
+        </button>
+    </ion-buttons>
   </ion-navbar>
+
+
 </ion-header>
-<ion-content padding>
+<ion-content padding  class="fondo" >
+    <div class="wrapper-perfil" *ngIf="fotoNoticia != '-'">
+    <img class="img-circle-perfil" [src]="fotoNoticia">
+  </div>
+
+   <div class="contenedor-eventos" *ngIf="fotoNoticia == '-'">
+      
+      <div class="iconoSubirFotoPrincipal centrado" (click)="cargarImagen('galeria')">
+         <img class="imagenSubir" src="../assets/icon/Blanco/subir.png"/>
+         <br>
+         <span class="fuente-blanco">Subir foto principal</span>
+      </div>
+
+      <div class="iconoTomarFotoPrincipal centrado" (click)="cargarImagen('foto')" >
+        <img class="imagenSubir" src="../assets/icon/Blanco/tomarFoto.png"/>
+         <br>         
+         <span class="fuente-blanco">Tomar foto principal</span>
+      </div>
+
+  </div>
+
+   <div class="contenedor-eventos" >
+      
+      <div *ngIf="foto1 == '-'" class="iconoSubirMasImagenes centrado" (click)="cargarOtrasImagenes(1)" >
+       
+      </div>
+
+      <div *ngIf="foto1 != '-'" class="iconoSubirMasImagenesCagado centrado" (click)="cargarOtrasImagenes(1)" >
+       <img class="fotosCargadas" [src]="foto1" />
+      </div>
+
+
+      <div *ngIf="foto2 == '-'" class="iconoSubirMasImagenes centrado"  (click)="cargarOtrasImagenes(2)" >
+       <!-- <img class="imagenSubirMas" src="../assets/icon/Blanco/imagen1.png"/>-->
+      </div>
+
+       <div *ngIf="foto2 != '-'" class="iconoSubirMasImagenesCagado centrado"  (click)="cargarOtrasImagenes(2)" >       
+         <img  class="fotosCargadas"  [src]="foto2" />         
+      </div>
+
+      <div *ngIf="foto3 == '-'"  class="iconoSubirMasImagenes centrado"  (click)="cargarOtrasImagenes(3)" >
+      </div>
+
+      <div *ngIf="foto3 != '-'"  class="iconoSubirMasImagenesCagado centrado"  (click)="cargarOtrasImagenes(3)" >
+         <img [src]="foto3" />  
+      </div>
+
+
+
+      <div *ngIf="foto4 == '-'"  class="iconoSubirMasImagenes centrado"  (click)="cargarOtrasImagenes(4)" >
+        
+         
+      </div>
+
+      <div *ngIf="foto4 != '-'"  class="iconoSubirMasImagenesCagado centrado"  (click)="cargarOtrasImagenes(4)" >
+        <img [src]="foto4" />
+         
+      </div>
+
+      <div *ngIf="foto5 == '-'"  class="iconoSubirMasImagenes centrado"  (click)="cargarOtrasImagenes(5)" >
+      </div>
+
+      <div *ngIf="foto5 != '-'"  class="iconoSubirMasImagenesCagado centrado"  (click)="cargarOtrasImagenes(5)" >
+        <img [src]="foto5" />
+      </div>
+
+  </div>
 
   <ion-list>
-    <ion-item>
-      <ion-label floating>Titulo noticia</ion-label>
+
+
+  <ion-item class="fondo bordeInput">
+    <ion-label>Municipio</ion-label>
+    <ion-select multiple="false" [(ngModel)]="uidMunicipio">
+      <ion-option *ngFor="let muni of municipios " value="{{muni.id}}">{{muni.municipio}}</ion-option>
+    </ion-select>
+  </ion-item>
+
+    <ion-item class="fondo bordeInput">
+      <ion-label>Titulo noticia</ion-label>
       <ion-input [(ngModel)]="tituloNoticia" type="text"></ion-input>
     </ion-item>
 
 
-    <ion-item>
-      <ion-label floating>Descripción de la noticia</ion-label>
+    <ion-item class="fondo bordeInput">
+      <ion-label>Descripción de la noticia</ion-label>
       <ion-textarea [(ngModel)]="descripcionNoticia" name="description"></ion-textarea>
     </ion-item>
   </ion-list>
 
-    <button ion-button full (click)="seleccionarArchivo()">Seleccionar archivo </button>
 
-  <div class="contenedor">
+   <ion-item class="fondo bordeInput">
+      <ion-label>Fuente</ion-label>
+      <ion-input [(ngModel)]="fuente" type="text"></ion-input>
+    </ion-item>
+
+ <!--   <button ion-button full (click)="seleccionarArchivo()">Seleccionar archivo </button>-->
+
+ <!-- <div class="contenedor">
     <div class="imagenCargaPerfil">
       <img *ngIf="fotoNoticia == '-'" (click)="cargarImagen('foto')" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2Fcargar.png?alt=media&token=0abb191b-43b0-4d6f-83d6-e92de753b5bd">
     </div>
     <div class="imagenCargaPerfil">
       <img *ngIf="fotoNoticia == '-'" (click)="cargarImagen('galeria')" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2Fsubir%20.png?alt=media&token=213ee309-9fe0-4fbe-88d2-2819435b452e">
     </div>
-  </div>
-  <div class="wrapper-perfil" *ngIf="fotoNoticia != '-'">
-    <img class="img-circle-perfil" [src]="fotoNoticia">
-  </div>
+  </div>-->
 
 
-  <ion-item>
-    <ion-label floating>Fecha</ion-label>
-    <ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="fechaNoticia"></ion-datetime>
-  </ion-item>
 
-  <ion-item>
+<!--
+  <ion-item class="fondo">
     <ion-label floating>Departamento</ion-label>
     <ion-select multiple="false" [(ngModel)]="uidDepartamento" (ionChange)="onSelecDepartamento()">
       <ion-option *ngFor="let muni of departamentos " value="{{muni.uid}}">{{muni.nombreDepartamento}}</ion-option>
     </ion-select>
-  </ion-item>
+  </ion-item>-->
 
 
 
 
-  <ion-item>
-    <ion-label floating>Municipio</ion-label>
-    <ion-select multiple="false" [(ngModel)]="uidMunicipio">
-      <ion-option *ngFor="let muni of municipios " value="{{muni.uid}}">{{muni.nombreMunicipio}}</ion-option>
-    </ion-select>
-  </ion-item>
+  <!--<button ion-button full (click)="publicarNoticia()">Publicar noticia</button>-->
 
-  <button ion-button full (click)="publicarNoticia()">Publicar noticia</button>
+   <div class="centrado">
+     <button ion-button outline item-end icon-left color="colorGris"  (click)="publicarNoticia()">
+        <ion-icon class="iconPublicar"></ion-icon>
+        Publicar
+      </button>
+  </div>
 
 
 </ion-content>

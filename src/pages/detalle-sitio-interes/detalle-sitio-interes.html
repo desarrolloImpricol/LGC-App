@@ -1,0 +1,90 @@
+<!--
+  Generated template for the DetalleSitioInteresPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="colorAmarillo">
+    <ion-title>{{sitio.tituloSitio}}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+	<ion-card>
+
+
+   
+   <img  [src]="sitio.urlImagen"/>
+    <div class="divContenido">
+                <span class="tituloNoticia">
+                  {{sitio.tituloSitio}}
+                </span>
+                
+                <span class="municipioNoticia">Bogota</span><span class="descripcionNoticia">{{sitio.descripcion}} </span>
+
+                <span class="telefonoSitio">{{sitio.telefono}}</span>
+                <br>
+                <br>
+                <span class="celularSitio"></span><span>{{sitio.celular}}</span>
+                <br>
+                <br>
+                <span class="emailSitio"></span><span>{{sitio.email}}</span>
+                <br>
+                <br>
+                <span class="horarioSitio"></span><span>{{sitio.horario}}</span>
+
+              </div>
+
+
+		 	<ion-slides pager class="sitios">
+		      <ion-slide  >
+		           <ion-card >
+		           	<img [src]="sitio.fotos[0]">
+		           </ion-card>
+		      </ion-slide>
+		       <ion-slide  >
+		           <ion-card >
+		           	<img [src]="sitio.fotos[1]">
+		           </ion-card>
+		      </ion-slide>
+		       <ion-slide  >
+		           <ion-card >
+		           	<img [src]="sitio.fotos[2]">
+		           </ion-card>
+		      </ion-slide>
+		       <ion-slide  >
+		           <ion-card >
+		           	<img [src]="sitio.fotos[3]">
+		           </ion-card>
+		      </ion-slide>
+		     
+
+		    </ion-slides>
+          <!--<ion-item>
+            <ion-icon name="wine" item-left large ></ion-icon>
+            <h2>Institute of Fine Cocktails</h2>
+            <p>14 S. Hop Avenue, Madison, WI 53703</p>
+          </ion-item>-->
+          <ion-row no-padding class="centrado">
+                <!--  <ion-col text-right>
+                    <button (click)="compartir(noti.urlImagen)" ion-button clear small color="colorEvento" icon-start>
+                      <img  class="iconoGuardadoEvento" />
+                      Me interesa
+                    </button>
+                    
+                  </ion-col>-->
+                  <ion-col>
+                  <button (click)="compartir(noti.urlImagen)" ion-button clear small color="colorEvento" icon-start>
+                     <img class="iconoCompartirEvento" />
+                      Compartir
+                    </button>
+                  </ion-col>
+                </ion-row>
+ </ion-card>
+
+</ion-content>

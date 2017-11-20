@@ -17,13 +17,16 @@ import { DetalleEventoPage } from '../pages/detalle-evento/detalle-evento';
 import { RecuperarClavePage } from '../pages/recuperar-clave/recuperar-clave';
 import { LoginPage } from '../pages/login/login';
 import { DetalleDepartamentoPage } from '../pages/detalle-departamento/detalle-departamento';
+import { DetalleSitioInteresPage } from '../pages/detalle-sitio-interes/detalle-sitio-interes';
 import { ColombiaPage } from '../pages/colombia/colombia';
+import { DepartamentoPage } from '../pages/departamento/departamento';
 import { PublicarPage } from '../pages/publicar/publicar';
 import { RegistroPage } from '../pages/registro/registro';
 import { FavoritosPage } from '../pages/favoritos/favoritos';
 import { MunicipiosPage } from '../pages/municipios/municipios';
 import { InicioSesionPage } from '../pages/inicio-sesion/inicio-sesion';
 import { PerfilClientePage } from '../pages/perfil-cliente/perfil-cliente';
+import { EditarPerfilPage } from '../pages/editar-perfil/editar-perfil';
 import { BusquedaAvanzadaPage } from '../pages/busqueda-avanzada/busqueda-avanzada';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database-deprecated';
@@ -47,9 +50,7 @@ import { Media, MediaObject } from '@ionic-native/media';
 import { NativeAudio } from '@ionic-native/native-audio';
 import { FileChooser } from '@ionic-native/file-chooser';
 import { FilePath } from '@ionic-native/file-path';
-
-
-
+import { DireccionamientosProvider } from '../providers/direccionamientos/direccionamientos';
 
 
 //configuracion firebase
@@ -86,7 +87,10 @@ firebase.initializeApp(firebaseConfig)
     DetalleDepartamentoPage,
     BusquedaAvanzadaPage,
     PerfilClientePage,
-    FavoritosPage
+    FavoritosPage,
+    DepartamentoPage,
+    DetalleSitioInteresPage,
+    EditarPerfilPage
   ],
   imports: [
     BrowserModule,
@@ -121,7 +125,10 @@ firebase.initializeApp(firebaseConfig)
     DetalleDepartamentoPage,
     BusquedaAvanzadaPage,
     PerfilClientePage,
-    FavoritosPage
+    FavoritosPage,
+    DepartamentoPage,
+    DetalleSitioInteresPage,
+    EditarPerfilPage
   ],
   providers: [
     StatusBar,
@@ -142,7 +149,8 @@ firebase.initializeApp(firebaseConfig)
     Media,
     NativeAudio,
     FileChooser,
-    FilePath
+    FilePath,
+    DireccionamientosProvider
 
   ]
 })

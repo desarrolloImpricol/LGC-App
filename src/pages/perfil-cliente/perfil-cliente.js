@@ -8,9 +8,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { AngularFireDatabase } from 'angularfire2/database-deprecated';
+import { CundiAmarillasPage } from '../../pages/cundi-amarillas/cundi-amarillas';
+import { CundiEmpleosPage } from '../../pages/cundi-empleos/cundi-empleos';
+import { CundiEventosPage } from '../../pages/cundi-eventos/cundi-eventos';
+import { CundiNoticiasPage } from '../../pages/cundi-noticias/cundi-noticias';
+import { ColombiaPage } from '../../pages/colombia/colombia';
 /**
  * Generated class for the PerfilClientePage page.
  *
@@ -18,12 +23,13 @@ import { AngularFireDatabase } from 'angularfire2/database-deprecated';
  * Ionic pages and navigation.
  */
 var PerfilClientePage = /** @class */ (function () {
-    function PerfilClientePage(navCtrl, navParams, storage, af) {
+    function PerfilClientePage(navCtrl, navParams, storage, af, menuCtrl) {
         var _this = this;
         this.navCtrl = navCtrl;
         this.navParams = navParams;
         this.storage = storage;
         this.af = af;
+        this.menuCtrl = menuCtrl;
         this.perfil = [];
         //veirfica si el usuario esta guardado
         this.storage.get('userData')
@@ -45,8 +51,33 @@ var PerfilClientePage = /** @class */ (function () {
             //  this.navCtrl.push(InicioSesionPage);
         });
     }
+    PerfilClientePage.prototype.ionViewWillEnter = function () {
+        console.log("activa nav");
+        this.menuCtrl.enable(true, 'menuSlide');
+    };
     PerfilClientePage.prototype.ionViewDidLoad = function () {
         console.log('ionViewDidLoad PerfilClientePage');
+    };
+    //redireccion a colombia
+    PerfilClientePage.prototype.irColombia = function () {
+        this.navCtrl.setRoot(ColombiaPage);
+    };
+    //redirecciona a noticias
+    PerfilClientePage.prototype.irNoticias = function () {
+        //this.navCtrl.setRoot(CundiNoticiasPage);
+        this.navCtrl.setRoot(CundiNoticiasPage);
+    };
+    //redirecciona a eventos
+    PerfilClientePage.prototype.irEventos = function () {
+        this.navCtrl.setRoot(CundiEventosPage);
+    };
+    //redireccion a empleos
+    PerfilClientePage.prototype.irEmpleos = function () {
+        this.navCtrl.setRoot(CundiEmpleosPage);
+    };
+    //redireccion a amarillas
+    PerfilClientePage.prototype.irAmarillas = function () {
+        this.navCtrl.setRoot(CundiAmarillasPage);
     };
     PerfilClientePage = __decorate([
         IonicPage(),
@@ -54,7 +85,7 @@ var PerfilClientePage = /** @class */ (function () {
             selector: 'page-perfil-cliente',
             templateUrl: 'perfil-cliente.html',
         }),
-        __metadata("design:paramtypes", [NavController, NavParams, Storage, AngularFireDatabase])
+        __metadata("design:paramtypes", [NavController, NavParams, Storage, AngularFireDatabase, MenuController])
     ], PerfilClientePage);
     return PerfilClientePage;
 }());

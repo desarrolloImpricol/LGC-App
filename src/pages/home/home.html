@@ -9,139 +9,9 @@
   </ion-navbar>
 </ion-header>
 
-<ion-menu [content]="content" persistent="true">
-  <ion-header>
-    <ion-toolbar  color="colorNegroMenu">
-      <ion-title>Menu</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content class="fondoMenu">
-    <!--<br>
-    <span class="fuenteMenu texto-margen-izquierda ">Editar perfil</span>
-    <br>
-     <div class="wrapper-perfil">
-      <img class="img-circle-perfil" [src]="perfil.photoUrl">
-    </div>
-    <br>
-    <div style="text-align: center;">
-      <span class="fuente-10 fuente-centrado  fuenteMenu "> {{perfil.nombreUsuario}} </span>
-    </div>
-    <br>-->
-    <ion-list >
-      <button  class="fondoMenu fuenteMenu bordeMenu" ion-item (click)="openPerfilMenu()">
-        <img class="iconoPerfil" />
-        Mi perfil
-      </button>
-
-      <div *ngIf="mostrarMenuPerfil">
-          <button  class="fondoMenu fuenteMenu bordeMenu" ion-item (click)="irPerfilCliente()">
-              Ver perfil
-          </button>
-          <button  class="fondoMenu fuenteMenu bordeMenu" ion-item >
-              Editar perfil
-          </button>
-          <button  class="fondoMenu fuenteMenu bordeMenu" ion-item >
-              Publicaciones
-          </button>
-          <button  class="fondoMenu fuenteMenu bordeMenu" ion-item (click)="irPublicar()">
-              Publicar
-          </button>
-      </div>
-
-      <button  class="fondoMenu fuenteMenu" ion-item (click)="irFavoritos()">
-        <img class="iconoFavoritos" />
-        Favoritos
-      </button>
-      <button  class="fondoMenu fuenteMenu" ion-item (click)="openBusquedaMenu()">
-        <img class="iconoBusqueda" />
-        Busqueda avanzada
-      </button>
-      <div class="fondoMenu" *ngIf="mostrarBusqueda">
-        <ion-list>
-          <ion-item class="fondoMenu fuente-blanco bordeMenu">
-            <ion-label class="fuente-blanco">¿Qué busca?</ion-label>
-            <ion-select [(ngModel)]="queBusca">
-              <ion-option value="noticias">Noticias</ion-option>
-              <ion-option value="eventos">Eventos</ion-option>
-            <!--  <ion-option value="empleos">Empleos</ion-option>
-              <ion-option value="amarillas">Amarillas</ion-option>-->
-              
-              
-            </ion-select>
-          </ion-item>
-
-           <ion-item class="fondoMenu">
-            <ion-label class="fuente-blanco">¿Donde lo busca?</ion-label>
-            <ion-select [(ngModel)]="dondebusca">
-             
-              <ion-option *ngFor="let muni of municipios " value="{{muni.uid}}">{{muni.nombreMunicipio}}</ion-option>                                          
-            </ion-select>
-          </ion-item>
-
-           <ion-item class="fondoMenu" *ngIf="queBusca === 'eventos'">
-            <ion-label class="fuente-blanco">Tipo publicación?</ion-label>
-            <ion-select [(ngModel)]="tipoPublicacion">
-         
-
-              <ion-option *ngFor="let muni of categoriasEventos " value="{{muni.uid}}">{{muni.nombre}}</ion-option>                                               
-            </ion-select>
-          </ion-item>
-
-           <ion-item class="fondoMenu"  *ngIf="queBusca === 'eventos'">
-            <ion-label class="fuente-blanco" >Fecha publicacion evento</ion-label>
-            <ion-select [(ngModel)]="fechaFiltroEvento">
-              <ion-option value="enero">Enero</ion-option>
-              <ion-option value="febrero">Febrero</ion-option>
-              <ion-option value="marzo">Marzo</ion-option>                                          
-              <ion-option value="abril">Abril</ion-option>                                          
-              <ion-option value="mayo">Mayo</ion-option>                                          
-              <ion-option value="junio">Junio</ion-option>                                          
-              <ion-option value="julio">Julio</ion-option>                                          
-              <ion-option value="agosto">Agosto</ion-option>                                          
-              <ion-option value="septiembre">Septiembre</ion-option>                                          
-              <ion-option value="octubre">Octubre</ion-option>                                          
-              <ion-option value="noviembre">Noviembre</ion-option>                                          
-              <ion-option value="diciembre">Diciembre</ion-option>                                          
-            </ion-select>
-          </ion-item>
-          <ion-item class="fondoMenu"  *ngIf="queBusca === 'noticias'">
-            <ion-label class="fuente-blanco" >Fecha publicacion noticia</ion-label>
-            <ion-select [(ngModel)]="fechaFiltroNoticia">
-               <ion-option value="enero">Enero</ion-option>
-              <ion-option value="febrero">Febrero</ion-option>
-              <ion-option value="marzo">Marzo</ion-option>                                          
-              <ion-option value="abril">Abril</ion-option>                                          
-              <ion-option value="mayo">Mayo</ion-option>                                          
-              <ion-option value="junio">Junio</ion-option>                                          
-              <ion-option value="julio">Julio</ion-option>                                          
-              <ion-option value="agosto">Agosto</ion-option>                                          
-              <ion-option value="septiembre">Septiembre</ion-option>                                          
-              <ion-option value="octubre">Octubre</ion-option>                                          
-              <ion-option value="noviembre">Noviembre</ion-option>                                          
-              <ion-option value="diciembre">Diciembre</ion-option>                                          
-            </ion-select>
-          </ion-item>
-        </ion-list>
-        <button [disabled]="queBusca === '-'" ion-button full color="colorNegroMenuOpciones" (click)="buscarMenu()">BUSCAR</button>
-
-      </div>
-      <button   class="fondoMenu fuenteMenu" ion-item (click)="cerrarSesion()" >
-        <img class="iconoCerrarSesion" />
-        Cerrar sesion
-      </button>
-       <!--<button   class="fondoMenu fuenteMenu" ion-item (click)="irColombia()">
-        Municipios
-      </button>
-      <button   class="fondoMenu fuenteMenu" ion-item (click)="irBusquedaAvanzada()">
-        Busqueda avanzada
-      </button>-->
-    </ion-list>
-  </ion-content>
-</ion-menu>
-<ion-nav id="nav" #content [root]="rootPage"></ion-nav>
 
 
-<ion-content padding>
+<ion-content padding class="fondo">
 
     <!--<ion-fab top right edge>
     <button ion-fab mini><ion-icon name="add"></ion-icon></button>
@@ -161,6 +31,7 @@
      <div class="wrapper-perfil">
 
       <img class="img-circle-perfil" [src]="perfil.photoUrl">
+
     </div>
     <span class="fuente-10 fuente-centrado  "> {{perfil.nombreUsuario}} </span>
 
@@ -245,7 +116,7 @@
                     <button (click)="guardarEvento(noti)" ion-button clear small color="colorEvento" icon-start>
                       <img  *ngIf="noti.guardado"  class="iconoGuardadoEvento" />
                       <img  *ngIf="!noti.guardado" class="iconoNoGuardadoEvento" />
-                      Me interesa
+                      Favorito
                     </button>
                     
                   </ion-col>
@@ -288,7 +159,7 @@
               <button (click)="guardarNoticia(noti)" ion-button clear small color="colorNoticias" icon-start>
                 <img  *ngIf="noti.guardado" class="iconoGuardado" />
                 <img  *ngIf="!noti.guardado" class="iconoNoGuardado" />
-                Me interesa
+                Favorito
               </button>
               
             </ion-col>

@@ -1,4 +1,4 @@
-<!--
+	<!--
   Generated template for the FavoritosPage page.
 
   See http://ionicframework.com/docs/components/#navigation for more info on
@@ -7,7 +7,11 @@
 <ion-header>
 
   <ion-navbar color="colorAmarillo">
-    <ion-title>favoritos</ion-title>
+  	<button ion-button menuToggle icon-only>
+      <ion-icon name='menu'></ion-icon>
+    </button>
+    <ion-title color="colorBlanco">favoritos</ion-title>
+    
   </ion-navbar>
 
 </ion-header>
@@ -20,6 +24,8 @@
       <button [ngClass]="{'activo' : menuSelect === 'noticias'  }" (click)="selectTab('noticias')">Noticias</button>
        <button [ngClass]="{'activo' : menuSelect === 'eventos'  }" (click)="selectTab('eventos')">Eventos</button>
        <button [ngClass]="{'activo' : menuSelect === 'municipios'}" (click)="selectTab('municipios')">Municipios</button>
+        <button [ngClass]="{'activo' : menuSelect === 'sitios'}" (click)="selectTab('sitios')">Sitios interes </button>
+
 
        
     </div>
@@ -43,7 +49,7 @@
 			    <ion-thumbnail item-start (click)="detalleNoticia(item.noticia)">
 			      <img [src]="item.noticia.urlImagen">
 			    </ion-thumbnail>
-			    <p>{{item.noticia.nombreUsuario}}</p>
+			    <p class="fuente-morada">{{item.noticia.nombreUsuario}}</p>
 			    <p>{{item.noticia.fechaNoticia}}</p>
 			    <p>{{item.noticia.tituloNoticia}}</p>			    
 			    <p>{{item.noticia.nombreMunicipio}}</p>
@@ -61,7 +67,7 @@
 	      <ion-thumbnail item-start (click)="detalleEvento(item.evento)">
 	        <img [src]="item.evento.urlImagen">
 	      </ion-thumbnail>
-		      <p>{{item.evento.nombreUsuario}}</p>
+		      <p class="fuente-naranja">{{item.evento.nombreUsuario}}</p>
 		      <p>{{item.evento.fechaInicio}} -{{item.evento.fechaFin}}</p>
 		      <p>{{item.evento.tituloEvento}}</p>
 		      <p>{{item.evento.nombreMunicipio}}</p>
@@ -71,8 +77,27 @@
 
 
 	  <ion-list *ngSwitchCase="'municipios'">
-	     <span>proximamente</span>
+	      <ion-item *ngFor="let item of municipios">
+	      <ion-thumbnail item-start (click)="detalleMunicipios(item.municipio)">
+	        <img [src]="item.municipio.urlBandera">
+	      </ion-thumbnail>
+		      <p class="fuente-amarilla">{{item.municipio.municipio}}</p>
+		      <p>Cundinamarca</p>
+		    
+	    </ion-item>
 	  </ion-list>
+
+ 		<ion-list *ngSwitchCase="'sitios'">
+	      <ion-item *ngFor="let item of sitios">
+		      <ion-thumbnail item-start (click)="detalleSitio(item.sitio)">
+		        <img [src]="item.sitio.urlImagen">
+		      </ion-thumbnail>
+			      <p class="fuente-amarilla">{{item.sitio.tituloSitio}}</p>
+			      <p>{{item.sitio.direccion}}</p>
+			      <p>{{item.sitio.nombreMunicipio}},Cundinamarca</p>
+			    
+		      </ion-item>
+	   </ion-list>
 
 	</div>
 

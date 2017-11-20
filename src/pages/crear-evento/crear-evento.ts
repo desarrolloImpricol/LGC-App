@@ -42,10 +42,30 @@ export class CrearEventoPage {
   fotoComprimidaCliente: any;
   loading2: any;
   fechaFinEvento: any;
+  departamentoApp :any = "/Cundinamarca";
+  categoriasEventos:any;
+  filtroEventos:any;
+  horario:any;
+  ubicacion:any;
+  datosContacto:any;
+  telefonoContacto:any;
+  organizador:any;
+  uidCategoria:any;
+  foto1 :any;
+  foto2 :any;
+  foto3 :any;
+  foto4 :any;
+  foto5 :any;
+
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public af: AngularFireDatabase, public camera: Camera, public ng2ImgToolsService: Ng2ImgToolsService, public loadingCtrl: LoadingController, public storage: Storage) {
     //inicializa la foto de evento
     this.fotoEvento = "-";
+    this.foto1 = "-";
+    this.foto2 = "-";
+    this.foto3 = "-";
+    this.foto4 = "-";
+    this.foto5 = "-";
     //veirfica si el usuario esta guardado
     this.storage.get('userData')
       .then(
@@ -53,7 +73,7 @@ export class CrearEventoPage {
         //console.log(JSON.stringify(data)),
         //console.log(data.uid);
         //consulta informacion del usuario
-        this.item = this.af.object('/userProfile/' + data.uid, { preserveSnapshot: true });
+        this.item = this.af.object(this.departamentoApp+'/userProfile/' + data.uid, { preserveSnapshot: true });
         this.item.subscribe(snapshot => {
           //console.log(snapshot.key);
           //console.log(snapshot.val());
@@ -67,7 +87,7 @@ export class CrearEventoPage {
       }
       );
     //Consume lista de departamentos
-    this.af.list('/departamentos/', { preserveSnapshot: true })
+    this.af.list(this.departamentoApp+'/departamentos/', { preserveSnapshot: true })
       .subscribe(snapshots => {
         this.departamentos = [];
         snapshots.forEach(snapshot1 => {
@@ -79,6 +99,55 @@ export class CrearEventoPage {
           this.departamentos.push(data);
         });
       });
+
+      //reinicializa el arreglo demunicipios
+      this.municipios = [];
+      let subject = new Subject();
+      const queryObservable = this.af.list(this.departamentoApp+'/Municipios', {
+        query: {
+          orderByKey: true
+        }
+      });
+      //manjo de respuesta 
+      // subscribe to changes
+      queryObservable.subscribe(queriedItems => {
+        console.log(JSON.stringify(queriedItems));
+        //alamaenca resultado del filtro en arreglo 
+        this.filtroMunicipios = queriedItems;
+        //recorre arreglo para setelartl en la lista 
+        this.filtroMunicipios.forEach((item, index) => {
+          //         console.log("item municipio = " + JSON.stringify(item));
+
+          let dataI = item;
+
+          this.municipios.push(dataI);
+        });
+      });
+
+         //arreglo de tipo evento
+    this.categoriasEventos = [];
+    //let subject = new Subject();
+    const queryObservableCategorias = this.af.list(this.departamentoApp+'/CategoriasEventos', {
+      query: {
+        orderByKey: true
+      }
+    });
+    //manjo de respuesta 
+    // subscribe to changes
+    queryObservableCategorias.subscribe(queriedItems => {
+      console.log(JSON.stringify(queriedItems));
+      //alamaenca resultado del filtro en arreglo 
+      this.filtroEventos = queriedItems;
+      //recorre arreglo para setelartl en la lista 
+      this.filtroEventos.forEach((item, index) => {
+        //         console.log("item municipio = " + JSON.stringify(item));
+
+        let dataI = item;
+
+        this.categoriasEventos.push(dataI);
+      });
+    });
+
   }
 
   //funcion que se ejecuta cuando se cambia el departamento
@@ -86,7 +155,7 @@ export class CrearEventoPage {
     this.municipios = [];
     let subject = new Subject();
     //Crea consulta
-    const queryObservable = this.af.list('/municipios', {
+    const queryObservable = this.af.list(this.departamentoApp+'/Municipios', {
       query: {
         orderByChild: 'uidDepartamento',
         equalTo: subject
@@ -94,6 +163,7 @@ export class CrearEventoPage {
     });
     // subscribe to changes
     queryObservable.subscribe(queriedItems => {
+      console.log("*************************Municipios*************************************");
       console.log(JSON.stringify(queriedItems));
       //alamacena resultado del query
       this.filtroMunicipios = queriedItems;
@@ -150,21 +220,59 @@ export class CrearEventoPage {
       return;
     }
     //valida que se tenfa seccionado el departamento
-    if (this.uidDepartamento === null || this.uidDepartamento === "0" || this.uidDepartamento === undefined) {
-      alert("Falta departamento");
+    //if (this.uidDepartamento === null || this.uidDepartamento === "0" || this.uidDepartamento === undefined) {
+    //  alert("Falta departamento");
+    //  return;
+    //}
+    //valida horario
+    if (this.horario === null || this.horario === "0" || this.horario === undefined) {
+      alert("Falta horario");
+      return;
+    }
+
+     //valida ubicacion
+    if (this.ubicacion === null || this.ubicacion === "0" || this.ubicacion === undefined) {
+      alert("Falta ubicacion");
+      return;
+    }
+
+     //valida datos de contacto 
+    if (this.datosContacto === null || this.datosContacto === "0" || this.datosContacto === undefined) {
+      alert("Faltan datos contacto");
+      return;
+    }
+
+     //valida datos de contacto 
+    if (this.telefonoContacto === null || this.telefonoContacto === "0" || this.telefonoContacto === undefined) {
+      alert("Faltan datos contacto");
+      return;
+    }
+
+     //valida datos de contacto 
+    if (this.organizador === null || this.organizador === "0" || this.organizador === undefined) {
+      alert("Faltan datos contacto");
       return;
     }
     //referencia de la tabla
-    const itemRef = this.af.list('Eventos');
+    const itemRef = this.af.list(this.departamentoApp+'/Eventos');
+    let  uid = this.uidMunicipio -1;
     //crea evento
     itemRef.push({
+      uidMunicipio: uid.toString(),
+      uidCategoriaEvento :this.uidCategoria,
       tituloEvento: this.tituloEvento,
       descripcionEvento: this.descripcionEvento,
-      uidMunicipio: this.uidMunicipio,
-      uidDepartamento: this.uidDepartamento,
+      //uidDepartamento: this.uidDepartamento,
       uidCreador: this.perfil.uid,
       fechaInicio: this.fechaEvento,
-      fechaFin: this.fechaFinEvento
+      fechaFin: this.fechaFinEvento,
+      horario:this.horario,
+      ubicacion:this.ubicacion,
+      datosContacto :this.datosContacto,
+      telefonoContacto:this.telefonoContacto,
+      organizador:this.organizador
+      
+
     }).then((item) => {
       console.log("llave = " + item.key);
       //luego de tener el uid del evento creado se ejecuta la funcion que sube una imagen
@@ -174,12 +282,51 @@ export class CrearEventoPage {
 
   //funcion que agrega la url de l imagen a un evento seleccionado
   updateFotoNoticia(uid, url) {
-    firebase.database().ref('/Eventos/').child(uid)
+    firebase.database().ref(this.departamentoApp+'/Eventos/').child(uid)
       .update(
       { urlImagen: url }
       );
     alert("Evento registrado");
     this.navCtrl.popToRoot();
+  }
+  
+  
+  cargarOtrasImagenes(numero){
+      const options: CameraOptions = {
+        quality: 10,
+        destinationType: this.camera.DestinationType.DATA_URL,
+        encodingType: this.camera.EncodingType.PNG,
+        mediaType: this.camera.MediaType.PICTURE,
+        sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
+        correctOrientation: true,
+        saveToPhotoAlbum: true
+      }
+      this.camera.getPicture(options).then((imageData) => {
+        if(numero === 1){
+          this.foto1 = 'data:image/jpeg;base64,' + imageData;
+        }
+        if(numero === 2){
+          this.foto2 = 'data:image/jpeg;base64,' + imageData;
+        }
+        if(numero === 3){
+          this.foto3 = 'data:image/jpeg;base64,' + imageData;
+        }
+        if(numero === 4){
+          this.foto4 = 'data:image/jpeg;base64,' + imageData;
+        }
+        if(numero === 5){
+          this.foto5 = 'data:image/jpeg;base64,' + imageData;
+        }
+        
+        //this.fotoEventoPura = imageData;
+        //let fotoCliente = this.b64toBlob(this.fotoEventoPura, null, null);
+        
+      }, (err) => {
+        console.log("error 2");
+        console.log(err);
+        //this.loading.dismiss();
+        // Handle error
+      });
   }
 
   //funcion que carga la imagen dese la libreria o dirctamento una foto de la camara, dependiento el tipo
@@ -256,7 +403,7 @@ export class CrearEventoPage {
         let storage = firebase.storage().ref();
         const loading = this.loading2;
         let thiss = this;
-        const storageRef = storage.child('eventos/' + uid + '/fotoPrincipal.png').put(this.fotoComprimidaCliente).then(function(snapshot) {
+        const storageRef = storage.child(this.departamentoApp+'eventos/' + uid + '/fotoPrincipal.png').put(this.fotoComprimidaCliente).then(function(snapshot) {
           console.log('Uploaded an array!');
           //  this.downloadURL = snapshot.downloadURL;
           console.log("sanpchot");

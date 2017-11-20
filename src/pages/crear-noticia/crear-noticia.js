@@ -20,6 +20,8 @@ import { Storage } from '@ionic/storage';
 import { FileChooser } from '@ionic-native/file-chooser';
 import { FileTransfer } from '@ionic-native/file-transfer';
 import { FilePath } from '@ionic-native/file-path';
+import { CundiNoticiasPage } from '../../pages/cundi-noticias/cundi-noticias';
+import { AlertController } from 'ionic-angular';
 /**
  * Generated class for the CrearNoticiaPage page.
  *
@@ -27,7 +29,7 @@ import { FilePath } from '@ionic-native/file-path';
  * Ionic pages and navigation.
  */
 var CrearNoticiaPage = /** @class */ (function () {
-    function CrearNoticiaPage(navCtrl, navParams, af, camera, ng2ImgToolsService, loadingCtrl, storage, fileChooser, transfer, Toast, filePath) {
+    function CrearNoticiaPage(navCtrl, navParams, af, camera, ng2ImgToolsService, loadingCtrl, storage, fileChooser, transfer, Toast, filePath, alertCtrl) {
         var _this = this;
         this.navCtrl = navCtrl;
         this.navParams = navParams;
@@ -40,8 +42,15 @@ var CrearNoticiaPage = /** @class */ (function () {
         this.transfer = transfer;
         this.Toast = Toast;
         this.filePath = filePath;
+        this.alertCtrl = alertCtrl;
+        this.departamentoApp = "/Cundinamarca";
         //inicializa  variable de foto de  noticia
         this.fotoNoticia = "-";
+        this.foto1 = "-";
+        this.foto2 = "-";
+        this.foto3 = "-";
+        this.foto4 = "-";
+        this.foto5 = "-";
         //obtiene informacion del usuario
         this.storage.get('userData')
             .then(function (data) {
@@ -49,7 +58,7 @@ var CrearNoticiaPage = /** @class */ (function () {
                 console.log("finaliza");
             console.log(data.uid);
             //consulta informacion de perfil 
-            _this.item = _this.af.object('/userProfile/' + data.uid, { preserveSnapshot: true });
+            _this.item = _this.af.object(_this.departamentoApp + '/userProfile/' + data.uid, { preserveSnapshot: true });
             _this.item.subscribe(function (snapshot) {
                 console.log(snapshot.key);
                 console.log(snapshot.val());
@@ -61,16 +70,37 @@ var CrearNoticiaPage = /** @class */ (function () {
             console.error("error = " + error);
         });
         //consulta departamentos  
-        this.af.list('/departamentos/', { preserveSnapshot: true })
-            .subscribe(function (snapshots) {
-            _this.departamentos = [];
-            snapshots.forEach(function (snapshot1) {
-                var data = snapshot1.val();
-                data.uid = snapshot1.key;
-                //   console.log("uid creador = " + data.uidCreador);
-                console.log("departamento key  =" + snapshot1.key);
-                console.log("departamento Value =" + JSON.stringify(snapshot1.val()));
-                _this.departamentos.push(data);
+        /*    this.af.list('/departamentos/', { preserveSnapshot: true })
+              .subscribe(snapshots => {
+                this.departamentos = [];
+                snapshots.forEach(snapshot1 => {
+                  let data = snapshot1.val();
+                  data.uid = snapshot1.key;
+                  //   console.log("uid creador = " + data.uidCreador);
+                  console.log("departamento key  =" + snapshot1.key);
+                  console.log("departamento Value =" + JSON.stringify(snapshot1.val()));
+                  this.departamentos.push(data);
+                });
+              });*/
+        //reinicializa el arreglo demunicipios
+        this.municipios = [];
+        var subject = new Subject();
+        var queryObservable = this.af.list(this.departamentoApp + '/Municipios', {
+            query: {
+                orderByKey: true
+            }
+        });
+        //manjo de respuesta 
+        // subscribe to changes
+        queryObservable.subscribe(function (queriedItems) {
+            console.log(JSON.stringify(queriedItems));
+            //alamaenca resultado del filtro en arreglo 
+            _this.filtroMunicipios = queriedItems;
+            //recorre arreglo para setelartl en la lista 
+            _this.filtroMunicipios.forEach(function (item, index) {
+                //         console.log("item municipio = " + JSON.stringify(item));
+                var dataI = item;
+                _this.municipios.push(dataI);
             });
         });
     }
@@ -80,7 +110,7 @@ var CrearNoticiaPage = /** @class */ (function () {
         //reinicializa el arreglo demunicipios
         this.municipios = [];
         var subject = new Subject();
-        var queryObservable = this.af.list('/municipios', {
+        var queryObservable = this.af.list(this.departamentoApp + '/municipios', {
             query: {
                 orderByChild: 'uidDepartamento',
                 equalTo: subject
@@ -127,38 +157,44 @@ var CrearNoticiaPage = /** @class */ (function () {
             return;
         }
         //valida que se tenga la fecha de notica
-        if (this.fechaNoticia === null || this.fechaNoticia === "0" || this.fechaNoticia === undefined) {
+        /*  if (this.fechaNoticia === null || this.fechaNoticia === "0" || this.fechaNoticia === undefined) {
             alert("Falta fecha");
             return;
-        }
+          }*/
         //valida que se tenga seleccionado un municipio 
         if (this.uidMunicipio === null || this.uidMunicipio === "0" || this.uidMunicipio === undefined) {
             alert("Falta municipio");
             return;
         }
-        if (this.uidDepartamento === null || this.uidDepartamento === "0" || this.uidDepartamento === undefined) {
-            alert("Falta departamento");
+        if (this.fuente === null || this.fuente === "" || this.fuente === undefined) {
+            alert("Falta fuente");
             return;
         }
+        /*if (this.uidDepartamento === null || this.uidDepartamento === "0" || this.uidDepartamento === undefined) {
+          alert("Falta departamento");
+          return;
+        }*/
+        var uid = this.uidMunicipio - 1;
         //conslta noticias 
-        var itemRef = this.af.list('Noticias');
+        var itemRef = this.af.list(this.departamentoApp + '/Noticias');
         itemRef.push({
             tituloNoticia: this.tituloNoticia,
             descripcion: this.descripcionNoticia,
-            uidMunicipio: this.uidMunicipio,
-            uidDepartamento: this.uidDepartamento,
+            uidMunicipio: uid.toString(),
+            //uidDepartamento: this.uidDepartamento,
             uidCreador: this.perfil.uid,
-            fechaNoticia: this.fechaNoticia
+            fuente: this.fuente
+            // fechaNoticia: this.fechaNoticia
         }).then(function (item) {
             console.log("llave = " + item.key);
             _this.subirImagen(item.key);
         });
     };
     CrearNoticiaPage.prototype.updateFotoNoticia = function (uid, url) {
-        firebase.database().ref('/Noticias/').child(uid)
+        firebase.database().ref(this.departamentoApp + '/Noticias/').child(uid)
             .update({ urlImagen: url });
         alert("Noticia registrada");
-        this.navCtrl.popToRoot();
+        this.navCtrl.setRoot(CundiNoticiasPage);
     };
     CrearNoticiaPage.prototype.cargarImagen = function (tipo) {
         var _this = this;
@@ -232,7 +268,7 @@ var CrearNoticiaPage = /** @class */ (function () {
                 var storage = firebase.storage().ref();
                 var loading = _this.loading2;
                 var thiss = _this;
-                var storageRef = storage.child('noticias/' + uid + '/fotoPrincipal.png').put(_this.fotoComprimidaCliente).then(function (snapshot) {
+                var storageRef = storage.child(_this.departamentoApp + '/noticias/' + uid + '/fotoPrincipal.png').put(_this.fotoComprimidaCliente).then(function (snapshot) {
                     console.log('Uploaded an array!');
                     //  this.downloadURL = snapshot.downloadURL;
                     console.log("sanpchot");
@@ -351,13 +387,90 @@ var CrearNoticiaPage = /** @class */ (function () {
             // error
         });
     };
+    CrearNoticiaPage.prototype.cargarOtrasImagenes = function (numero) {
+        var _this = this;
+        var options = {
+            quality: 10,
+            destinationType: this.camera.DestinationType.DATA_URL,
+            encodingType: this.camera.EncodingType.PNG,
+            mediaType: this.camera.MediaType.PICTURE,
+            sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
+            correctOrientation: true,
+            saveToPhotoAlbum: true
+        };
+        this.camera.getPicture(options).then(function (imageData) {
+            if (numero === 1) {
+                _this.foto1 = 'data:image/jpeg;base64,' + imageData;
+            }
+            if (numero === 2) {
+                _this.foto2 = 'data:image/jpeg;base64,' + imageData;
+            }
+            if (numero === 3) {
+                _this.foto3 = 'data:image/jpeg;base64,' + imageData;
+            }
+            if (numero === 4) {
+                _this.foto4 = 'data:image/jpeg;base64,' + imageData;
+            }
+            if (numero === 5) {
+                _this.foto5 = 'data:image/jpeg;base64,' + imageData;
+            }
+            //this.fotoEventoPura = imageData;
+            //let fotoCliente = this.b64toBlob(this.fotoEventoPura, null, null);
+        }, function (err) {
+            console.log("error 2");
+            console.log(err);
+            //this.loading.dismiss();
+            // Handle error
+        });
+    };
+    CrearNoticiaPage.prototype.showRadio = function () {
+        var alert = this.alertCtrl.create();
+        alert.setTitle('!Noticia creada! , que desea hacer ? ');
+        alert.addInput({
+            type: 'radio',
+            label: 'Compartir',
+            value: 'compartir',
+            checked: false
+        });
+        alert.addInput({
+            type: 'radio',
+            label: 'Crear otra noticia',
+            value: 'crearNoticia',
+            checked: false
+        });
+        alert.addInput({
+            type: 'radio',
+            label: 'Volver',
+            value: 'volver',
+            checked: false
+        });
+        //   alert.addButton('Cancelar');
+        alert.addButton({
+            text: 'OK',
+            handler: function (data) {
+                //this.testRadioOpen = false;
+                //this.testRadioResult = data;
+                console.log(data);
+                if (data === 'compartir') {
+                    //this.irCrearNoticias();
+                }
+                if (data === 'crearNoticia') {
+                    //this.irCreaEventos();
+                }
+                if (data === 'volver') {
+                    //this.irCreaEventos();
+                }
+            }
+        });
+        alert.present();
+    };
     CrearNoticiaPage = __decorate([
         IonicPage(),
         Component({
             selector: 'page-crear-noticia',
             templateUrl: 'crear-noticia.html',
         }),
-        __metadata("design:paramtypes", [NavController, NavParams, AngularFireDatabase, Camera, Ng2ImgToolsService, LoadingController, Storage, FileChooser, FileTransfer, ToastController, FilePath])
+        __metadata("design:paramtypes", [NavController, NavParams, AngularFireDatabase, Camera, Ng2ImgToolsService, LoadingController, Storage, FileChooser, FileTransfer, ToastController, FilePath, AlertController])
     ], CrearNoticiaPage);
     return CrearNoticiaPage;
 }());

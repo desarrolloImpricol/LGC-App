@@ -1,0 +1,65 @@
+page-departamento {
+
+}
+
+
+/*---------------botones artistas PERFIL------------------*/
+.content-fotos-departamento {
+	display:flex;
+	width:100%;
+	flex-wrap: wrap;
+}
+.content-fotos-departamento img  {
+	width:33%;  //original
+	height:auto !important;
+	//width:50%;
+	flex-shrink: 0;
+	//border: 1px solid #ffcc29 ;
+	//padding: 9pt  7pt 7pt 7pt ;
+	color: #ededed;
+	font-family: 'gotham-light';
+	font-size: 1.3rem;
+	line-height: 1.5rem;
+	background-color: white;
+}
+
+.eslogan {
+
+	font-size: 12pt;
+}
+
+.textoMunicipio{
+	border-left:none;
+    border-right:none;
+    border-top:none;
+   // border-bottom:solid #838383 1px;
+    margin-top:10px !important;
+}
+
+
+.iconoGuardadoSitio {
+	width:20px;
+	height:20px;
+	content : url('../assets/icon/Amarillo/favorito.png');
+}
+
+
+.iconoNoGuardadoSitio {
+	width:20px;
+	height:20px;
+	content : url('../assets/icon/Amarillo/noFavorito.png');
+}
+.iconoCompartirSitio {
+	width:20px;
+	height:20px;
+	content : url('../assets/icon/Amarillo/compartir.png');
+}
+
+h6 .linea{
+   width: 100%; 
+   text-align: center; 
+   border-bottom: 1px  #838383; 
+   line-height: 0.1em;
+   margin: 10px 0 20px; 
+} 
+

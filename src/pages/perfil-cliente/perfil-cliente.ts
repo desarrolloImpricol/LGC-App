@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams ,MenuController  } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database-deprecated';
 import { CundiAmarillasPage } from '../../pages/cundi-amarillas/cundi-amarillas';
@@ -7,6 +7,9 @@ import { CundiEmpleosPage } from '../../pages/cundi-empleos/cundi-empleos';
 import { CundiEventosPage } from '../../pages/cundi-eventos/cundi-eventos';
 import { CundiNoticiasPage } from '../../pages/cundi-noticias/cundi-noticias';
 import { ColombiaPage } from '../../pages/colombia/colombia';
+import { DepartamentoPage } from '../../pages/departamento/departamento';
+
+
 /**
  * Generated class for the PerfilClientePage page.
  *
@@ -23,7 +26,8 @@ export class PerfilClientePage {
 
   item: any;
   perfil:any = [];
-  constructor(public navCtrl: NavController, public navParams: NavParams ,public storage: Storage  ,public af: AngularFireDatabase ) {
+  departamentoApp :any = "/Cundinamarca";
+  constructor(public navCtrl: NavController, public navParams: NavParams ,public storage: Storage  ,public af: AngularFireDatabase , public menuCtrl :MenuController) {
 
   	 //veirfica si el usuario esta guardado
     this.storage.get('userData')
@@ -33,7 +37,7 @@ export class PerfilClientePage {
           console.log("finaliza");
         //existe usuario
           console.log(data.uid);
-          this.item = this.af.object('/userProfile/' + data.uid, { preserveSnapshot: true });
+          this.item = this.af.object(this.departamentoApp+'/userProfile/' + data.uid, { preserveSnapshot: true });
           this.item.subscribe(snapshot => {
           	console.log("Perifl  info ");
             console.log(snapshot.key);
@@ -50,33 +54,49 @@ export class PerfilClientePage {
       }
       );
   }
+ionViewWillEnter() {
+   console.log("activa nav");
+     this.menuCtrl.enable(true, 'menuSlide');
 
+   }
 
  
   ionViewDidLoad() {
     console.log('ionViewDidLoad PerfilClientePage');
   }
 
+  irDepartamentos(){
+
+    this.navCtrl.setRoot(DepartamentoPage);
    //redireccion a colombia
+  
+  }
   irColombia(){
-    this.navCtrl.push(ColombiaPage);
+    this.navCtrl.setRoot(ColombiaPage);
   }
   //redirecciona a noticias
   irNoticias() {
     //this.navCtrl.setRoot(CundiNoticiasPage);
-    this.navCtrl.push(CundiNoticiasPage);
+    this.navCtrl.setRoot(CundiNoticiasPage);
   }
   //redirecciona a eventos
   irEventos() {
-    this.navCtrl.push(CundiEventosPage);
+    this.navCtrl.setRoot(CundiEventosPage);
+    //alert("Proximamente");
   }
   //redireccion a empleos
   irEmpleos() {
-    this.navCtrl.push(CundiEmpleosPage);
+    //this.navCtrl.setRoot(CundiEmpleosPage);
+    alert("Proximamente");
   }
   //redireccion a amarillas
   irAmarillas() {
-    this.navCtrl.push(CundiAmarillasPage);
+    alert("Proximamente");
+    //this.navCtrl.setRoot(CundiAmarillasPage);
+  }
+
+  irPromociones(){
+    alert("Proximamente");
   }
 
 }

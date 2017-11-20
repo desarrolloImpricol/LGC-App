@@ -39,6 +39,7 @@ var RegistroPage = /** @class */ (function () {
         this.clave = "";
         this.reclave = "";
         this.tipoUsuario = false;
+        this.terminos = false;
         this.departamentoApp = "/Cundinamarca";
         //inicializa la variable de url de cliente
         this.downloadURL = "-";
@@ -56,6 +57,27 @@ var RegistroPage = /** @class */ (function () {
                 console.log("departamento key  =" + snapshot1.key);
                 console.log("departamento Value =" + JSON.stringify(snapshot1.val()));
                 _this.deptos.push(data);
+            });
+        });
+        //reinicializa el arreglo demunicipios
+        this.municipios = [];
+        var subject = new Subject();
+        var queryObservable = this.af.list(this.departamentoApp + '/Municipios', {
+            query: {
+                orderByKey: true
+            }
+        });
+        //manjo de respuesta 
+        // subscribe to changes
+        queryObservable.subscribe(function (queriedItems) {
+            console.log(JSON.stringify(queriedItems));
+            //alamaenca resultado del filtro en arreglo 
+            _this.filtroMunicipios = queriedItems;
+            //recorre arreglo para setelartl en la lista 
+            _this.filtroMunicipios.forEach(function (item, index) {
+                //         console.log("item municipio = " + JSON.stringify(item));
+                var dataI = item;
+                _this.municipios.push(dataI);
             });
         });
     }
@@ -110,15 +132,18 @@ var RegistroPage = /** @class */ (function () {
                 .set({
                 email: _this.correo,
                 nombreUsuario: _this.usuario,
-                tipoUsuario: tipo
+                tipoUsuario: _this.tipoPerfil
             });
+            if (_this.uidMunicipio === "" || _this.uidMunicipio === null || _this.uidMunicipio === undefined) {
+                _this.uidMunicipio = "noInteres";
+            }
             //actualiza notificaciones de usuario
             firebase.database().ref(_this.departamentoApp + '/notificacionesUsuario').child(newUser.uid)
                 .set({
                 uid: newUser.uid,
-                uidMunicipio: _this.uidMunicipio,
-                uidDepartamento: _this.uidDepartamento,
-                interesSoloMunicipio: true
+                uidMunicipio: _this.uidMunicipio
+                // uidDepartamento: this.uidDepartamento,
+                //interesSoloMunicipio: true
             });
             //llamado a funcion de subir imagen
             _this.subirImagen(newUser.uid);
@@ -158,6 +183,15 @@ var RegistroPage = /** @class */ (function () {
         //verifica que se tenga un usuario para el registros
         if (this.usuario === "" || this.usuario === null || this.usuario === undefined) {
             alert("Falta nombre de usuario");
+            return;
+        }
+        //verifica que se tenga un usuario para el registros
+        if (this.tipoPerfil === "" || this.tipoPerfil === null || this.tipoPerfil === undefined) {
+            alert("Falta tipo perfil");
+            return;
+        }
+        if (this.terminos === false || this.terminos === null || this.terminos === undefined) {
+            alert("Debe aceptar los terminos y condiciones");
             return;
         }
         //llamado a suncion der registro

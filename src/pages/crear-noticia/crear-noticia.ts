@@ -11,7 +11,8 @@ import { Storage } from '@ionic/storage';
 import { FileChooser } from '@ionic-native/file-chooser';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
 import { FilePath } from '@ionic-native/file-path';
-
+import { CundiNoticiasPage } from '../../pages/cundi-noticias/cundi-noticias';
+import { AlertController } from 'ionic-angular';
 
 /**
  * Generated class for the CrearNoticiaPage page.
@@ -39,10 +40,22 @@ export class CrearNoticiaPage {
   item: any;
   perfil: any;
   fechaNoticia: any;
+  departamentoApp :any = "/Cundinamarca";
+  fuente :any ;
+  foto1 :any;
+  foto2 :any;
+  foto3 :any;
+  foto4 :any;
+  foto5 :any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public af: AngularFireDatabase, public camera: Camera, public ng2ImgToolsService: Ng2ImgToolsService, public loadingCtrl: LoadingController, public storage: Storage,private fileChooser: FileChooser,private transfer: FileTransfer,private Toast:ToastController,private filePath: FilePath) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public af: AngularFireDatabase, public camera: Camera, public ng2ImgToolsService: Ng2ImgToolsService, public loadingCtrl: LoadingController, public storage: Storage,private fileChooser: FileChooser,private transfer: FileTransfer,private Toast:ToastController,private filePath: FilePath , public alertCtrl : AlertController) {
     //inicializa  variable de foto de  noticia
     this.fotoNoticia = "-";
+     this.foto1 = "-";
+    this.foto2 = "-";
+    this.foto3 = "-";
+    this.foto4 = "-";
+    this.foto5 = "-";
     //obtiene informacion del usuario
     this.storage.get('userData')
       .then(
@@ -51,7 +64,7 @@ export class CrearNoticiaPage {
         console.log("finaliza");
         console.log(data.uid);
         //consulta informacion de perfil 
-        this.item = this.af.object('/userProfile/' + data.uid, { preserveSnapshot: true });
+        this.item = this.af.object(this.departamentoApp+'/userProfile/' + data.uid, { preserveSnapshot: true });
         this.item.subscribe(snapshot => {
           console.log(snapshot.key);
           console.log(snapshot.val());
@@ -69,7 +82,7 @@ export class CrearNoticiaPage {
 
 
     //consulta departamentos  
-    this.af.list('/departamentos/', { preserveSnapshot: true })
+/*    this.af.list('/departamentos/', { preserveSnapshot: true })
       .subscribe(snapshots => {
         this.departamentos = [];
         snapshots.forEach(snapshot1 => {
@@ -80,7 +93,32 @@ export class CrearNoticiaPage {
           console.log("departamento Value =" + JSON.stringify(snapshot1.val()));
           this.departamentos.push(data);
         });
+      });*/
+
+       //reinicializa el arreglo demunicipios
+      this.municipios = [];
+      let subject = new Subject();
+      const queryObservable = this.af.list(this.departamentoApp+'/Municipios', {
+        query: {
+          orderByKey: true
+        }
       });
+      //manjo de respuesta 
+      // subscribe to changes
+      queryObservable.subscribe(queriedItems => {
+        console.log(JSON.stringify(queriedItems));
+        //alamaenca resultado del filtro en arreglo 
+        this.filtroMunicipios = queriedItems;
+        //recorre arreglo para setelartl en la lista 
+        this.filtroMunicipios.forEach((item, index) => {
+          //         console.log("item municipio = " + JSON.stringify(item));
+
+          let dataI = item;
+
+          this.municipios.push(dataI);
+        });
+      });
+
 
 
 
@@ -93,7 +131,7 @@ export class CrearNoticiaPage {
      //reinicializa el arreglo demunicipios
     this.municipios = [];
     let subject = new Subject();
-    const queryObservable = this.af.list('/municipios', {
+    const queryObservable = this.af.list(this.departamentoApp+'/municipios', {
       query: {
         orderByChild: 'uidDepartamento',
         equalTo: subject
@@ -146,29 +184,35 @@ export class CrearNoticiaPage {
       return;
     }
     //valida que se tenga la fecha de notica
-    if (this.fechaNoticia === null || this.fechaNoticia === "0" || this.fechaNoticia === undefined) {
+  /*  if (this.fechaNoticia === null || this.fechaNoticia === "0" || this.fechaNoticia === undefined) {
       alert("Falta fecha");
       return;
-    }
+    }*/
+
     //valida que se tenga seleccionado un municipio 
     if (this.uidMunicipio === null || this.uidMunicipio === "0" || this.uidMunicipio === undefined) {
       alert("Falta municipio");
       return;
     }
-    if (this.uidDepartamento === null || this.uidDepartamento === "0" || this.uidDepartamento === undefined) {
-      alert("Falta departamento");
+     if (this.fuente === null || this.fuente === "" || this.fuente === undefined) {
+      alert("Falta fuente");
       return;
     }
-    
+    /*if (this.uidDepartamento === null || this.uidDepartamento === "0" || this.uidDepartamento === undefined) {
+      alert("Falta departamento");
+      return;
+    }*/
+    let  uid = this.uidMunicipio -1;
     //conslta noticias 
-    const itemRef = this.af.list('Noticias');
+    const itemRef = this.af.list(this.departamentoApp+'/Noticias');
     itemRef.push({
       tituloNoticia: this.tituloNoticia,
       descripcion: this.descripcionNoticia,
-      uidMunicipio: this.uidMunicipio,
-      uidDepartamento: this.uidDepartamento,
+      uidMunicipio: uid.toString(),
+      //uidDepartamento: this.uidDepartamento,
       uidCreador: this.perfil.uid,
-      fechaNoticia: this.fechaNoticia
+      fuente :this.fuente
+     // fechaNoticia: this.fechaNoticia
 
     }).then((item) => {
       console.log("llave = " + item.key);
@@ -179,12 +223,12 @@ export class CrearNoticiaPage {
   }
 
   updateFotoNoticia(uid, url) {
-    firebase.database().ref('/Noticias/').child(uid)
+    firebase.database().ref(this.departamentoApp+'/Noticias/').child(uid)
       .update(
       { urlImagen: url }
       );
     alert("Noticia registrada");
-    this.navCtrl.popToRoot();
+    this.navCtrl.setRoot(CundiNoticiasPage);
   }
 
   //carga imagen
@@ -277,7 +321,7 @@ export class CrearNoticiaPage {
         let storage = firebase.storage().ref();
         const loading = this.loading2;
         let thiss = this;
-        const storageRef = storage.child('noticias/' + uid + '/fotoPrincipal.png').put(this.fotoComprimidaCliente).then(function(snapshot) {
+        const storageRef = storage.child(this.departamentoApp+'/noticias/' + uid + '/fotoPrincipal.png').put(this.fotoComprimidaCliente).then(function(snapshot) {
           console.log('Uploaded an array!');
 
           //  this.downloadURL = snapshot.downloadURL;
@@ -435,5 +479,92 @@ readimage(url) {
    })
 }
 
+  cargarOtrasImagenes(numero){
+      const options: CameraOptions = {
+        quality: 10,
+        destinationType: this.camera.DestinationType.DATA_URL,
+        encodingType: this.camera.EncodingType.PNG,
+        mediaType: this.camera.MediaType.PICTURE,
+        sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
+        correctOrientation: true,
+        saveToPhotoAlbum: true
+      }
+      this.camera.getPicture(options).then((imageData) => {
+        if(numero === 1){
+          this.foto1 = 'data:image/jpeg;base64,' + imageData;
+        }
+        if(numero === 2){
+          this.foto2 = 'data:image/jpeg;base64,' + imageData;
+        }
+        if(numero === 3){
+          this.foto3 = 'data:image/jpeg;base64,' + imageData;
+        }
+        if(numero === 4){
+          this.foto4 = 'data:image/jpeg;base64,' + imageData;
+        }
+        if(numero === 5){
+          this.foto5 = 'data:image/jpeg;base64,' + imageData;
+        }
+        
+        //this.fotoEventoPura = imageData;
+        //let fotoCliente = this.b64toBlob(this.fotoEventoPura, null, null);
+        
+      }, (err) => {
+        console.log("error 2");
+        console.log(err);
+        //this.loading.dismiss();
+        // Handle error
+      });
+  }
+
+
+  showRadio() {
+    let alert = this.alertCtrl.create();
+    alert.setTitle('!Noticia creada! , que desea hacer ? ');
+
+    alert.addInput({
+      type: 'radio',
+      label: 'Compartir',
+      value: 'compartir',
+      checked: false
+    });
+
+
+    alert.addInput({
+      type: 'radio',
+      label: 'Crear otra noticia',
+      value: 'crearNoticia',
+      checked: false
+    });
+
+      alert.addInput({
+      type: 'radio',
+      label: 'Volver',
+      value: 'volver',
+      checked: false
+    });
+
+
+ //   alert.addButton('Cancelar');
+    alert.addButton({
+      text: 'OK',
+      handler: data => {
+        //this.testRadioOpen = false;
+        //this.testRadioResult = data;
+        console.log(data);
+        if(data === 'compartir'){
+            //this.irCrearNoticias();
+        }
+        if(data === 'crearNoticia'){
+            //this.irCreaEventos();
+        } 
+        if(data === 'volver'){
+            //this.irCreaEventos();
+        } 
+
+      }
+    });
+    alert.present();
+  }
 
 }

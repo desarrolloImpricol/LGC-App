@@ -15,6 +15,7 @@ import { SocialSharing } from '@ionic-native/social-sharing';
 import { FileTransfer } from '@ionic-native/file-transfer';
 import { File } from '@ionic-native/file';
 import { Storage } from '@ionic/storage';
+import { Subject } from 'rxjs/Subject';
 /**
  * Generated class for the CundiNoticiasPage page.
  *
@@ -90,6 +91,27 @@ var CundiNoticiasPage = /** @class */ (function () {
         }, function (error) {
             console.error("error = " + error);
         });
+        //arreglo de municipios
+        this.municipios = [];
+        var subject = new Subject();
+        var queryObservable = this.af.list(this.departamentoApp + '/Municipios', {
+            query: {
+                orderByKey: true
+            }
+        });
+        //manjo de respuesta 
+        // subscribe to changes
+        queryObservable.subscribe(function (queriedItems) {
+            // console.log(JSON.stringify(queriedItems));
+            //alamaenca resultado del filtro en arreglo 
+            _this.filtroMunicipios = queriedItems;
+            //recorre arreglo para setelartl en la lista 
+            _this.filtroMunicipios.forEach(function (item, index) {
+                //         console.log("item municipio = " + JSON.stringify(item));
+                var dataI = item;
+                _this.municipios.push(dataI);
+            });
+        });
     }
     //funcion que comparte las imagenes de la notica 
     CundiNoticiasPage.prototype.compartir = function (urlImg) {
@@ -152,6 +174,119 @@ var CundiNoticiasPage = /** @class */ (function () {
             // this.tatuajeGuardado = true;
             noticia.guardado = true;
         }
+    };
+    CundiNoticiasPage.prototype.mostrarFiltro = function () {
+        if (this.mostrarBusqueda) {
+            this.mostrarBusqueda = false;
+        }
+        else {
+            this.mostrarBusqueda = true;
+        }
+    };
+    CundiNoticiasPage.prototype.filtraMunicipios = function () {
+        var _this = this;
+        var newMunicipio = this.uidMunicipio - 1;
+        console.log("id municipio " + newMunicipio);
+        //arreglo de municipios
+        this.noticias = [];
+        var subject = new Subject();
+        var queryObservable = this.af.list(this.departamentoApp + '/Noticias', {
+            query: {
+                orderByChild: 'uidMunicipio',
+                equalTo: subject
+            }
+        });
+        //manjo de respuesta 
+        // subscribe to changes
+        queryObservable.subscribe(function (queriedItems) {
+            console.log(JSON.stringify(queriedItems));
+            //alamaenca resultado del filtro en arreglo 
+            _this.filtroMunicipios = queriedItems;
+            //recorre arreglo para setelartl en la lista 
+            _this.filtroMunicipios.forEach(function (item, index) {
+                //         console.log("item municipio = " + JSON.stringify(item));
+                //let dataI = item;
+                //        this.eventos.push(dataI);
+                var data = item;
+                console.log("uid creador = " + data.uidCreador);
+                //consulta informacion del creador del evento
+                _this.itemRef = _this.af.object(_this.departamentoApp + '/userProfile/' + data.uidCreador, { preserveSnapshot: true });
+                _this.itemRef.subscribe(function (snapshot) {
+                    //console.log(action.type);
+                    console.log("llave" + snapshot.key);
+                    console.log('data ' + JSON.stringify(snapshot.val()));
+                    data.urlImagenCreador = snapshot.val().photoUrl;
+                    data.nombreUsuario = snapshot.val().nombreUsuario;
+                    data.index = index;
+                    //verifica si esa noticia esta guardada  como favorita 
+                    var infoGuardado = _this.af.object(_this.departamentoApp + '/NoticiasGuardadasUsuario/' + _this.perfil.uid + "/" + index, { preserveSnapshot: true });
+                    infoGuardado.subscribe(function (snapshot) {
+                        console.log("entra consulta si guardo evento ");
+                        //  console.log(snapshot.key);
+                        //  console.log(snapshot.val());
+                        if (snapshot.val() === null) {
+                            console.log("evento no guardada");
+                            data.guardado = false;
+                        }
+                        else {
+                            console.log("evento guardada");
+                            data.guardado = true;
+                        }
+                    });
+                    //setea eventos 
+                    _this.noticias.push(data);
+                });
+                // console.log("key =" + snapshot1.key);
+                //console.log("Value =" + JSON.stringify(snapshot1.val()));
+            });
+        });
+        subject.next(newMunicipio.toString());
+    };
+    CundiNoticiasPage.prototype.cargarTodasNoticias = function () {
+        var _this = this;
+        //consulta la informacion de tdas las noticias 
+        this.af.list(this.departamentoApp + '/Noticias/', { preserveSnapshot: true })
+            .subscribe(function (snapshots) {
+            _this.noticias = [];
+            snapshots.forEach(function (snapshot1) {
+                var data = snapshot1.val();
+                console.log("uid creador = " + data.uidCreador);
+                _this.itemRef = _this.af.object(_this.departamentoApp + '/userProfile/' + data.uidCreador, { preserveSnapshot: true });
+                _this.itemRef.subscribe(function (snapshot) {
+                    //console.log(action.type);
+                    console.log("llave" + snapshot.key);
+                    console.log('data ' + JSON.stringify(snapshot.val()));
+                    data.urlImagenCreador = snapshot.val().photoUrl;
+                    data.nombreUsuario = snapshot.val().nombreUsuario;
+                    data.index = snapshot1.key;
+                    //verifica si esa noticia esta guardada  como favorita 
+                    var infoGuardado1 = _this.af.object(_this.departamentoApp + '/NoticiasGuardadasUsuario/' + _this.perfil.uid + "/" + snapshot1.key, { preserveSnapshot: true });
+                    infoGuardado1.subscribe(function (snapshot3) {
+                        console.log("entra consulta si guardo noticia ");
+                        console.log(_this.departamentoApp + '/NoticiasGuardadasUsuario/' + _this.perfil.uid + "/" + snapshot1.key);
+                        console.log(snapshot3.val());
+                        //  console.log(snapshot.val());
+                        if (snapshot3.val() === null) {
+                            console.log("noticia no guardada");
+                            data.guardado = false;
+                        }
+                        else {
+                            console.log("noticia guardada");
+                            data.guardado = true;
+                        }
+                    });
+                    console.log("add noticia");
+                    _this.noticias.push(data);
+                });
+                console.log("key =" + snapshot1.key);
+                console.log("Value =" + JSON.stringify(snapshot1.val()));
+            });
+        });
+    };
+    CundiNoticiasPage.prototype.reiniciarBusqueda = function () {
+        this.uidMunicipio = undefined;
+        this.mostrarBusqueda = false;
+        this.cargarTodasNoticias();
     };
     CundiNoticiasPage = __decorate([
         IonicPage(),

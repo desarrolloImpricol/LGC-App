@@ -39,7 +39,7 @@ var ColombiaPage = /** @class */ (function () {
             });
           });*/
         var subject = new Subject();
-        var queryObservable = this.af.list('/Colombia', {
+        var queryObservable = this.af.list('/Cundinamarca/Colombia', {
             query: {
                 orderByChild: 'id',
                 //startAt: 0,
@@ -65,7 +65,7 @@ var ColombiaPage = /** @class */ (function () {
         console.log("entra scroll");
         var finF = this.finFoto;
         var subject = new Subject();
-        var queryObservable = this.af.list('/Colombia', {
+        var queryObservable = this.af.list('/Cundinamarca/Colombia', {
             query: {
                 orderByChild: 'id',
                 //startAt: 0,
@@ -79,9 +79,9 @@ var ColombiaPage = /** @class */ (function () {
             //console.log(queriedItems);
             //console.log(JSON.stringify(queriedItems));
             _this.filtro2 = queriedItems;
-            _this.departamentos = [];
+            // this.departamentos = [];
             _this.filtro2.forEach(function (item, index) {
-                console.log("agregar foto ");
+                console.log("agregar foto 11 ");
                 _this.departamentos.push(item);
             });
             //this.tatuajesArtistas.reverse();

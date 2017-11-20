@@ -1,3 +1,27 @@
 page-municipios {
 
 }
+
+.textoo{
+
+  width:20px;
+	height:20px;
+}
+
+.iconoGuardadoMunicipio {
+	width:20px;
+	height:20px;
+	content : url('../assets/icon/Amarillo/favorito.png');
+}
+
+.iconoNoGuardadoMunicipio {
+	width:20px;
+	height:20px;
+	content : url('../assets/icon/Amarillo/noFavorito.png');
+}
+
+.iconoCompartirMunicipio {
+	width:20px;
+	height:20px;
+	content : url('../assets/icon/Amarillo/compartir.png');
+}

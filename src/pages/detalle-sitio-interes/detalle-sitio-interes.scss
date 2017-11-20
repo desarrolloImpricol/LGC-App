@@ -1,0 +1,52 @@
+page-detalle-sitio-interes {
+
+}
+
+
+.telefonoSitio{
+	//width:20px;
+	//height:20px;
+//	content : url('../assets/icon/Gris/telefono.png');
+
+	background-image: url('../assets/icon/Gris/telefono.png');
+	background-position: left center;
+	background-repeat: no-repeat;
+	background-size: 20px 20px;
+
+
+
+	padding-left: 25px; /* Or size of icon + spacing */
+}
+
+.celularSitio{
+	
+	background-image: url('../assets/icon/Gris/celular.png');
+	background-position: left center;
+	background-repeat: no-repeat;
+	background-size: 20px 20px;
+	padding-left: 25px; /* Or size of icon + spacing */
+	
+}
+
+.emailSitio{
+	
+	background-image: url('../assets/icon/Gris/email.png');
+	background-position: left center;
+	background-repeat: no-repeat;
+	background-size: 20px 20px;
+	padding-left: 25px; /* Or size of icon + spacing */
+
+
+}
+
+.horarioSitio{
+	
+		background-image: url('../assets/icon/Gris/horario.png');
+	background-position: left center;
+	background-repeat: no-repeat;
+	background-size: 20px 20px;
+
+
+	padding-left: 25px; /* Or size of icon + spacing */
+
+}

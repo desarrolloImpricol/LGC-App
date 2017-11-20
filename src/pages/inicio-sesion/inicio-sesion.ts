@@ -147,8 +147,12 @@ export class InicioSesionPage {
         })
         .catch((error) => {
           console.log("Firebase failure: " + JSON.stringify(error));
+          alert("Firebase failure: " + JSON.stringify(error));
         });
-    }).catch((error) => { console.log(error) });
+    }).catch((error1) => { 
+      console.log(error1) ;
+      alert("Facebook error : " + JSON.stringify(error1));
+    });
   }
 
 

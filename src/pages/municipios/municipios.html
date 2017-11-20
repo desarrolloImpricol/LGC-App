@@ -6,13 +6,196 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>Municipios</ion-title>
+  <ion-navbar color="colorAmarillo">
+    <ion-title>{{municipio.municipio}}</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
+<ion-content padding class="fondo">
+
+    <div class="centrado">
+    	<span class="eslogan">{{municipio.eslogan}}</span>    	
+   
+
+	 <div class="content-fotos-departamento">
+      <!--<button [ngClass]="{'activo' : menuSelect === 'mistatuajes'  }"   (click)="selectTab('mistatuajes')" >Mis tatuajes</button>-->
+      <img [src]="municipio.urlBandera" />
+      <img [src]="municipio.urlMandatario" />
+      <img [src]="municipio.urlEscudo" />
+    
+
+    </div>
+    <br>
+         <span class="eslogan textoMunicipio">{{municipio.nombreMandatario}}</span>   
+         <h6></h6> 	
+         
+     </div>
+	      <span class="eslogan textoMunicipio">{{municipio.direccion}}</span>    
+        <h6></h6>	
+	      <span class="eslogan textoMunicipio">{{municipio.telefono}}</span>    	
+        <h6></h6>
+	      <span class="eslogan textoMunicipio">{{municipio.web}}</span>  
+        <h6></h6>
+
+	      <button  ion-button full color="colorRojo">Escribale a la gobernaciòn</button>
+
+         <ion-row no-padding>
+              <ion-col text-right>
+              <button (click)="guardarMunicipio(noti)" ion-button clear small color="colorNegroMenu" icon-start>
+                <img  *ngIf="municipio.guardado"  class="iconoGuardadoMunicipio" />
+                <img  *ngIf="!municipio.guardado"  class="iconoNoGuardadoMunicipio" />
+                Favorito
+              </button>
+              
+            </ion-col>
+            <ion-col>
+            <button (click)="compartir(noti.urlImagen)" ion-button clear small color="colorNegroMenu" icon-start>
+               <img class="iconoCompartirMunicipio" />
+                Compartir
+              </button>
+            </ion-col>
+          </ion-row>
+
+
+
+    <ion-slides pager class="eventos" *ngIf="mostrarEventos" >   
+         <ion-slide  *ngFor="let noti of eventos">
+              <ion-card >
+              <ion-item>
+                <ion-avatar item-start>
+                  <img [src]="noti.urlImagenCreador">
+                </ion-avatar>
+                <h2 class="fuente-naranja">{{noti.nombreUsuario}}</h2>
+                <p>{{noti.fechaInicio}} - {{noti.fechaFin}}</p>
+              </ion-item>
+                <div class="contenedor-foto-info">
+                    <img (click)="detalleEvento(noti.urlImagen,noti.tituloEvento,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcionEvento,noti.index,noti.fechaInicio,noti.fechaFin)" [src]="noti.urlImagen" />
+                </div>
+               
+                <!--<ion-item>   
+                  <h2 class="tituloNoticia" >{{noti.tituloEvento}}</h2>
+                  <p>{{noti.descripcionEvento}}</p>
+                </ion-item> -->
+               
+
+              <div class="divContenido">
+                <span class="tituloNoticia">
+                  {{noti.tituloEvento}}
+                </span>
+                
+                <span class="municipioNoticia">Bogota</span><span class="descripcionNoticia">{{noti.descripcionEvento}} </span>
+
+              </div>
+
+                  <ion-row no-padding>
+                    <ion-col text-right>
+                    <button (click)="guardarEvento(noti)" ion-button clear small color="colorEvento" icon-start>
+                      <img  *ngIf="noti.guardado"  class="iconoGuardadoEvento" />
+                      <img  *ngIf="!noti.guardado" class="iconoNoGuardadoEvento" />
+                      Favorito
+                    </button>
+                    
+                  </ion-col>
+                  <ion-col>
+                  <button (click)="compartir(noti.urlImagen)" ion-button clear small color="colorEvento" icon-start>
+                     <img class="iconoCompartirEvento" />
+                      Compartir
+                    </button>
+                  </ion-col>
+                </ion-row>
+              </ion-card>
+          </ion-slide>
+      </ion-slides>
+
+    <ion-slides pager class="noticias" *ngIf="mostrarNoticias" >
+      <ion-slide  *ngFor="let noti of noticias ">
+           <ion-card >
+            <ion-item>
+                <ion-avatar item-start>
+                  <img [src]="noti.urlImagenCreador">
+                </ion-avatar>
+                <h2 class="fuente-morada">{{noti.nombreUsuario}}</h2>
+                <p> {{noti.fechaNoticia}}</p>
+              </ion-item>
+            <div class="contenedor-foto-info">
+              <img (click)="detalleNoticia(noti.urlImagen,noti.tituloNoticia,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcion,noti.index,noti.fechaNoticia)"  [src]="noti.urlImagen" />
+             </div>
+
+              <div class="divContenido">
+                <span class="tituloNoticia">
+                  {{noti.tituloNoticia}}
+                </span>
+                
+                <span class="municipioNoticia">Bogota</span><span class="descripcionNoticia">{{noti.descripcion}} </span>
+
+              </div>
+
+           <ion-row no-padding>
+            <ion-col text-right>
+              <button (click)="guardarNoticia(noti)" ion-button clear small color="colorNoticias" icon-start>
+                <img  *ngIf="noti.guardado" class="iconoGuardado" />
+                <img  *ngIf="!noti.guardado" class="iconoNoGuardado" />
+                Favorito
+              </button>
+              
+            </ion-col>
+            <ion-col>
+            <button (click)="compartir(noti.urlImagen)" ion-button clear small color="colorNoticias" icon-start>
+               <img class="iconoCompartir" />
+                Compartir
+              </button>
+            </ion-col>
+          </ion-row>
+          </ion-card>
+      </ion-slide>
+    </ion-slides>
+
+    <ion-slides pager class="sitios" *ngIf="mostrarSitios">
+      <ion-slide  *ngFor="let noti of sitiosInteres">
+           <ion-card >
+            <ion-item>
+                <ion-avatar item-start>
+                  <img [src]="noti.urlImagenCreador">
+                </ion-avatar>
+                <h2 class="fuente-amarilla">{{noti.nombreUsuario}}</h2>
+                <p> {{noti.direccion}}</p>
+              </ion-item>
+            <div class="contenedor-foto-info">
+              <img (click)="openSitioInteres(noti)"  [src]="noti.urlImagen" />
+             </div>
+
+              <div class="divContenido">
+                <span class="tituloNoticia">
+                  {{noti.tituloSitio}}
+                </span>
+                
+                <span class="municipioNoticia">Bogota</span><span class="descripcionNoticia">{{noti.descripcion}} </span>
+
+              </div>
+
+           <ion-row no-padding>
+            <ion-col text-right>
+              <button (click)="guardarSitio(noti)" ion-button clear small color="colorAmarillo" icon-start>
+                <img  *ngIf="noti.guardado" class="iconoGuardadoSitio" />
+                <img  *ngIf="!noti.guardado" class="iconoNoGuardadoSitio" />
+                 Favorito
+              </button>
+              
+            </ion-col>
+            <ion-col>
+            <button (click)="compartir(noti.urlImagen)" ion-button clear small color="colorAmarillo" icon-start>
+               <img class="iconoCompartirSitio" />
+                Compartir
+              </button>
+            </ion-col>
+          </ion-row>
+          </ion-card>
+      </ion-slide>
+    </ion-slides>
+
+
+
 
 </ion-content>

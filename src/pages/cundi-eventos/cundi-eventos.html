@@ -7,13 +7,54 @@
 <ion-header>
 
   <ion-navbar color="colorEvento" >
-    <ion-title>Todos los eventos</ion-title>
-  </ion-navbar>
 
-</ion-header>s
+    <ion-buttons left >
+        <button ion-button menuToggle icon-only>
+          <ion-icon name='menu'></ion-icon>
+        </button>
+    </ion-buttons>
+
+    <ion-title>Todos los eventos</ion-title>
+    
+    <ion-buttons end>
+        <button ion-button  icon-only >
+          <ion-icon name='search'></ion-icon>
+        </button>
+         <button ion-button  icon-only (click)="mostrarFiltro()">
+          <ion-icon name='funnel'></ion-icon>
+        </button>
+    </ion-buttons>
+     
+  </ion-navbar> 
+
+
+  <div  *ngIf="mostrarBusqueda">
+      
+    <ion-item >
+      <ion-label>Buscar por municipio</ion-label>
+      <ion-select multiple="false" [(ngModel)]="uidMunicipio" (ionChange)="filtraMunicipios()">
+        <ion-option *ngFor="let muni of municipios" value="{{muni.id}}">{{muni.municipio}}</ion-option>
+      </ion-select>
+    </ion-item>
+
+
+    <ion-item >
+      <ion-label >Buscar por tipo evento</ion-label>
+      <ion-select multiple="false" [(ngModel)]="uidCategoria" (ionChange)="filtraCategoria()">
+        <ion-option *ngFor="let muni of categoriasEventos" value="{{muni.id}}">{{muni.nombre}}</ion-option>
+      </ion-select>
+    </ion-item>
+    
+        <button center full (click)="reiniciarBusqueda()" color="colorEvento" small ion-button>borrar filtros</button>
+  
+  </div>
+
+</ion-header>
 
 
 <ion-content padding>
+
+
 
 <!--
   <div *ngFor="let noti of eventos ">
@@ -34,6 +75,7 @@
     <br>
 
   </div>-->
+
 
   <div *ngFor="let noti of eventos ">
 
@@ -68,7 +110,7 @@
                     <button (click)="guardarEvento(noti)" ion-button clear small color="colorEvento" icon-start>
                       <img  *ngIf="noti.guardado"  class="iconoGuardadoEvento" />
                       <img  *ngIf="!noti.guardado" class="iconoNoGuardadoEvento" />
-                      Me interesa
+                       Favorito
                     </button>
                     
                   </ion-col>

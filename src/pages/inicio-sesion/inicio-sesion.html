@@ -13,10 +13,14 @@
   <hr class="style1">
   <br>
    
+   <div class="contenedor-inicio centrado">
        <button (click)="loginFacebook()" color="colorFacebook" ion-button>Facebook</button>
        <button (click)="googleLogin()" color="colorGoogle" ion-button>Google</button>
        <button (click)="twLogin()"  color="colorTwitter" ion-button>Twitter</button>
-       
+   </div>
+   <div class="centrado">
+     <span class="centrado">Si es empresa registrese con correo</span>
+    </div>   
      <!--  <button (click)="ok()" full ion-button>Telefono</button>
          <div id="recaptcha-container"></div>
          <input class="inputLogin" type="text" [(ngModel)]="telefono" placeholder="Telefono"/>
@@ -55,7 +59,7 @@
 
   <hr class="style1">
   
-  <p class="noRegistro">¿Aún no se ha registrado?</p>
+  <p class="noRegistro ">¿Aún no se ha registrado?</p>
   <button (click)="irRegistro()" color="colorRojo" ion-button full>Registrarse</button>
   
     

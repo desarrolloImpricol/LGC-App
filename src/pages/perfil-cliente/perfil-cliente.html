@@ -1,4 +1,4 @@
-<!--
+ <!--
   Generated template for the PerfilClientePage page.
 
   See http://ionicframework.com/docs/components/#navigation for more info on
@@ -7,10 +7,15 @@
 <ion-header>
 
   <ion-navbar  color="colorAmarillo">
+     <button ion-button menuToggle icon-only>
+      <ion-icon name='menu'></ion-icon>
+    </button>
     <ion-title>Perfil</ion-title>
   </ion-navbar>
 
 </ion-header>
+
+
 
 
 <ion-content padding>
@@ -18,15 +23,14 @@
  <div class="centrado">
 
    <ion-item>
-
     <ion-avatar item-start>
       <img style="width: 100%; height: 100%;" [src]="perfil.photoUrl">
     </ion-avatar>
     <h2>{{perfil.nombreUsuario}}</h2>
-    <h3>Bogota</h3>
-    <p>Gerente general </p>
+    <h3>{{perfil.sitioWeb}}</h3>
+    <!--<p>Gerente general </p>-->
     </ion-item>
-  <p class="divContenido"> texto descripcion texto descripcion texto descripcion texto descripcion texto descripcion texto descripcion texto descripcion texto descripcion texto descripcion texto descripcion  </p>
+  <p class="divContenido">{{perfil.descripcion}} </p>
 
   <h3 class="fuente-amarilla" >Ver publicados</h3>
      <!--<div class="wrapper-perfil">
@@ -36,7 +40,7 @@
     <span class="fuente-10 fuente-centrado  "> {{perfil.nombreUsuario}} </span>
 -->
     <div class="contenedor">
-           <img  class="imagenLogo" (click)="irColombia()" src="assets/icon/Infomunicipios.png">     
+           <img  class="imagenLogo" (click)="irDepartamentos()" src="assets/icon/Infomunicipios.png">     
             
            <img class="imagenLogo" (click)="irNoticias()" src="assets/icon/NoticiasIcon.png">
 

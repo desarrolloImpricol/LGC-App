@@ -8,7 +8,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { Component } from '@angular/core';
-import { NavController, Platform } from 'ionic-angular';
+import { NavController, Platform, MenuController } from 'ionic-angular';
 import { AngularFireDatabase } from 'angularfire2/database-deprecated';
 import { CundiAmarillasPage } from '../../pages/cundi-amarillas/cundi-amarillas';
 import { CundiEmpleosPage } from '../../pages/cundi-empleos/cundi-empleos';
@@ -19,7 +19,7 @@ import { InicioSesionPage } from '../../pages/inicio-sesion/inicio-sesion';
 import { Deeplinks } from '@ionic-native/deeplinks';
 import { PublicarPage } from '../../pages/publicar/publicar';
 import { Storage } from '@ionic/storage';
-import { ColombiaPage } from '../../pages/colombia/colombia';
+import { DepartamentoPage } from '../../pages/departamento/departamento';
 import { CrearNoticiaPage } from '../../pages/crear-noticia/crear-noticia';
 import { CrearEventoPage } from '../../pages/crear-evento/crear-evento';
 import { Subject } from 'rxjs/Subject';
@@ -32,7 +32,7 @@ import { PerfilClientePage } from '../../pages/perfil-cliente/perfil-cliente';
 import { FavoritosPage } from '../../pages/favoritos/favoritos';
 var HomePage = /** @class */ (function () {
     // file:MediaObject;
-    function HomePage(navCtrl, af, secureStorage, deeplinks, platform, storage, media, nativeAudio) {
+    function HomePage(navCtrl, af, secureStorage, deeplinks, platform, storage, media, nativeAudio, menuCtrl) {
         var _this = this;
         this.navCtrl = navCtrl;
         this.af = af;
@@ -42,13 +42,16 @@ var HomePage = /** @class */ (function () {
         this.storage = storage;
         this.media = media;
         this.nativeAudio = nativeAudio;
+        this.menuCtrl = menuCtrl;
         //info de perfil
         this.perfil = [];
         this.noticias = [];
         this.departamentoApp = "/Cundinamarca";
         this.mostrarBusqueda = false;
-        this.nativeAudio.preloadSimple('uniqueId12', 'assets/sounds/inicio1.mp3');
-        this.platform = platform;
+        this.mostrarMenuPerfil = false;
+        this.queBusca = '-';
+        //this.nativeAudio.preloadSimple('uniqueId12', 'assets/sounds/inicio1.mp3');
+        //this.platform = this.platform;
         //acceso a links  con enlaces profundos
         this.deeplinks.route({
             '/noticias': CundiNoticiasPage,
@@ -80,113 +83,6 @@ var HomePage = /** @class */ (function () {
             // nomatch.$link - the full link data
             console.error('Got a deeplink that didn\'t match', nomatch);
         });
-        //setea  un valor de inicio para la foto
-        this.perfil.photoUrl = "-";
-        //consulta departamentos  
-        this.af.list(this.departamentoApp + '/departamentos/', { preserveSnapshot: true })
-            .subscribe(function (snapshots) {
-            _this.departamentos = [];
-            snapshots.forEach(function (snapshot1) {
-                var data = snapshot1.val();
-                data.uid = snapshot1.key;
-                //   console.log("uid creador = " + data.uidCreador);
-                console.log("departamento key  =" + snapshot1.key);
-                console.log("departamento Value =" + JSON.stringify(snapshot1.val()));
-                _this.departamentos.push(data);
-            });
-        });
-        this.af.list(this.departamentoApp + '/CategoriasEventos/', { preserveSnapshot: true })
-            .subscribe(function (snapshots) {
-            _this.categoriasEventos = [];
-            snapshots.forEach(function (snapshot1) {
-                var data = snapshot1.val();
-                data.uid = snapshot1.key;
-                //   console.log("uid creador = " + data.uidCreador);
-                console.log("departamento key  =" + snapshot1.key);
-                console.log("departamento Value =" + JSON.stringify(snapshot1.val()));
-                _this.categoriasEventos.push(data);
-            });
-        });
-        //recibe informacion de los eventos
-        this.af.list(this.departamentoApp + '/Eventos/', { preserveSnapshot: true })
-            .subscribe(function (snapshots) {
-            //reinicializa eventos
-            _this.eventos = [];
-            //recorre resultado de la consulta 
-            snapshots.forEach(function (snapshot1) {
-                var data = snapshot1.val();
-                // console.log("uid creador = " + data.uidCreador);
-                console.log("EVENTOS");
-                //consulta informacion del creador del evento
-                _this.itemRef = _this.af.object(_this.departamentoApp + '/userProfile/' + data.uidCreador, { preserveSnapshot: true });
-                _this.itemRef.subscribe(function (snapshot) {
-                    //console.log(action.type);
-                    console.log("llave" + snapshot.key);
-                    console.log('data ' + JSON.stringify(snapshot.val()));
-                    data.urlImagenCreador = snapshot.val().photoUrl;
-                    data.nombreUsuario = snapshot.val().nombreUsuario;
-                    data.index = snapshot1.key;
-                    //verifica si esa noticia esta guardada  como favorita 
-                    var infoGuardado = _this.af.object(_this.departamentoApp + '/EventosGuardadosUsuario/' + _this.perfil.uid + "/" + snapshot1.key, { preserveSnapshot: true });
-                    infoGuardado.subscribe(function (snapshot) {
-                        console.log("entra consulta si guardo evento ");
-                        //  console.log(snapshot.key);
-                        //  console.log(snapshot.val());
-                        if (snapshot.val() === null) {
-                            console.log("evento no guardada");
-                            data.guardado = false;
-                        }
-                        else {
-                            console.log("evento guardada");
-                            data.guardado = true;
-                        }
-                    });
-                    //setea eventos 
-                    _this.eventos.push(data);
-                });
-                console.log("key =" + snapshot1.key);
-                console.log("Value =" + JSON.stringify(snapshot1.val()));
-            });
-        });
-        //consulta la informacion de tdas las noticias 
-        this.af.list(this.departamentoApp + '/Noticias/', { preserveSnapshot: true })
-            .subscribe(function (snapshots) {
-            _this.noticias = [];
-            snapshots.forEach(function (snapshot1) {
-                var data = snapshot1.val();
-                //console.log("uid creador = " + data.uidCreador);
-                console.log("NOTICIAS");
-                _this.itemRefNoticias = _this.af.object(_this.departamentoApp + '/userProfile/' + data.uidCreador, { preserveSnapshot: true });
-                _this.itemRefNoticias.subscribe(function (snapshot) {
-                    //console.log(action.type);
-                    console.log("llave" + snapshot.key);
-                    console.log('data ' + JSON.stringify(snapshot.val()));
-                    data.urlImagenCreador = snapshot.val().photoUrl;
-                    data.nombreUsuario = snapshot.val().nombreUsuario;
-                    data.index = snapshot1.key;
-                    //verifica si esa noticia esta guardada  como favorita 
-                    var infoGuardado = _this.af.object(_this.departamentoApp + '/NoticiasGuardadasUsuario/' + _this.perfil.uid + "/" + snapshot1.key, { preserveSnapshot: true });
-                    infoGuardado.subscribe(function (snapshot) {
-                        console.log("entra consulta si guardo noticia ");
-                        //  console.log(snapshot.key);
-                        //  console.log(snapshot.val());
-                        if (snapshot.val() === null) {
-                            console.log("noticia no guardada");
-                            data.guardado = false;
-                        }
-                        else {
-                            console.log("noticia guardada");
-                            data.guardado = true;
-                        }
-                    });
-                    console.log("add noticia");
-                    _this.noticias.push(data);
-                });
-                console.log("key =" + snapshot1.key);
-                console.log("Value =" + JSON.stringify(snapshot1.val()));
-            });
-        });
-        this.onSelecDepartamento();
     }
     //funcion que  se llama cuando se elecciona un departamento
     HomePage.prototype.onSelecDepartamento = function () {
@@ -237,12 +133,120 @@ var HomePage = /** @class */ (function () {
             //existe usuario
             if (data != null) {
                 console.log(data.uid);
-                _this.item = _this.af.object('/userProfile/' + data.uid, { preserveSnapshot: true });
+                _this.item = _this.af.object(_this.departamentoApp + '/userProfile/' + data.uid, { preserveSnapshot: true });
                 _this.item.subscribe(function (snapshot) {
                     console.log(snapshot.key);
                     console.log(snapshot.val());
                     _this.perfil = snapshot.val();
                     _this.perfil.uid = snapshot.key;
+                    //setea  un valor de inicio para la foto
+                    //this.perfil.photoUrl = "-";
+                    //consulta departamentos  
+                    _this.af.list(_this.departamentoApp + '/departamentos/', { preserveSnapshot: true })
+                        .subscribe(function (snapshots) {
+                        _this.departamentos = [];
+                        snapshots.forEach(function (snapshot1) {
+                            var data = snapshot1.val();
+                            data.uid = snapshot1.key;
+                            //   console.log("uid creador = " + data.uidCreador);
+                            console.log("departamento key  =" + snapshot1.key);
+                            console.log("departamento Value =" + JSON.stringify(snapshot1.val()));
+                            _this.departamentos.push(data);
+                        });
+                    });
+                    _this.af.list(_this.departamentoApp + '/CategoriasEventos/', { preserveSnapshot: true })
+                        .subscribe(function (snapshots) {
+                        _this.categoriasEventos = [];
+                        snapshots.forEach(function (snapshot1) {
+                            var data = snapshot1.val();
+                            data.uid = snapshot1.key;
+                            //   console.log("uid creador = " + data.uidCreador);
+                            console.log("departamento key  =" + snapshot1.key);
+                            console.log("departamento Value =" + JSON.stringify(snapshot1.val()));
+                            _this.categoriasEventos.push(data);
+                        });
+                    });
+                    //recibe informacion de los eventos
+                    _this.af.list(_this.departamentoApp + '/Eventos/', { preserveSnapshot: true })
+                        .subscribe(function (snapshots) {
+                        //reinicializa eventos
+                        _this.eventos = [];
+                        //recorre resultado de la consulta 
+                        snapshots.forEach(function (snapshot1) {
+                            var data = snapshot1.val();
+                            // console.log("uid creador = " + data.uidCreador);
+                            console.log("EVENTOS");
+                            //consulta informacion del creador del evento
+                            _this.itemRef = _this.af.object(_this.departamentoApp + '/userProfile/' + data.uidCreador, { preserveSnapshot: true });
+                            _this.itemRef.subscribe(function (snapshot) {
+                                //console.log(action.type);
+                                console.log("llave" + snapshot.key);
+                                console.log('data ' + JSON.stringify(snapshot.val()));
+                                data.urlImagenCreador = snapshot.val().photoUrl;
+                                data.nombreUsuario = snapshot.val().nombreUsuario;
+                                data.index = snapshot1.key;
+                                //verifica si esa noticia esta guardada  como favorita 
+                                var infoGuardado = _this.af.object(_this.departamentoApp + '/EventosGuardadosUsuario/' + _this.perfil.uid + "/" + snapshot1.key, { preserveSnapshot: true });
+                                infoGuardado.subscribe(function (snapshot) {
+                                    console.log("entra consulta si guardo evento ");
+                                    //  console.log(snapshot.key);
+                                    //  console.log(snapshot.val());
+                                    if (snapshot.val() === null) {
+                                        console.log("evento no guardada");
+                                        data.guardado = false;
+                                    }
+                                    else {
+                                        console.log("evento guardada");
+                                        data.guardado = true;
+                                    }
+                                });
+                                //setea eventos 
+                                _this.eventos.push(data);
+                            });
+                            console.log("key =" + snapshot1.key);
+                            console.log("Value =" + JSON.stringify(snapshot1.val()));
+                        });
+                    });
+                    //consulta la informacion de tdas las noticias 
+                    _this.af.list(_this.departamentoApp + '/Noticias/', { preserveSnapshot: true })
+                        .subscribe(function (snapshots) {
+                        _this.noticias = [];
+                        snapshots.forEach(function (snapshot1) {
+                            var data = snapshot1.val();
+                            //console.log("uid creador = " + data.uidCreador);
+                            console.log("NOTICIAS");
+                            _this.itemRefNoticias = _this.af.object(_this.departamentoApp + '/userProfile/' + data.uidCreador, { preserveSnapshot: true });
+                            _this.itemRefNoticias.subscribe(function (snapshot) {
+                                //console.log(action.type);
+                                console.log("llave" + snapshot.key);
+                                console.log('data ' + JSON.stringify(snapshot.val()));
+                                data.urlImagenCreador = snapshot.val().photoUrl;
+                                data.nombreUsuario = snapshot.val().nombreUsuario;
+                                data.index = snapshot1.key;
+                                //verifica si esa noticia esta guardada  como favorita 
+                                console.log("url=" + _this.departamentoApp + '/NoticiasGuardadasUsuario/' + _this.perfil.uid + "/" + snapshot1.key);
+                                var infoGuardado = _this.af.object(_this.departamentoApp + '/NoticiasGuardadasUsuario/' + _this.perfil.uid + "/" + snapshot1.key, { preserveSnapshot: true });
+                                infoGuardado.subscribe(function (snapshot) {
+                                    console.log("entra consulta si guardo noticia ");
+                                    //  console.log(snapshot.key);
+                                    //  console.log(snapshot.val());
+                                    if (snapshot.val() === null) {
+                                        console.log("noticia no guardada");
+                                        data.guardado = false;
+                                    }
+                                    else {
+                                        console.log("noticia guardada");
+                                        data.guardado = true;
+                                    }
+                                });
+                                console.log("add noticia");
+                                _this.noticias.push(data);
+                            });
+                            console.log("key =" + snapshot1.key);
+                            console.log("Value =" + JSON.stringify(snapshot1.val()));
+                        });
+                    });
+                    _this.onSelecDepartamento();
                 });
             }
             else {
@@ -277,40 +281,42 @@ var HomePage = /** @class */ (function () {
     };
     //redireccion a colombia
     HomePage.prototype.irColombia = function () {
-        this.navCtrl.push(ColombiaPage);
+        this.navCtrl.setRoot(DepartamentoPage);
     };
     //redirecciona a noticias
     HomePage.prototype.irNoticias = function () {
         //this.navCtrl.setRoot(CundiNoticiasPage);
-        this.navCtrl.push(CundiNoticiasPage);
+        this.navCtrl.setRoot(CundiNoticiasPage);
     };
     //redirecciona a eventos
     HomePage.prototype.irEventos = function () {
-        this.navCtrl.push(CundiEventosPage);
+        //this.navCtrl.push(CundiEventosPage);
+        this.navCtrl.setRoot(CundiEventosPage);
     };
     //redireccion a empleos
     HomePage.prototype.irEmpleos = function () {
-        this.navCtrl.push(CundiEmpleosPage);
+        this.navCtrl.setRoot(CundiEmpleosPage);
     };
     //redireccion a amarillas
     HomePage.prototype.irAmarillas = function () {
-        this.navCtrl.push(CundiAmarillasPage);
+        this.navCtrl.setRoot(CundiAmarillasPage);
     };
     //redireccion a publicar
     HomePage.prototype.irPublicar = function () {
-        this.navCtrl.push(PublicarPage);
+        this.navCtrl.setRoot(PublicarPage);
     };
     HomePage.prototype.irCrearNoticias = function () {
-        this.navCtrl.push(CrearNoticiaPage);
+        this.navCtrl.setRoot(CrearNoticiaPage);
     };
     HomePage.prototype.irCreaEventos = function () {
-        this.navCtrl.push(CrearEventoPage);
+        this.navCtrl.setRoot(CrearEventoPage);
     };
     HomePage.prototype.irBusquedaAvanzada = function () {
         this.navCtrl.push(BusquedaAvanzadaPage);
     };
     HomePage.prototype.irPerfilCliente = function () {
-        this.navCtrl.push(PerfilClientePage);
+        //this.navCtrl.push(PerfilClientePage);
+        this.navCtrl.setRoot(PerfilClientePage);
     };
     HomePage.prototype.irFavoritos = function () {
         this.navCtrl.push(FavoritosPage);
@@ -345,6 +351,14 @@ var HomePage = /** @class */ (function () {
         }
         else {
             this.mostrarBusqueda = true;
+        }
+    };
+    HomePage.prototype.openPerfilMenu = function () {
+        if (this.mostrarMenuPerfil) {
+            this.mostrarMenuPerfil = false;
+        }
+        else {
+            this.mostrarMenuPerfil = true;
         }
     };
     HomePage.prototype.guardarNoticia = function (noticia) {
@@ -391,12 +405,20 @@ var HomePage = /** @class */ (function () {
             evento.guardado = true;
         }
     };
+    HomePage.prototype.buscarMenu = function () {
+        if (this.queBusca === 'noticias') {
+            this.navCtrl.push(CundiNoticiasPage);
+        }
+        if (this.queBusca === 'eventos') {
+            this.navCtrl.push(CundiEventosPage);
+        }
+    };
     HomePage = __decorate([
         Component({
             selector: 'page-home',
             templateUrl: 'home.html'
         }),
-        __metadata("design:paramtypes", [NavController, AngularFireDatabase, SecureStorage, Deeplinks, Platform, Storage, Media, NativeAudio])
+        __metadata("design:paramtypes", [NavController, AngularFireDatabase, SecureStorage, Deeplinks, Platform, Storage, Media, NativeAudio, MenuController])
     ], HomePage);
     return HomePage;
 }());

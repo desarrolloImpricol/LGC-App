@@ -19,12 +19,100 @@ page-crear-evento {
 
 }
 
-.contenedor{
-  width: 80%;
-  left: 1%;
+.contenedor-eventos{
+  width: 100%;
+  //left: 1%;
   display:flex;
   flex-direction:row;
   flex-grow:1;
-
   align-items:center;
+}
+
+.imagenLogo{
+  width:41.5%;
+  padding :0.7rem;
+  margin :0.1rem;
+}
+
+.iconoSubirMasImagenes {
+  //padding:1%;
+  margin:2%;
+  //min-width:13% !important;
+  //max-height:8% !important; 
+  content : url('../assets/icon/Blanco/imagen.png');
+  height: 3%;
+  width :16%;
+  background-color : #838383 !important;
+}
+.iconoSubirMasImagenesCagado {
+  //padding:1%;
+  margin:2%;
+  //min-width:13% !important;
+  //max-height:8% !important; 
+  //content : url('../assets/icon/Blanco/imagen.png');
+  height: 3%;
+  width :16%;
+  background-color : #838383 !important;
+}
+
+.iconoSubirFotoPrincipal {
+  padding:10%;
+  margin:2%;
+  min-width:47% !important;
+  height:20%;
+  //content : url('../assets/icon/Blanco/subir.png');
+  background-color : #838383 !important;
+}
+.imagenSubir {
+ // background-image : url('../assets/icon/Blanco/subir.png');
+  width :60%;
+  height:60%;
+}
+.imagenSubirMas {
+ // background-image : url('../assets/icon/Blanco/subir.png');
+  width :auto;
+  height:auto;
+}
+.iconPublicar {
+  width:20px;
+  height:20px;
+  content : url('../assets/icon/Negro/publicar.png');
+}
+
+.iconFoto {
+  //width:20px;
+  //height:20px;
+  content : url('../assets/icon/Blanco/imagen.png');
+}
+.iconoTomarFotoPrincipal {
+  padding:10%;
+  margin:2%;
+  min-width:47%;
+  height:20%;
+ // content : url('../assets/icon/Blanco/tomarFoto.png');
+  background-color : #838383 !important;
+}
+
+
+.imagenFotoPrincipal{
+  border : 2px solid ; 
+  min-width :40% !important;
+  min-height :30% !important;
+  background-color : #ededed !important;
+}
+
+.bordeInput{
+    border-top :1px #838383 solid;
+
+}
+
+.borderfin{
+    border-bottom :1px #838383 solid;  
+}
+
+.fotosCargadas img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

@@ -33,7 +33,7 @@ export class ColombiaPage {
         });
       });*/
     const subject = new Subject();
-    const queryObservable = this.af.list('/Colombia', {
+    const queryObservable = this.af.list('/Cundinamarca/Colombia', {
       query: {
         orderByChild: 'id',
         //startAt: 0,
@@ -77,7 +77,7 @@ export class ColombiaPage {
     
 
     const subject = new Subject();
-    const queryObservable = this.af.list('/Colombia', {
+    const queryObservable = this.af.list('/Cundinamarca/Colombia', {
       query: {
         orderByChild: 'id',
         //startAt: 0,
@@ -96,9 +96,9 @@ export class ColombiaPage {
       //console.log(queriedItems);
       //console.log(JSON.stringify(queriedItems));
       this.filtro2 = queriedItems;
-      this.departamentos = [];
+     // this.departamentos = [];
       this.filtro2.forEach((item, index) => {
-        console.log("agregar foto ");
+        console.log("agregar foto 11 ");
         this.departamentos.push(item);
       });
 

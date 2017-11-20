@@ -46,8 +46,10 @@ export class RegistroPage {
   uidDepartamento: any;
   uidMunicipio: any;
   deptos:any;
-  
+  tipoPerfil:any;
+  terminos:any = false ;
   departamentoApp :any = "/Cundinamarca";
+
 
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public af: AngularFireDatabase, private _auth: AuthServiceProvider, public afu: AngularFireAuthModule, public camera: Camera, public ng2ImgToolsService: Ng2ImgToolsService, public loadingCtrl: LoadingController) {
@@ -69,6 +71,30 @@ export class RegistroPage {
           this.deptos.push(data);
         });
       });
+
+        //reinicializa el arreglo demunicipios
+        this.municipios = [];
+        let subject = new Subject();
+        const queryObservable = this.af.list(this.departamentoApp+'/Municipios', {
+          query: {
+            orderByKey: true
+          }
+        });
+        //manjo de respuesta 
+        // subscribe to changes
+        queryObservable.subscribe(queriedItems => {
+          console.log(JSON.stringify(queriedItems));
+          //alamaenca resultado del filtro en arreglo 
+          this.filtroMunicipios = queriedItems;
+          //recorre arreglo para setelartl en la lista 
+          this.filtroMunicipios.forEach((item, index) => {
+            //         console.log("item municipio = " + JSON.stringify(item));
+
+            let dataI = item;
+
+            this.municipios.push(dataI);
+          });
+        });
   }
 
   //funcion que se ejecuta  cuando se cambios la opcion de departamentos
@@ -117,25 +143,30 @@ export class RegistroPage {
         if (this.tipoUsuario) {
           tipo = "empresa";
         }
+          if (this.uidMunicipio === "" || this.uidMunicipio === null || this.uidMunicipio === undefined) {
+            this.uidMunicipio = false;
+          }
         //guarda datos en la tabla
         firebase.database().ref(this.departamentoApp+'/userProfile').child(newUser.uid)
           .set(
           {
             email: this.correo,
             nombreUsuario: this.usuario,
-            tipoUsuario: tipo
+            tipoUsuario: this.tipoPerfil,
+            uidMunicipio: this.uidMunicipio
           }
           );
+        
         //actualiza notificaciones de usuario
-        firebase.database().ref(this.departamentoApp+'/notificacionesUsuario').child(newUser.uid)
+        /*firebase.database().ref(this.departamentoApp+'/notificacionesUsuario').child(newUser.uid)
           .set(
           {
             uid: newUser.uid,
-           // uidMunicipio: this.uidMunicipio,
+            uidMunicipio: this.uidMunicipio
            // uidDepartamento: this.uidDepartamento,
-            interesSoloMunicipio: true
+            //interesSoloMunicipio: true
           }
-          );
+          );*/
         //llamado a funcion de subir imagen
         this.subirImagen(newUser.uid);
         //  alert("Registro exitoso");
@@ -177,6 +208,18 @@ export class RegistroPage {
       alert("Falta nombre de usuario");
       return;
     }
+
+     //verifica que se tenga un usuario para el registros
+    if (this.tipoPerfil === "" || this.tipoPerfil === null || this.tipoPerfil === undefined) {
+      alert("Falta tipo perfil");
+      return;
+    }
+
+     if (this.terminos === false || this.terminos === null || this.terminos === undefined) {
+      alert("Debe aceptar los terminos y condiciones");
+      return;
+    }
+
     //llamado a suncion der registro
     this.signupUser("nada", "nada");
   }

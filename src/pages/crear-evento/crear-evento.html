@@ -7,37 +7,27 @@
 <ion-header>
 
   <ion-navbar color="colorEvento">
+     <ion-buttons left >
+        <button ion-button menuToggle icon-only>
+          <ion-icon name='menu'></ion-icon>
+        </button>
+    </ion-buttons>
+
     <ion-title>Nuevo evento</ion-title>
+
+    <ion-buttons end>
+        <button ion-button  icon-only (click)="mostrarFiltro()">
+          <ion-icon name='search'></ion-icon>
+        </button>
+    </ion-buttons>
+
   </ion-navbar>
 
 </ion-header>
 
 
-<ion-content padding>
+<ion-content padding class="fondo">
 
-  <ion-list>
-    <ion-item>
-      <ion-label floating>Titulo evento</ion-label>
-      <ion-input [(ngModel)]="tituloEvento" type="text"></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-label floating>Descripción del evento</ion-label>
-      <ion-textarea [(ngModel)]="descripcionEvento" name="description"></ion-textarea>
-    </ion-item>
-  </ion-list>
-
-  <!--  <img   class="imagenCargaPerfil" *ngIf="fotoEvento == '-'" (click)="cargarImagen()" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2Fcargar.png?alt=media&token=0abb191b-43b0-4d6f-83d6-e92de753b5bd">-->
-
-
-  <div class="contenedor">
-    <div class="imagenCargaPerfil">
-      <img *ngIf="fotoEvento == '-'" (click)="cargarImagen('foto')" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2Fcargar.png?alt=media&token=0abb191b-43b0-4d6f-83d6-e92de753b5bd">
-    </div>
-    <div class="imagenCargaPerfil">
-      <img *ngIf="fotoEvento == '-'" (click)="cargarImagen('galeria')" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2Fsubir%20.png?alt=media&token=213ee309-9fe0-4fbe-88d2-2819435b452e">
-    </div>
-  </div>
 
 
   <div class="wrapper-perfil" *ngIf="fotoEvento != '-'">
@@ -45,31 +35,186 @@
   </div>
 
 
-  <ion-item>
-    <ion-label floating>Fecha inicio</ion-label>
+  <div class="contenedor-eventos" *ngIf="fotoEvento == '-'">
+      
+      <div class="iconoSubirFotoPrincipal centrado" >
+         <img class="imagenSubir" src="../assets/icon/Blanco/subir.png" (click)="cargarImagen('galeria')"/>
+         <br>
+         <span class="fuente-blanco">Subir foto principal</span>
+      </div>
+
+      <div class="iconoTomarFotoPrincipal centrado"  (click)="cargarImagen('foto')" >
+        <img class="imagenSubir" src="../assets/icon/Blanco/tomarFoto.png"/>
+         <br>         
+         <span class="fuente-blanco">Tomar foto principal</span>
+      </div>
+
+  </div>
+
+  <div class="contenedor-eventos" >
+      
+      <div *ngIf="foto1 == '-'" class="iconoSubirMasImagenes centrado" (click)="cargarOtrasImagenes(1)" >
+       
+      </div>
+
+      <div *ngIf="foto1 != '-'" class="iconoSubirMasImagenesCagado centrado" (click)="cargarOtrasImagenes(1)" >
+       <img class="fotosCargadas" [src]="foto1" />
+      </div>
+
+
+      <div *ngIf="foto2 == '-'" class="iconoSubirMasImagenes centrado"  (click)="cargarOtrasImagenes(2)" >
+       <!-- <img class="imagenSubirMas" src="../assets/icon/Blanco/imagen1.png"/>-->
+      </div>
+
+       <div *ngIf="foto2 != '-'" class="iconoSubirMasImagenesCagado centrado"  (click)="cargarOtrasImagenes(2)" >       
+         <img  class="fotosCargadas"  [src]="foto2" />         
+      </div>
+
+      <div *ngIf="foto3 == '-'"  class="iconoSubirMasImagenes centrado"  (click)="cargarOtrasImagenes(3)" >
+      </div>
+
+      <div *ngIf="foto3 != '-'"  class="iconoSubirMasImagenesCagado centrado"  (click)="cargarOtrasImagenes(3)" >
+         <img [src]="foto3" />  
+      </div>
+
+
+
+      <div *ngIf="foto4 == '-'"  class="iconoSubirMasImagenes centrado"  (click)="cargarOtrasImagenes(4)" >
+        
+         
+      </div>
+
+      <div *ngIf="foto4 != '-'"  class="iconoSubirMasImagenesCagado centrado"  (click)="cargarOtrasImagenes(4)" >
+        <img [src]="foto4" />
+         
+      </div>
+
+      <div *ngIf="foto5 == '-'"  class="iconoSubirMasImagenes centrado"  (click)="cargarOtrasImagenes(5)" >
+      </div>
+
+      <div *ngIf="foto5 != '-'"  class="iconoSubirMasImagenesCagado centrado"  (click)="cargarOtrasImagenes(5)" >
+        <img [src]="foto5" />
+      </div>
+
+  </div>
+  <!--<div class="contenedor-eventos" >
+      
+      <div class="iconoSubirMasImagenesCagado centrado" (click)="cargarOtrasImagenes(1)" >
+       <img class="fotosCargadas" [src]="foto1" />
+      </div>
+
+
+      <div class="iconoSubirMasImagenesCagado centrado"  (click)="cargarOtrasImagenes(2)" >       
+         <img  class="fotosCargadas"  [src]="foto2" />         
+      </div>
+
+      <div class="iconoSubirMasImagenesCagado centrado"  (click)="cargarOtrasImagenes(3)" >
+         <img [src]="foto3" />  
+      </div>
+
+      <div class="iconoSubirMasImagenesCagado centrado"  (click)="cargarOtrasImagenes(4)" >
+        <img [src]="foto4" />
+         
+      </div>
+
+      <div class="iconoSubirMasImagenesCagado centrado"  (click)="cargarOtrasImagenes(5)" >
+        <img [src]="foto5" />
+      </div>
+
+  </div>-->
+
+
+<!--
+  <div class="contenedor">
+    
+
+
+      <img class="imagenLogo" *ngIf="fotoEvento == '-'" (click)="cargarImagen('foto')" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2Fcargar.png?alt=media&token=0abb191b-43b0-4d6f-83d6-e92de753b5bd">
+    
+    
+      <img class="imagenLogo"  *ngIf="fotoEvento == '-'" (click)="cargarImagen('galeria')" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2Fsubir%20.png?alt=media&token=213ee309-9fe0-4fbe-88d2-2819435b452e">
+    
+  </div>
+-->
+
+ <ion-item class="fondo bordeInput">
+    <ion-label >Municipio</ion-label>
+    <ion-select multiple="false" [(ngModel)]="uidMunicipio">
+    <ion-option *ngFor="let muni of municipios" value="{{muni.id}}">{{muni.municipio}}</ion-option>
+    </ion-select>
+  </ion-item>
+
+
+ <ion-item class="fondo bordeInput" >
+      <ion-label >Tipo de evento</ion-label>
+      <ion-select multiple="false" [(ngModel)]="uidCategoria" >
+        <ion-option *ngFor="let muni of categoriasEventos" value="{{muni.id}}">{{muni.nombre}}</ion-option>
+      </ion-select>
+    </ion-item>
+    
+
+  <ion-list >
+    <ion-item class="fondo bordeInput">
+      <ion-label >Titulo evento</ion-label>
+      <ion-input [(ngModel)]="tituloEvento" type="text"></ion-input>
+    </ion-item>
+
+    <ion-item class="fondo bordeInput">
+      <ion-label >Descripción del evento</ion-label>
+      <ion-textarea [(ngModel)]="descripcionEvento" name="description"></ion-textarea>
+    </ion-item>
+
+    <ion-item class="fondo bordeInput">
+    <ion-label >Fecha inicio</ion-label>
     <ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="fechaEvento"></ion-datetime>
   </ion-item>
 
-  <ion-item>
-    <ion-label floating>Fecha fin</ion-label>
+  <ion-item class="fondo bordeInput">
+    <ion-label >Finalizacion</ion-label>
     <ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="fechaFinEvento"></ion-datetime>
   </ion-item>
 
-  <ion-item>
-    <ion-label floating>Departamento</ion-label>
-    <ion-select multiple="false" [(ngModel)]="uidDepartamento" (ionChange)="onSelecDepartamento()">
-      <ion-option *ngFor="let muni of departamentos " value="{{muni.uid}}">{{muni.nombreDepartamento}}</ion-option>
-    </ion-select>
-  </ion-item>
+    <ion-item class="fondo bordeInput">
+      <ion-label >Horario</ion-label>
+      <ion-input [(ngModel)]="horario" type="text"></ion-input>
+    </ion-item>
 
-  <ion-item>
-    <ion-label floating>Municipio</ion-label>
-    <ion-select multiple="false" [(ngModel)]="uidMunicipio">
-      <ion-option *ngFor="let muni of municipios " value="{{muni.uid}}">{{muni.nombreMunicipio}}</ion-option>
-    </ion-select>
-  </ion-item>
+    <ion-item class="fondo bordeInput">
+      <ion-label >ubicacion</ion-label>
+      <ion-input [(ngModel)]="ubicacion" type="text"></ion-input>
+    </ion-item>
 
-  <button ion-button full (click)="publicarEvento()">Publicar Evento</button>
+    <ion-item class="fondo bordeInput"  >
+      <ion-label >Datos de contaco</ion-label>
+      <ion-input [(ngModel)]="datosContacto" type="text"></ion-input>
+    </ion-item>
+
+     <ion-item class="fondo bordeInput">
+      <ion-label >Telonos de contacto</ion-label>
+      <ion-input [(ngModel)]="telefonoContacto" type="text"></ion-input>
+    </ion-item>
+
+     <ion-item class="fondo bordeInput borderfin">
+      <ion-label >Organizador</ion-label>
+      <ion-input [(ngModel)]="organizador" type="text"></ion-input>
+    </ion-item>
+
+  </ion-list>
+
+  <!--  <img   class="imagenCargaPerfil" *ngIf="fotoEvento == '-'" (click)="cargarImagen()" src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2Fcargar.png?alt=media&token=0abb191b-43b0-4d6f-83d6-e92de753b5bd">-->
+
+
+
+
+  
+
+  <div class="centrado">
+     <button ion-button outline item-end icon-left color="colorGris" (click)="publicarEvento()">
+        <ion-icon class="iconPublicar"></ion-icon>
+        Publicar
+      </button>
+  </div>
+  <!--<button ion-button full (click)="publicarEvento()">Publicar Evento</button>-->
 
 
 </ion-content>

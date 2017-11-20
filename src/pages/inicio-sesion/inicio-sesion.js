@@ -128,8 +128,12 @@ var InicioSesionPage = /** @class */ (function () {
             })
                 .catch(function (error) {
                 console.log("Firebase failure: " + JSON.stringify(error));
+                alert("Firebase failure: " + JSON.stringify(error));
             });
-        }).catch(function (error) { console.log(error); });
+        }).catch(function (error1) {
+            console.log(error1);
+            alert("Facebook error : " + JSON.stringify(error1));
+        });
     };
     InicioSesionPage.prototype.twLogin = function () {
         var _this = this;
