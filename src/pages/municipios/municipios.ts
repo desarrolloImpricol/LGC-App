@@ -4,6 +4,9 @@ import { Subject } from 'rxjs/Subject';
 import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database-deprecated';
 import { Storage } from '@ionic/storage';
 import { DetalleSitioInteresPage } from '../../pages/detalle-sitio-interes/detalle-sitio-interes';
+import { DetalleNoticiaPage } from '../../pages/detalle-noticia/detalle-noticia';
+import { DetalleEventoPage } from '../../pages/detalle-evento/detalle-evento';
+import { PhotoViewer } from '@ionic-native/photo-viewer';
 /**
  * Generated class for the MunicipiosPage page.
  *
@@ -33,8 +36,9 @@ export class MunicipiosPage {
     mostrarEventos :any ;
     mostrarNoticias :any ;
     mostrarSitios :any ;
+    itemRefNombre:any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams ,public af: AngularFireDatabase ,public storage:Storage) {
+  constructor(public navCtrl: NavController, public navParams: NavParams ,public af: AngularFireDatabase ,public storage:Storage ,private photoViewer: PhotoViewer) {
 
   	console.log("data " + this.navParams.data.municipioInfo);
     this.idMunicipio = this.navParams.data.municipioInfo ; 
@@ -150,6 +154,11 @@ export class MunicipiosPage {
                                   }
                                  });
                               //setea eventos 
+                             this.itemRefNombre = this.af.object(this.departamentoApp+'/Municipios/' + data.uidMunicipio, { preserveSnapshot: true });
+                            this.itemRefNombre.subscribe(snapshot => {
+                              
+                                data.nombreMunicipio = snapshot.val().municipio; 
+                            });
                               this.mostrarEventos =true;
                               this.eventos.push(data);
                             });
@@ -158,6 +167,8 @@ export class MunicipiosPage {
 
               });
             });
+
+
 
             subjectEvento.next(newMunicipio.toString());
     
@@ -221,6 +232,11 @@ export class MunicipiosPage {
                                  });
                               //setea eventos 
                               this.mostrarNoticias =true;
+                            this.itemRefNombre = this.af.object(this.departamentoApp+'/Municipios/' + data.uidMunicipio, { preserveSnapshot: true });
+                            this.itemRefNombre.subscribe(snapshot => {
+                              
+                                data.nombreMunicipio = snapshot.val().municipio; 
+                            });
                               this.noticias.push(data);
                             });
                            // console.log("key =" + snapshot1.key);
@@ -280,6 +296,11 @@ export class MunicipiosPage {
                            });
                         //setea eventos 
                         this.mostrarSitios =true;
+                        this.itemRefNombre = this.af.object(this.departamentoApp+'/Municipios/' + data.uidMunicipio, { preserveSnapshot: true });
+                            this.itemRefNombre.subscribe(snapshot => {
+                              
+                                data.nombreMunicipio = snapshot.val().municipio; 
+                            });
                         this.sitiosInteres.push(data);
                       });
                     //  console.log("key =" + snapshot1.key);
@@ -484,10 +505,39 @@ openSitioInteres(sitio){
   }
 
 
+   detalleNoticia(urlImagen,tituloNoticia , nombreCreador , imagenCreador , descripcion ,uidNoticia,fechaCreacion ,fotos){
+      console.log("url imagen = " + urlImagen);
+      console.log("titulo noticia = " + tituloNoticia);
+      console.log("nombre creador = " + nombreCreador);
+      console.log("imagen creador = " + imagenCreador);
+      console.log("descripcion = " + descripcion);
+      console.log("uid noticia = " + uidNoticia);
+      console.log("fecha noticia = " + fechaCreacion);
+        
+      this.navCtrl.push(DetalleNoticiaPage , {urlImagen  :urlImagen ,tituloNoticia :tituloNoticia ,  nombreCreador :nombreCreador , descripcion :descripcion  , imagenCreador :imagenCreador  ,uidNoticia:uidNoticia,fechaCreacion:fechaCreacion ,fotos:fotos});
+  }
+
+  //funcon que envia a la pantalla de detalle de evento con su respecitva inv
+  detalleEvento(urlImagen, tituloEvento, nombreCreador, imagenCreador, descripcion, uidNoticia, fechaInicio, fechaFin,fotos) {
+    console.log("url imagen = " + urlImagen);
+    console.log("titulo noticia = " + tituloEvento);
+    console.log("nombre creador = " + nombreCreador);
+    console.log("imagen creador = " + imagenCreador);
+    console.log("descripcion = " + descripcion);
+    console.log("uid noticia = " + uidNoticia);
+    //envia a la pantalla  
+    this.navCtrl.push(DetalleEventoPage, { urlImagen: urlImagen, tituloEvento: tituloEvento, nombreCreador: nombreCreador, descripcion: descripcion, imagenCreador: imagenCreador, uidNoticia: uidNoticia, fechaInicio: fechaInicio, fechaFin: fechaFin ,fotos:fotos});
+  }
+
+
+
 
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad MunicipiosPage');
   }
 
+  zoom(url){
+    this.photoViewer.show(url ,'', {share: false});
+  }
 }

@@ -16,11 +16,11 @@
 
     <ion-title>Crear noticia</ion-title>
     
-    <ion-buttons end>
+ <!--   <ion-buttons end>
         <button ion-button  icon-only (click)="mostrarFiltro()">
           <ion-icon name='search'></ion-icon>
         </button>
-    </ion-buttons>
+    </ion-buttons> -->
   </ion-navbar>
 
 
@@ -46,9 +46,44 @@
 
   </div>
 
-   <div class="contenedor-eventos" >
+
+  
+
+  <ion-list>
+
+
+
+
+  <ion-item class="fondo" style="padding-left:5pt;" >
+    <ion-label class="padding-0" >Municipio</ion-label>
+    <ion-select multiple="false" [(ngModel)]="uidMunicipio">
+      <ion-option *ngFor="let muni of municipios " placeholder="Municipio" value="{{muni.id}}">{{muni.municipio}}</ion-option>
+    </ion-select>
+  </ion-item>
+
+    <ion-item class="fondo padding-0">
+      <!--<ion-label>Titulo noticia</ion-label>-->
+      <ion-input placeholder="Titulo noticia"  [(ngModel)]="tituloNoticia" type="text"></ion-input>
+    </ion-item>
+
+     <ion-item class="fondo padding-0">
+      <!--<ion-label>Fuente</ion-label>-->
+      <ion-input [(ngModel)]="fuente" placeholder="Fuente" type="text"></ion-input>
+    </ion-item>
+
+
+    <ion-item class="fondo padding-0">
+      <!--<ion-label>Descripción de la noticia</ion-label>-->
+      <ion-textarea [(ngModel)]="descripcionNoticia" class="descripcionCrearNoticia padding-0"  placeholder="Descripción de noticia" name="description"></ion-textarea>
+    </ion-item>
+  </ion-list>
+
+
+ 
+
+       <div class="contenedor-eventos" >
       
-      <div *ngIf="foto1 == '-'" class="iconoSubirMasImagenes centrado" (click)="cargarOtrasImagenes(1)" >
+      <div *ngIf="foto1 == '-'" class="iconoSubirIniMasImagenes centrado" (click)="cargarOtrasImagenes(1)" >
        
       </div>
 
@@ -92,34 +127,6 @@
       </div>
 
   </div>
-
-  <ion-list>
-
-
-  <ion-item class="fondo bordeInput">
-    <ion-label>Municipio</ion-label>
-    <ion-select multiple="false" [(ngModel)]="uidMunicipio">
-      <ion-option *ngFor="let muni of municipios " value="{{muni.id}}">{{muni.municipio}}</ion-option>
-    </ion-select>
-  </ion-item>
-
-    <ion-item class="fondo bordeInput">
-      <ion-label>Titulo noticia</ion-label>
-      <ion-input [(ngModel)]="tituloNoticia" type="text"></ion-input>
-    </ion-item>
-
-
-    <ion-item class="fondo bordeInput">
-      <ion-label>Descripción de la noticia</ion-label>
-      <ion-textarea [(ngModel)]="descripcionNoticia" name="description"></ion-textarea>
-    </ion-item>
-  </ion-list>
-
-
-   <ion-item class="fondo bordeInput">
-      <ion-label>Fuente</ion-label>
-      <ion-input [(ngModel)]="fuente" type="text"></ion-input>
-    </ion-item>
 
  <!--   <button ion-button full (click)="seleccionarArchivo()">Seleccionar archivo </button>-->
 

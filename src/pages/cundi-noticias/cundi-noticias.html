@@ -16,9 +16,9 @@
         <ion-title>Todos las noticias</ion-title>
         
         <ion-buttons end>
-            <button ion-button  icon-only >
+            <!--<button ion-button  icon-only >
               <ion-icon name='search'></ion-icon>
-            </button>
+            </button>-->
               <button ion-button  icon-only (click)="mostrarFiltro()">
               <ion-icon name='funnel'></ion-icon>
             </button>
@@ -28,7 +28,7 @@
       
     <ion-item >
       <ion-label>Buscar por municipio</ion-label>
-      <ion-select multiple="false" [(ngModel)]="uidMunicipio" (ionChange)="filtraMunicipios()">
+      <ion-select multiple="false " [(ngModel)]="uidMunicipio" (ionChange)="filtraMunicipios()">
         <ion-option *ngFor="let muni of municipios" value="{{muni.id}}">{{muni.municipio}}</ion-option>
       </ion-select>
     </ion-item>
@@ -86,7 +86,7 @@
                 <p>{{noti.fechaNoticia}}</p>
               </ion-item>
   <div class="contenedor-foto-info">
-    <img (click)="detalleNoticia(noti.urlImagen,noti.tituloNoticia,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcion,noti.index,noti.fechaNoticia)"  [src]="noti.urlImagen" />
+    <img (click)="detalleNoticia(noti.urlImagen,noti.tituloNoticia,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcion,noti.index,noti.fechaNoticia,noti.fotos)"  [src]="noti.urlImagen" />
 </div>
      <!--<ion-card-title>
     {{noti.tituloNoticia}}
@@ -97,7 +97,7 @@
       </span>
     
       
-      <span class="municipioNoticia">Bogota</span><span class="descripcionNoticia">{{noti.descripcion}} </span>
+      <span class="municipioNoticia">{{noti.nombreMunicipio}}</span><span class="descripcionNoticia">{{noti.descripcion}} </span>
 
       </div>
       

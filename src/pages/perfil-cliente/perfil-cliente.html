@@ -33,13 +33,75 @@
   <p class="divContenido">{{perfil.descripcion}} </p>
 
   <h3 class="fuente-amarilla" >Ver publicados</h3>
+
+
+  <div class="content-botones-perfil-edicion">
+      <!--<button [ngClass]="{'activo' : menuSelect === 'mistatuajes'  }"   (click)="selectTab('mistatuajes')" >Mis tatuajes</button>-->
+      <button [ngClass]="{'activo' : menuSelect === 'noticias'  }" (click)="selectTab('noticias')">Noticias</button>
+       <button [ngClass]="{'activo' : menuSelect === 'eventos'  }" (click)="selectTab('eventos')">Eventos</button>
+  
+       
+    </div>
+
+    <div [ngSwitch]="menuSelect">
+
+    <ion-list *ngSwitchCase="'noticias'">
+     <!-- <ion-item  *ngFor="let item of noticias">
+        <ion-thumbnail item-start>
+          <img [src]="item.noticia.urlImagen">
+        </ion-thumbnail>
+        <h2>{{item.noticia.tituloNoticia}}</h2>
+      </ion-item>-->
+
+      
+        <ion-item  *ngFor="let item of noticias" >
+          <ion-thumbnail item-start (click)="detalleNoticia(item.noticia)">
+            <img [src]="item.urlImagen">
+          </ion-thumbnail>
+          <p class="fuente-morada">{{item.nombreUsuario}}</p>
+          <p>{{item.fechaNoticia}}</p>
+          <p>{{item.tituloNoticia}}</p>         
+          <p>{{item.nombreMunicipio}}</p>
+           <button ion-button clear item-end (click)="eliminarNoticia(item.uid)">
+            <label><ion-icon class="iconoEliminar"></ion-icon></label>
+          </button>
+           <button ion-button clear item-end (click)="editarNoticia(item.uid)">
+            <label><ion-icon class="iconoEditar"></ion-icon></label>
+          </button>
+
+          <!--<button ion-button clear item-end>V</button>-->
+        </ion-item>
+    
+      
+      
+    </ion-list>
+
+    <ion-list *ngSwitchCase="'eventos'">
+      <ion-item *ngFor="let item of eventos">
+        <ion-thumbnail item-start (click)="detalleEvento(item.evento)">
+          <img [src]="item.urlImagen">
+        </ion-thumbnail>
+          <p class="fuente-naranja">{{item.nombreUsuario}}</p>
+          <p>{{item.fechaInicio}} -{{item.fechaFin}}</p>
+          <p>{{item.tituloEvento}}</p>
+          <p>{{item.nombreMunicipio}}</p>
+           <button ion-button clear item-end (click)="eliminarEvento(item.uid)">
+            <label><ion-icon class="iconoEliminar"></ion-icon></label>
+          </button>
+           <button ion-button clear item-end (click)="editarEvento(item.uid)">
+            <label><ion-icon class="iconoEditar"></ion-icon></label>
+          </button>
+      </ion-item>
+     
+    </ion-list>
+  </div>
      <!--<div class="wrapper-perfil">
 
       <img class="img-circle-perfil" [src]="perfil.photoUrl">
     </div>
     <span class="fuente-10 fuente-centrado  "> {{perfil.nombreUsuario}} </span>
 -->
-    <div class="contenedor">
+   <!-- <div class="contenedor">
            <img  class="imagenLogo" (click)="irDepartamentos()" src="assets/icon/Infomunicipios.png">     
             
            <img class="imagenLogo" (click)="irNoticias()" src="assets/icon/NoticiasIcon.png">
@@ -59,6 +121,6 @@
       
               
     </div>
-
+-->
 </div>
 </ion-content>

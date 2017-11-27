@@ -27,6 +27,8 @@ import { MunicipiosPage } from '../pages/municipios/municipios';
 import { InicioSesionPage } from '../pages/inicio-sesion/inicio-sesion';
 import { PerfilClientePage } from '../pages/perfil-cliente/perfil-cliente';
 import { EditarPerfilPage } from '../pages/editar-perfil/editar-perfil';
+import { EditarNoticiasPage } from '../pages/editar-noticias/editar-noticias';
+import { EditarEventoPage } from '../pages/editar-evento/editar-evento';
 import { BusquedaAvanzadaPage } from '../pages/busqueda-avanzada/busqueda-avanzada';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database-deprecated';
@@ -51,6 +53,8 @@ import { NativeAudio } from '@ionic-native/native-audio';
 import { FileChooser } from '@ionic-native/file-chooser';
 import { FilePath } from '@ionic-native/file-path';
 import { DireccionamientosProvider } from '../providers/direccionamientos/direccionamientos';
+import { PhotoViewer } from '@ionic-native/photo-viewer';
+
 
 
 //configuracion firebase
@@ -90,7 +94,9 @@ firebase.initializeApp(firebaseConfig)
     FavoritosPage,
     DepartamentoPage,
     DetalleSitioInteresPage,
-    EditarPerfilPage
+    EditarPerfilPage,
+    EditarNoticiasPage,
+    EditarEventoPage
   ],
   imports: [
     BrowserModule,
@@ -128,7 +134,9 @@ firebase.initializeApp(firebaseConfig)
     FavoritosPage,
     DepartamentoPage,
     DetalleSitioInteresPage,
-    EditarPerfilPage
+    EditarPerfilPage,
+    EditarNoticiasPage,
+    EditarEventoPage
   ],
   providers: [
     StatusBar,
@@ -150,7 +158,8 @@ firebase.initializeApp(firebaseConfig)
     NativeAudio,
     FileChooser,
     FilePath,
-    DireccionamientosProvider
+    DireccionamientosProvider,
+    PhotoViewer
 
   ]
 })

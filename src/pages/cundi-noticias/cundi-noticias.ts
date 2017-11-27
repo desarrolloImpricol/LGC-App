@@ -31,8 +31,14 @@ export class CundiNoticiasPage {
   municipios:any ;
   filtroMunicipios:any;
   uidMunicipio:any;
-
+  uidMunicipioCargado :any ;
+  itemRefNombre:any; 
+  
   constructor(public navCtrl: NavController, public navParams: NavParams , public af: AngularFireDatabase ,private socialSharing: SocialSharing  ,private transfer: FileTransfer, private file: File ,public storage: Storage) {
+    this.uidMunicipioCargado  =  this.navParams.data.uidMunicipio ;
+
+    console.log("uidMunicipioCargado  = "  +this.uidMunicipioCargado);
+    
     //obtiene informacion del usuario
     this.storage.get('userData')
       .then(
@@ -50,6 +56,10 @@ export class CundiNoticiasPage {
           this.perfil.uid = data.uid;
 
 
+          if(this.uidMunicipioCargado != undefined){
+              this.uidMunicipio = this.uidMunicipioCargado;
+              this.filtraMunicipios();
+          }else{
               //consulta la informacion de tdas las noticias 
               this.af.list(this.departamentoApp+'/Noticias/' ,{ preserveSnapshot: true})
                   .subscribe(snapshots=>{
@@ -80,6 +90,13 @@ export class CundiNoticiasPage {
                                       data.guardado  = true ;
                                   }
                                  });
+
+
+                                this.itemRefNombre = this.af.object(this.departamentoApp+'/Municipios/' + data.uidMunicipio, { preserveSnapshot: true });
+                                this.itemRefNombre.subscribe(snapshot => {
+                                    console.log("NBOMBRE  MUNICIPIO  ^!^!^!^!^!^!^!^!^!^!^!^!^!^!^!" + snapshot.val().municipio);
+                                    data.nombreMunicipio = snapshot.val().municipio; 
+                                });
                               console.log("add noticia");
                               this.noticias.push(data);
                             });
@@ -87,6 +104,10 @@ export class CundiNoticiasPage {
                        console.log("Value ="+ JSON.stringify(snapshot1.val()));
                       });
                   });
+          }
+
+
+            
 
 
         });
@@ -155,7 +176,7 @@ export class CundiNoticiasPage {
     }
 
 
-  detalleNoticia(urlImagen,tituloNoticia , nombreCreador , imagenCreador , descripcion ,uidNoticia,fechaCreacion){
+  detalleNoticia(urlImagen,tituloNoticia , nombreCreador , imagenCreador , descripcion ,uidNoticia,fechaCreacion ,fotos){
       console.log("url imagen = " + urlImagen);
       console.log("titulo noticia = " + tituloNoticia);
       console.log("nombre creador = " + nombreCreador);
@@ -163,7 +184,7 @@ export class CundiNoticiasPage {
       console.log("descripcion = " + descripcion);
       console.log("uid noticia = " + uidNoticia);
       console.log("fecha noticia = " + fechaCreacion);
-      this.navCtrl.push(DetalleNoticiaPage , {urlImagen  :urlImagen ,tituloNoticia :tituloNoticia ,  nombreCreador :nombreCreador , descripcion :descripcion  , imagenCreador :imagenCreador  ,uidNoticia:uidNoticia,fechaCreacion:fechaCreacion });
+      this.navCtrl.push(DetalleNoticiaPage , {urlImagen  :urlImagen ,tituloNoticia :tituloNoticia ,  nombreCreador :nombreCreador , descripcion :descripcion  , imagenCreador :imagenCreador  ,uidNoticia:uidNoticia,fechaCreacion:fechaCreacion ,fotos:fotos});
   }
 
   ionViewDidLoad() {
@@ -241,7 +262,7 @@ export class CundiNoticiasPage {
                 //let dataI = item;
 
         //        this.eventos.push(dataI);
-                 let data =item;
+                           let data =item;
                             console.log("uid creador = " + data.uidCreador);
                             //consulta informacion del creador del evento
                             this.itemRef = this.af.object(this.departamentoApp+'/userProfile/' + data.uidCreador, { preserveSnapshot: true });
@@ -268,6 +289,14 @@ export class CundiNoticiasPage {
                                       data.guardado  = true ;
                                   }
                                  });
+                                this.itemRefNombre = this.af.object(this.departamentoApp+'/Municipios/' + data.uidMunicipio, { preserveSnapshot: true });
+                                this.itemRefNombre.subscribe(snapshot => {
+                                    console.log("NBOMBRE  MUNICIPIO  ^!^!^!^!^!^!^!^!^!^!^!^!^!^!^!" + snapshot.val().municipio);
+                                    data.nombreMunicipio = snapshot.val().municipio; 
+                                });
+
+
+
                               //setea eventos 
                               this.noticias.push(data);
                             });
@@ -317,6 +346,12 @@ export class CundiNoticiasPage {
                                       data.guardado  = true ;
                                   }
                                  });
+
+                                this.itemRefNombre = this.af.object(this.departamentoApp+'/Municipios/' + data.uidMunicipio, { preserveSnapshot: true });
+                                this.itemRefNombre.subscribe(snapshot => {
+                                    console.log("NBOMBRE  MUNICIPIO  ^!^!^!^!^!^!^!^!^!^!^!^!^!^!^!" + snapshot.val().municipio);
+                                    data.nombreMunicipio = snapshot.val().municipio; 
+                                });
                               console.log("add noticia");
                               this.noticias.push(data);
                             });

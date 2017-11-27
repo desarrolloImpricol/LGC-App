@@ -46,8 +46,17 @@
     <p>{{fechaInicio}} - {{fechaFin}}</p>
   </ion-item>
 
+<ion-slides pager class="eventos">   
+         <ion-slide  *ngFor="let item of fotosNoticia ">
+          <div class="contenedor-foto-info-detalle" (click)="zoom(item)">
+            <img  [src]="item"/>
+           </div> 
+         </ion-slide>
+</ion-slides>
+
+
    
-   <img  [src]="urlImagen"/>
+   <!--<img  [src]="urlImagen"/>-->
     <div class="divContenido">
                 <span class="tituloNoticia">
                   {{tituloEvento}}
@@ -56,6 +65,8 @@
                 <span class="municipioNoticia">Bogota</span><span class="descripcionNoticia">{{descripcion}} </span>
 
               </div>
+
+              
 
           <!--<ion-item>
             <ion-icon name="wine" item-left large ></ion-icon>
@@ -70,6 +81,14 @@
                     </button>
                     
                   </ion-col>-->
+                <ion-col text-right>
+                    <button (click)="guardarEvento(noti)" ion-button clear small color="colorEvento" icon-start>
+                      <img  *ngIf="guardado"  class="iconoGuardadoEvento" />
+                      <img  *ngIf="!guardado" class="iconoNoGuardadoEvento" />
+                       Favorito
+                    </button>
+                    
+                  </ion-col>
                   <ion-col>
                   <button (click)="compartir(noti.urlImagen)" ion-button clear small color="colorEvento" icon-start>
                      <img class="iconoCompartirEvento" />

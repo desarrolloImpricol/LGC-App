@@ -17,9 +17,9 @@
     <ion-title>Todos los eventos</ion-title>
     
     <ion-buttons end>
-        <button ion-button  icon-only >
+        <!--<button ion-button  icon-only >
           <ion-icon name='search'></ion-icon>
-        </button>
+        </button>-->
          <button ion-button  icon-only (click)="mostrarFiltro()">
           <ion-icon name='funnel'></ion-icon>
         </button>
@@ -89,14 +89,14 @@
                 <p>{{noti.fechaInicio}} - {{noti.fechaFin}}</p>
               </ion-item>
 
-         <img (click)="detalleNoticia(noti.urlImagen,noti.tituloEvento,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcionEvento,noti.index,noti.fechaInicio,noti.fechaFin)" [src]="noti.urlImagen" />
+         <img (click)="detalleNoticia(noti.urlImagen,noti.tituloEvento,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcionEvento,noti.index,noti.fechaInicio,noti.fechaFin,noti.fotos)" [src]="noti.urlImagen" />
          
           <div class="divContenido">
                 <span class="tituloNoticia">
                   {{noti.tituloEvento}}
                 </span>
                 
-                <span class="municipioNoticia">Bogota</span><span class="descripcionNoticia">{{noti.descripcionEvento}} </span>
+                <span class="municipioNoticia">{{noti.nombreMunicipio}}</span><span class="descripcionNoticia">{{noti.descripcionEvento}} </span>
 
               </div>
 

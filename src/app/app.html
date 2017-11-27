@@ -45,6 +45,20 @@
         <img class="iconoFavoritos" />
         Favoritos
       </button>
+
+      <button  class="fondoMenu fuenteMenu" ion-item (click)="irNoticias()">
+        <img class="iconoFavoritos" />
+        Noticias
+      </button>
+       <button  class="fondoMenu fuenteMenu" ion-item (click)="irEventos()">
+        <img class="iconoFavoritos" />
+        Eventos
+      </button>
+       <button  class="fondoMenu fuenteMenu" ion-item (click)="irColombia()">
+        <img class="iconoFavoritos" />
+        Municipios
+      </button>
+
       <button  class="fondoMenu fuenteMenu" ion-item (click)="openBusquedaMenu()">
         <img class="iconoBusqueda" />
         Busqueda avanzada
@@ -63,15 +77,15 @@
             </ion-select>
           </ion-item>
 
-           <ion-item class="fondoMenu">
+           <ion-item class="fondoMenu fuente-blanco">
             <ion-label class="fuente-blanco">¿Donde lo busca?</ion-label>
             <ion-select [(ngModel)]="dondebusca">
              
-              <ion-option *ngFor="let muni of municipios " value="{{muni.uid}}">{{muni.nombreMunicipio}}</ion-option>                                          
+              <ion-option *ngFor="let muni of municipios" value="{{muni.id}}">{{muni.municipio}}</ion-option>                                          
             </ion-select>
           </ion-item>
 
-           <ion-item class="fondoMenu" *ngIf="queBusca === 'eventos'">
+           <ion-item class="fondoMenu fuente-blanco" *ngIf="queBusca === 'eventos'">
             <ion-label class="fuente-blanco">Tipo publicación?</ion-label>
             <ion-select [(ngModel)]="tipoPublicacion">
          
@@ -80,7 +94,7 @@
             </ion-select>
           </ion-item>
 
-           <ion-item class="fondoMenu"  *ngIf="queBusca === 'eventos'">
+           <ion-item class="fondoMenu fuente-blanco"  *ngIf="queBusca === 'eventos'">
             <ion-label class="fuente-blanco" >Fecha publicacion evento</ion-label>
             <ion-select [(ngModel)]="fechaFiltroEvento">
               <ion-option value="enero">Enero</ion-option>
@@ -97,7 +111,7 @@
               <ion-option value="diciembre">Diciembre</ion-option>                                          
             </ion-select>
           </ion-item>
-          <ion-item class="fondoMenu"  *ngIf="queBusca === 'noticias'">
+          <ion-item class="fondoMenu fuente-blanco"  *ngIf="queBusca === 'noticias'">
             <ion-label class="fuente-blanco" >Fecha publicacion noticia</ion-label>
             <ion-select [(ngModel)]="fechaFiltroNoticia">
                <ion-option value="enero">Enero</ion-option>
@@ -115,13 +129,14 @@
             </ion-select>
           </ion-item>
         </ion-list>
-        <button [disabled]="queBusca === '-'" ion-button full color="colorNegroMenuOpciones" (click)="buscarMenu()">BUSCAR</button>
+        <button [disabled]="queBusca === '-'" ion-button full color="colorNegroMenuOpciones" (click)="busquedaAvanzada()">BUSCAR</button>
 
       </div>
       <button   class="fondoMenu fuenteMenu" ion-item (click)="cerrarSesion()" >
         <img class="iconoCerrarSesion" />
         Cerrar sesion
       </button>
+      
        <!--<button   class="fondoMenu fuenteMenu" ion-item (click)="irColombia()">
         Municipios
       </button>

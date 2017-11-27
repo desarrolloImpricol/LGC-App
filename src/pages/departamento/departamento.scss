@@ -5,11 +5,18 @@ page-departamento {
 
 /*---------------botones artistas PERFIL------------------*/
 .content-fotos-departamento {
-	display:flex;
-	width:100%;
-	flex-wrap: wrap;
+	 display:flex;
+	 width:100%;
+	//flex-wrap: wrap;
+	 max-height :7% !important;
+     height :5% !important;
+	// background-color:red;
 }
-.content-fotos-departamento img  {
+/*.content-fotos-departamento img{
+	height :100% !important;
+
+}*/
+/*.content-fotos-departamento img  {
 	width:33%;  //original
 	height:auto !important;
 	//width:50%;
@@ -21,7 +28,9 @@ page-departamento {
 	font-size: 1.3rem;
 	line-height: 1.5rem;
 	background-color: white;
-}
+	display:flex;
+	justify-content :center;
+}*/
 
 .eslogan {
 
@@ -34,6 +43,7 @@ page-departamento {
     border-top:none;
    // border-bottom:solid #838383 1px;
     margin-top:10px !important;
+
 }
 
 
@@ -63,3 +73,30 @@ h6 .linea{
    margin: 10px 0 20px; 
 } 
 
+
+.img-circle-departamento {
+	border-radius: 50% !important;
+	width: 30%  !important;
+	height: 60% !important;
+	margin: 3pt;
+	overflow:hidden;
+	//left :10% ;
+	//background-color:red;
+}
+
+
+.image-cropper {
+	margin: 3pt;
+    width: 100px;
+    height: 100px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.image-cropper img {
+    display: inline;
+    margin: 0 auto;
+    height: 100%;
+    width: auto;
+}

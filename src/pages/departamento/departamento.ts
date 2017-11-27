@@ -5,6 +5,9 @@ import { Subject } from 'rxjs/Subject';
 import { MunicipiosPage } from '../../pages/municipios/municipios';
 import { Storage } from '@ionic/storage';
 import { DetalleSitioInteresPage } from '../../pages/detalle-sitio-interes/detalle-sitio-interes';
+import { DetalleNoticiaPage } from '../../pages/detalle-noticia/detalle-noticia';
+import { DetalleEventoPage } from '../../pages/detalle-evento/detalle-evento';
+import { PhotoViewer } from '@ionic-native/photo-viewer';
 //import { DireccionamientosProvider } from '../../providers/direccionamientos/direccionamientos';
 /**
  * Generated class for the DepartamentoPage page.
@@ -19,6 +22,7 @@ import { DetalleSitioInteresPage } from '../../pages/detalle-sitio-interes/detal
 })
 export class DepartamentoPage {
  
+ 
 departamentoApp :any = "/Cundinamarca";
 item :any ;
 dataDepartamento:any = [];
@@ -31,16 +35,9 @@ eventos:any;
 itemRefNoticias:any;
 perfil:any=[];
 sitiosInteres :any ;
-  constructor(public navCtrl: NavController, public navParams: NavParams ,public af: AngularFireDatabase ,public storage:Storage) {
-   
-  }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad DepartamentoPage');
-  }
-
-  ionViewWillEnter(){
-       this.storage.get('userData')
+itemRefNombre:any;
+  constructor(public navCtrl: NavController, public navParams: NavParams ,public af: AngularFireDatabase ,public storage:Storage ,private photoViewer: PhotoViewer) {
+            this.storage.get('userData')
       .then(
       data => {
         console.log(JSON.stringify(data)),
@@ -89,6 +86,8 @@ sitiosInteres :any ;
                     });
                   });
 
+                  
+
                   // trigger the query
                 //  subject.next(this.uidDepartamento);
 
@@ -127,7 +126,12 @@ sitiosInteres :any ;
                                 data.guardado  = true ;
                             }
                            });
-                        //setea eventos 
+                           this.itemRefNombre = this.af.object(this.departamentoApp+'/Municipios/' + data.uidMunicipio, { preserveSnapshot: true });
+                            this.itemRefNombre.subscribe(snapshot => {
+                              
+                                data.nombreMunicipio = snapshot.val().municipio; 
+                            });
+                      //setea eventos 
                         this.eventos.push(data);
                       });
                       console.log("key =" + snapshot1.key);
@@ -165,6 +169,11 @@ sitiosInteres :any ;
                                         data.guardado  = true ;
                                     }
                                    });
+                            this.itemRefNombre = this.af.object(this.departamentoApp+'/Municipios/' + data.uidMunicipio, { preserveSnapshot: true });
+                            this.itemRefNombre.subscribe(snapshot => {
+                              
+                                data.nombreMunicipio = snapshot.val().municipio; 
+                            });
 
 
                                 console.log("add noticia");
@@ -212,6 +221,12 @@ sitiosInteres :any ;
                                 data.guardado  = true ;
                             }
                            });
+                            this.itemRefNombre = this.af.object(this.departamentoApp+'/Municipios/' + data.uidMunicipio, { preserveSnapshot: true });
+                            this.itemRefNombre.subscribe(snapshot => {
+                              
+                                data.nombreMunicipio = snapshot.val().municipio; 
+                            });
+
                         //setea eventos 
                         this.sitiosInteres.push(data);
                       });
@@ -230,6 +245,14 @@ sitiosInteres :any ;
         //this.navCtrl.push(InicioSesionPage);
       }
       );
+  }
+
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad DepartamentoPage');
+  }
+
+  ionViewWillEnter(){
+  
 
   }
 
@@ -329,6 +352,32 @@ sitiosInteres :any ;
 
 
 
+   detalleNoticia(urlImagen,tituloNoticia , nombreCreador , imagenCreador , descripcion ,uidNoticia,fechaCreacion ,fotos){
+      console.log("url imagen = " + urlImagen);
+      console.log("titulo noticia = " + tituloNoticia);
+      console.log("nombre creador = " + nombreCreador);
+      console.log("imagen creador = " + imagenCreador);
+      console.log("descripcion = " + descripcion);
+      console.log("uid noticia = " + uidNoticia);
+      console.log("fecha noticia = " + fechaCreacion);
+        
+      this.navCtrl.push(DetalleNoticiaPage , {urlImagen  :urlImagen ,tituloNoticia :tituloNoticia ,  nombreCreador :nombreCreador , descripcion :descripcion  , imagenCreador :imagenCreador  ,uidNoticia:uidNoticia,fechaCreacion:fechaCreacion ,fotos:fotos});
+  }
+
+  //funcon que envia a la pantalla de detalle de evento con su respecitva inv
+  detalleEvento(urlImagen, tituloEvento, nombreCreador, imagenCreador, descripcion, uidNoticia, fechaInicio, fechaFin,fotos) {
+    console.log("url imagen = " + urlImagen);
+    console.log("titulo noticia = " + tituloEvento);
+    console.log("nombre creador = " + nombreCreador);
+    console.log("imagen creador = " + imagenCreador);
+    console.log("descripcion = " + descripcion);
+    console.log("uid noticia = " + uidNoticia);
+    //envia a la pantalla  
+    this.navCtrl.push(DetalleEventoPage, { urlImagen: urlImagen, tituloEvento: tituloEvento, nombreCreador: nombreCreador, descripcion: descripcion, imagenCreador: imagenCreador, uidNoticia: uidNoticia, fechaInicio: fechaInicio, fechaFin: fechaFin ,fotos:fotos});
+  }
+
+
+
   onSelectMunicipio (municipio){
     console.log("Municipio info" + this.uidMunicipio);
 
@@ -341,5 +390,10 @@ sitiosInteres :any ;
    this.navCtrl.push(DetalleSitioInteresPage , {sitioInfo : sitio}); 
 
   }
+
+  zoom(url){
+   this.photoViewer.show(url ,'', {share: false});
+  }
+
 
 }

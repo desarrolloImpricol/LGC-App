@@ -44,6 +44,16 @@ page-crear-evento {
   width :16%;
   background-color : #838383 !important;
 }
+.iconoSubirIniMasImagenes {
+  //padding:1%;
+  margin:2%;
+  //min-width:13% !important;
+  //max-height:8% !important; 
+  content : url('../assets/icon/Blanco/agregarMasFotos.png');
+  height: 3%;
+  width :16%;
+  background-color : #838383 !important;
+}
 .iconoSubirMasImagenesCagado {
   //padding:1%;
   margin:2%;
@@ -115,4 +125,52 @@ page-crear-evento {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.descripcionCrearEvento{
+  border-left: 1px solid #838383;
+  border-right: 1px solid #838383;
+  border-bottom: 1px solid #838383;
+  border-top: 1px solid #838383;
+  
+}
+
+
+.iconFecha {
+  width:20px;
+  height:20px;
+  content : url('../assets/icon/Gris/fecha.png');
+}
+
+.iconHorario {
+  width:20px;
+  height:20px;
+  content : url('../assets/icon/Gris/horario.png');
+}
+
+
+.iconUbicacion {
+  width:20px;
+  height:20px;
+  content : url('../assets/icon/Gris/ubicacion.png');
+}
+
+.iconDatosContacto {
+  width:20px;
+  height:20px;
+  content : url('../assets/icon/Gris/datosContacto.png');
+}
+
+.iconTelefono {
+  width:20px;
+  height:20px;
+  content : url('../assets/icon/Gris/telefono.png');
+}
+
+.item-datetime ion-label {
+  -webkit-flex: initial;
+  -ms-flex: initial;
+  flex: initial;
+  max-width: 200px;
+  pointer-events: none;
 }

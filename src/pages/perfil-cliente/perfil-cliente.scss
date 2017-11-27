@@ -1,3 +1,48 @@
 page-perfil-cliente {
 
 }
+
+
+.content-botones-perfil-edicion {
+	display:flex;
+	width:100%;
+	flex-wrap: wrap;
+}
+.content-botones-perfil-edicion button {
+	width:50%;  //original
+	//width:50%;
+	flex-shrink: 0;
+	border: 1px solid #ffcc29 ;
+	padding: 9pt  7pt 7pt 7pt ;
+	
+	font-family: 'gotham-light';
+	font-size: 1.1rem;
+	line-height: 1.3rem;
+	
+
+
+	background-color: #ffcc29;
+    //color: #fff;
+    color:black;
+}
+.content-botones-perfil-edicion button.activo {
+    	background-color: white;
+    //	color: #97999C;
+    color:black;
+}
+
+
+.iconoEliminar {
+	width:20px;
+	height:20px;
+	content : url('../assets/icon/Morado/eliminar.png');
+}
+
+.iconoEditar {
+	width:20px;
+	height:20px;
+	content : url('../assets/icon/Morado/editar.png');
+}
+
+
+

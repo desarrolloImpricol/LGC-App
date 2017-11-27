@@ -25,6 +25,7 @@ import { PerfilClientePage } from '../../pages/perfil-cliente/perfil-cliente';
 import { FavoritosPage } from '../../pages/favoritos/favoritos';
 
 
+
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
@@ -46,10 +47,12 @@ export class HomePage {
   categoriasEventos:any;
   queBusca :any ; 
   mostrarMenuPerfil :any = false  ;
+  dondebusca:any;
+  itemRefNombre:any;
  // file:MediaObject;
   constructor(public navCtrl: NavController, public af: AngularFireDatabase, public secureStorage: SecureStorage, private deeplinks: Deeplinks, public platform: Platform, public storage: Storage ,private media: Media ,private nativeAudio: NativeAudio,public menuCtrl :MenuController) {
 
-  
+ 
 
 
     this.queBusca  = '-'; 
@@ -88,40 +91,40 @@ export class HomePage {
       // nomatch.$link - the full link data
       console.error('Got a deeplink that didn\'t match', nomatch);
     });
+
+
+
+
   }
 
 
     //funcion que  se llama cuando se elecciona un departamento
   onSelecDepartamento() {
     
-     //reinicializa el arreglo demunicipios
-    this.municipios = [];
-    let subject = new Subject();
-    const queryObservable = this.af.list(this.departamentoApp+'/municipios', {
-      query: {
-        orderByKey: true
-
-      }
-    });
-    //manjo de respuesta 
-    // subscribe to changes
-    queryObservable.subscribe(queriedItems => {
-      console.log(JSON.stringify(queriedItems));
-      //alamaenca resultado del filtro en arreglo 
-      this.filtroMunicipios = queriedItems;
-      //recorre arreglo para setelartl en la lista 
-      this.filtroMunicipios.forEach((item, index) => {
-
-        //         console.log("item municipio = " + JSON.stringify(item));
-
-        let dataI = item;
-
-        this.municipios.push(dataI);
+        //reinicializa el arreglo demunicipios
+      this.municipios = [];
+      let subject = new Subject();
+      const queryObservable = this.af.list(this.departamentoApp+'/Municipios', {
+        query: {
+          orderByKey: true
+        }
       });
-    });
+      //manjo de respuesta 
+      // subscribe to changes
+      queryObservable.subscribe(queriedItems => {
+        console.log(JSON.stringify(queriedItems));
+        //alamaenca resultado del filtro en arreglo 
+        this.filtroMunicipios = queriedItems;
+        //recorre arreglo para setelartl en la lista 
+        this.filtroMunicipios.forEach((item, index) => {
+          //         console.log("item municipio = " + JSON.stringify(item));
 
-    // trigger the query
-    subject.next(this.uidDepartamento);
+          let dataI = item;
+
+          this.municipios.push(dataI);
+        });
+      });
+
   }
 
   //elimina los datos guardados del usuario
@@ -224,6 +227,12 @@ export class HomePage {
                     data.guardado  = true ;
                 }
                });
+                   this.itemRefNombre = this.af.object(this.departamentoApp+'/Municipios/' + data.uidMunicipio, { preserveSnapshot: true });
+                                this.itemRefNombre.subscribe(snapshot => {
+                                  
+                                    data.nombreMunicipio = snapshot.val().municipio; 
+                                });
+
             //setea eventos 
             this.eventos.push(data);
           });
@@ -264,7 +273,11 @@ export class HomePage {
                             data.guardado  = true ;
                         }
                        });
-
+                          this.itemRefNombre = this.af.object(this.departamentoApp+'/Municipios/' + data.uidMunicipio, { preserveSnapshot: true });
+                                this.itemRefNombre.subscribe(snapshot => {
+                                  
+                                    data.nombreMunicipio = snapshot.val().municipio; 
+                                });
 
                     console.log("add noticia");
                     this.noticias.push(data);
@@ -289,7 +302,7 @@ export class HomePage {
     );
   }
 
-  detalleNoticia(urlImagen,tituloNoticia , nombreCreador , imagenCreador , descripcion ,uidNoticia,fechaCreacion){
+  detalleNoticia(urlImagen,tituloNoticia , nombreCreador , imagenCreador , descripcion ,uidNoticia,fechaCreacion ,fotos){
       console.log("url imagen = " + urlImagen);
       console.log("titulo noticia = " + tituloNoticia);
       console.log("nombre creador = " + nombreCreador);
@@ -297,11 +310,12 @@ export class HomePage {
       console.log("descripcion = " + descripcion);
       console.log("uid noticia = " + uidNoticia);
       console.log("fecha noticia = " + fechaCreacion);
-      this.navCtrl.push(DetalleNoticiaPage , {urlImagen  :urlImagen ,tituloNoticia :tituloNoticia ,  nombreCreador :nombreCreador , descripcion :descripcion  , imagenCreador :imagenCreador  ,uidNoticia:uidNoticia,fechaCreacion:fechaCreacion });
+        
+      this.navCtrl.push(DetalleNoticiaPage , {urlImagen  :urlImagen ,tituloNoticia :tituloNoticia ,  nombreCreador :nombreCreador , descripcion :descripcion  , imagenCreador :imagenCreador  ,uidNoticia:uidNoticia,fechaCreacion:fechaCreacion ,fotos:fotos});
   }
 
   //funcon que envia a la pantalla de detalle de evento con su respecitva inv
-  detalleEvento(urlImagen, tituloEvento, nombreCreador, imagenCreador, descripcion, uidNoticia, fechaInicio, fechaFin) {
+  detalleEvento(urlImagen, tituloEvento, nombreCreador, imagenCreador, descripcion, uidNoticia, fechaInicio, fechaFin,fotos) {
     console.log("url imagen = " + urlImagen);
     console.log("titulo noticia = " + tituloEvento);
     console.log("nombre creador = " + nombreCreador);
@@ -309,7 +323,7 @@ export class HomePage {
     console.log("descripcion = " + descripcion);
     console.log("uid noticia = " + uidNoticia);
     //envia a la pantalla  
-    this.navCtrl.push(DetalleEventoPage, { urlImagen: urlImagen, tituloEvento: tituloEvento, nombreCreador: nombreCreador, descripcion: descripcion, imagenCreador: imagenCreador, uidNoticia: uidNoticia, fechaInicio: fechaInicio, fechaFin: fechaFin });
+    this.navCtrl.push(DetalleEventoPage, { urlImagen: urlImagen, tituloEvento: tituloEvento, nombreCreador: nombreCreador, descripcion: descripcion, imagenCreador: imagenCreador, uidNoticia: uidNoticia, fechaInicio: fechaInicio, fechaFin: fechaFin ,fotos:fotos});
   }
   //redireccion a colombia
   irColombia(){
@@ -351,6 +365,15 @@ export class HomePage {
   irCreaEventos() {
     this.navCtrl.setRoot(CrearEventoPage);
   }
+
+  irCrearNoticiasFab() {
+    this.navCtrl.push(CrearNoticiaPage);
+  }
+
+  irCreaEventosFab() {
+    this.navCtrl.push(CrearEventoPage);
+  }
+
 
   irBusquedaAvanzada() {
     this.navCtrl.push(BusquedaAvanzadaPage);
@@ -483,6 +506,7 @@ export class HomePage {
 
   }
 
+
   
   buscarMenu(){
     if(this.queBusca === 'noticias'){
@@ -492,6 +516,35 @@ export class HomePage {
       this.navCtrl.push(CundiEventosPage);
     }
   }
+
+
+
+   busquedaAvanzada(){
+  console.log("busqueda avanzada antes de if = " + this.dondebusca );  
+   if(this.queBusca === 'noticias'){
+     if(this.dondebusca === undefined || this.dondebusca === "" || this.dondebusca === null  ){
+       this.navCtrl.setRoot(CundiNoticiasPage);
+     }else{
+
+       console.log("busqueda avanzada = " + this.dondebusca );  
+       this.navCtrl.setRoot(CundiNoticiasPage , {uidMunicipio:this.dondebusca});
+     }
+      
+      //this.menu.close();
+    }
+    if(this.queBusca === 'eventos'){
+      if(this.dondebusca === undefined || this.dondebusca === "" || this.dondebusca === null  ){
+        this.navCtrl.setRoot(CundiEventosPage);
+      }else{
+        console.log("busqueda avanzada = " + this.dondebusca );  
+        this.navCtrl.setRoot(CundiEventosPage, {uidMunicipio:this.dondebusca});
+      }      
+      //this.menu.close();
+    }
+     
+  }
+
+ 
 
 
 

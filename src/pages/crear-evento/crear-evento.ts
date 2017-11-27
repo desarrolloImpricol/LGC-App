@@ -8,7 +8,7 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Ng2ImgToolsService } from 'ng2-img-tools';
 import firebase from 'firebase';
 import { Storage } from '@ionic/storage';
-
+import { CundiEventosPage } from '../../pages/cundi-eventos/cundi-eventos';
 /**
  * Generated class for the CrearEventoPage page.
  *
@@ -56,6 +56,11 @@ export class CrearEventoPage {
   foto3 :any;
   foto4 :any;
   foto5 :any;
+  foto1Pura :any;
+  foto2Pura :any;
+  foto3Pura :any;
+  foto4Pura :any;
+  foto5Pura :any;
 
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public af: AngularFireDatabase, public camera: Camera, public ng2ImgToolsService: Ng2ImgToolsService, public loadingCtrl: LoadingController, public storage: Storage) {
@@ -270,7 +275,8 @@ export class CrearEventoPage {
       ubicacion:this.ubicacion,
       datosContacto :this.datosContacto,
       telefonoContacto:this.telefonoContacto,
-      organizador:this.organizador
+      organizador:this.organizador,
+      disponible: true
       
 
     }).then((item) => {
@@ -284,12 +290,71 @@ export class CrearEventoPage {
   updateFotoNoticia(uid, url) {
     firebase.database().ref(this.departamentoApp+'/Eventos/').child(uid)
       .update(
-      { urlImagen: url }
+        {
+           urlImagen: url ,
+           uid:uid
+         }
       );
-    alert("Evento registrado");
-    this.navCtrl.popToRoot();
+    //alert("Evento registrado");
+    //this.navCtrl.popToRoot();
+    this.loading.dismiss();
+    this.verificarFotosAdicionales(uid);
+  }
+    updateFotoNoticiaAdicional(uid, url ,numeroImagen) {
+    firebase.database().ref(this.departamentoApp+'/Eventos/'+uid+'/fotos/').child(numeroImagen)
+      .update(
+      { urlImagen: url 
+       
+     }
+      );
+   // alert("Evento registrado");
+    //this.navCtrl.popToRoot();
   }
   
+
+   verificarFotosAdicionales(uidEvento){
+    this.presentLoadingDefault();
+
+    console.log("verificar fotos adicionales ");
+     let fotos = []; 
+     if(this.foto1 != "-"){
+       fotos.push(this.foto1Pura);
+     }
+     if(this.foto2 != "-"){
+       fotos.push(this.foto2Pura);
+     }
+     if(this.foto3 != "-"){
+       fotos.push(this.foto3Pura);
+     }
+     if(this.foto4 != "-"){
+       fotos.push(this.foto4Pura);
+     }
+     if(this.foto5 != "-"){
+       fotos.push(this.foto5Pura);
+     }
+     if(fotos.length > 0 ){
+       this.subirFotosAdicionales(fotos ,uidEvento );  
+     }else{
+       this.loading.dismiss();
+     }
+     
+
+
+  }
+
+  subirFotosAdicionales(fotos , uidEvento ){
+   // this.presentLoadingDefault();
+    fotos.forEach((item, index) => {
+       console.log("fotos " + index );
+       console.log(JSON.stringify(item));
+       this.subirImagenAdicional(uidEvento ,  index , item);
+      // this.loading.dismiss();
+    });
+    //this.loading.dismiss();
+    alert("Evento creado exitosamente !!!");
+    this.navCtrl.setRoot(CundiEventosPage);
+
+  }
   
   cargarOtrasImagenes(numero){
       const options: CameraOptions = {
@@ -304,18 +369,23 @@ export class CrearEventoPage {
       this.camera.getPicture(options).then((imageData) => {
         if(numero === 1){
           this.foto1 = 'data:image/jpeg;base64,' + imageData;
+           this.foto1Pura = imageData;
         }
         if(numero === 2){
           this.foto2 = 'data:image/jpeg;base64,' + imageData;
+           this.foto2Pura = imageData;
         }
         if(numero === 3){
           this.foto3 = 'data:image/jpeg;base64,' + imageData;
+           this.foto3Pura = imageData;
         }
         if(numero === 4){
           this.foto4 = 'data:image/jpeg;base64,' + imageData;
+           this.foto4Pura = imageData;
         }
         if(numero === 5){
           this.foto5 = 'data:image/jpeg;base64,' + imageData;
+           this.foto5Pura = imageData;
         }
         
         //this.fotoEventoPura = imageData;
@@ -430,6 +500,48 @@ export class CrearEventoPage {
     });
   }
    
+
+  subirImagenAdicional(uid ,numeroImagen , foto ) {
+   // this.presentLoadingDefault();
+    this.promise = new Promise((res, rej) => {
+      let fotoCompress = this.b64toBlob(foto, 'image/png', null);
+      //comprimir imagen para subir
+      let file = this.blobToFile(fotoCompress, 'imagen.png');
+      this.ng2ImgToolsService.compress([file], 3, false, false).subscribe(result => {
+        //all good, result is a file
+        this.fotoComprimidaCliente = result;
+        console.log(result);
+        console.log(JSON.stringify(result));
+        let storage = firebase.storage().ref();
+        const loading = this.loading2;
+        let thiss = this;
+        const storageRef = storage.child(this.departamentoApp+'eventos/' + uid + '/'+numeroImagen+'.png').put(this.fotoComprimidaCliente).then(function(snapshot) {
+          console.log('Uploaded an array!');
+          //  this.downloadURL = snapshot.downloadURL;
+          console.log("sanpchot");
+          console.log(snapshot.downloadURL);
+          // this.dataChangeObserver.next(this.downloadURL);
+          //  console.log("url descarga imagen " + this.downloadURL);
+          //  thiss.generarRegistroFoto();
+          //    this.entra = true ;
+          //  this.downloadURL = snapshot.downloadURL ;
+          //    thiss.updateFotoPerfil(uid , snapshot.downloadURL);
+          thiss.loading.dismiss();
+          thiss.updateFotoNoticiaAdicional(uid, snapshot.downloadURL ,numeroImagen);
+          
+          //this.imagenSubida = false  ;
+        });
+
+
+      }, error => {
+        console.log("error comprimir  " + JSON.stringify(error));
+        //something went wrong
+        //use result.compressedFile or handle specific error cases individually
+      });
+      //  this.loading.dismiss();
+    });
+  }
+
 
    //convierte archivo blod  a file 
   blobToFile(theBlob: Blob, fileName: string) {

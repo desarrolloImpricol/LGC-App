@@ -48,6 +48,12 @@ export class CrearNoticiaPage {
   foto4 :any;
   foto5 :any;
 
+  foto1Pura :any;
+  foto2Pura :any;
+  foto3Pura :any;
+  foto4Pura :any;
+  foto5Pura :any;
+
   constructor(public navCtrl: NavController, public navParams: NavParams, public af: AngularFireDatabase, public camera: Camera, public ng2ImgToolsService: Ng2ImgToolsService, public loadingCtrl: LoadingController, public storage: Storage,private fileChooser: FileChooser,private transfer: FileTransfer,private Toast:ToastController,private filePath: FilePath , public alertCtrl : AlertController) {
     //inicializa  variable de foto de  noticia
     this.fotoNoticia = "-";
@@ -211,7 +217,8 @@ export class CrearNoticiaPage {
       uidMunicipio: uid.toString(),
       //uidDepartamento: this.uidDepartamento,
       uidCreador: this.perfil.uid,
-      fuente :this.fuente
+      fuente :this.fuente,
+      disponible: true
      // fechaNoticia: this.fechaNoticia
 
     }).then((item) => {
@@ -223,13 +230,78 @@ export class CrearNoticiaPage {
   }
 
   updateFotoNoticia(uid, url) {
+    //AQUI TAMBIEN AGREGO EL UID DE LA NOTCIA  DENTRO DE LA MISMA 
     firebase.database().ref(this.departamentoApp+'/Noticias/').child(uid)
       .update(
-      { urlImagen: url }
+      { 
+        urlImagen: url ,
+        uid:uid
+      }
       );
-    alert("Noticia registrada");
-    this.navCtrl.setRoot(CundiNoticiasPage);
+  //  alert("Noticia registrada");
+  this.loading.dismiss();
+    this.verificarFotosAdicionales(uid);
+    //this.navCtrl.setRoot(CundiNoticiasPage);
   }
+  //sube  fotos  adicionales  sobre  una notcia 
+  updateFotoNoticiaAdicional(uid, url ,numeroImagen) {
+    //AQUI TAMBIEN AGREGO EL UID DE LA NOTCIA  DENTRO DE LA MISMA 
+    firebase.database().ref(this.departamentoApp+'/Noticias/'+uid+'/fotos/').child(numeroImagen)
+      .update(
+      { 
+        urlImagen: url 
+      }
+      );  
+    //alert("foto noticia adicional "+numeroImagen+" registrada");
+  // this.loading.dismiss();
+    //this.navCtrl.setRoot(CundiNoticiasPage);
+  }
+
+  verificarFotosAdicionales(uidNoticia){
+    this.presentLoadingDefault();
+
+    console.log("verificar fotos adicionales ");
+     let fotos = []; 
+     if(this.foto1 != "-"){
+       fotos.push(this.foto1Pura);
+     }
+     if(this.foto2 != "-"){
+       fotos.push(this.foto2Pura);
+     }
+     if(this.foto3 != "-"){
+       fotos.push(this.foto3Pura);
+     }
+     if(this.foto4 != "-"){
+       fotos.push(this.foto4Pura);
+     }
+     if(this.foto5 != "-"){
+       fotos.push(this.foto5Pura);
+     }
+     if(fotos.length > 0 ){
+       this.subirFotosAdicionales(fotos ,uidNoticia );  
+     }else{
+       this.loading.dismiss();
+     }
+     
+
+
+  }
+
+  subirFotosAdicionales(fotos , uidNoticia ){
+   // this.presentLoadingDefault();
+    fotos.forEach((item, index) => {
+       console.log("fotos " + index );
+       console.log(JSON.stringify(item));
+       this.subirImagenAdicional(uidNoticia ,  index , item);
+      // this.loading.dismiss();
+    });
+    //this.loading.dismiss();
+    alert("Noticia creada exitosamente !!!");
+    this.navCtrl.setRoot(CundiNoticiasPage);
+
+  }
+
+
 
   //carga imagen
   fotoNoticia: any;
@@ -351,8 +423,59 @@ export class CrearNoticiaPage {
       //  this.loading.dismiss();
     });
 
+  }
+  //sube las iamgenes adicionales de la noticia 
+   subirImagenAdicional(uid , numeroImagen ,  foto ) {
+   //this.presentLoadingDefault();
+    this.promise = new Promise((res, rej) => {
+      // let fotoCompress = this.dataURLtoFile( this.fotoCliente , 'nombre.jpeg');
+      //  let fotoCompress  = this.base64ToFile( this.fotoClientePura  , 'comprimida' ,'image/png');
+      let fotoCompress = this.b64toBlob(foto, 'image/png', null);
+      //  const file = new File(fotoCompress,'image/png');
+      //comprimir imagen para subir
+      let file = this.blobToFile(fotoCompress, 'imagen.png');
+      this.ng2ImgToolsService.compress([file], 3, false, false).subscribe(result => {
+        //all good, result is a file
+        this.fotoComprimidaCliente = result;
+        console.log(result);
+        console.log(JSON.stringify(result));
+        let storage = firebase.storage().ref();
+        const loading = this.loading2;
+        let thiss = this;
+        const storageRef = storage.child(this.departamentoApp+'/noticias/' + uid + '/'+numeroImagen+'.png').put(this.fotoComprimidaCliente).then(function(snapshot) {
+          console.log('Uploaded an array!');
+
+          //  this.downloadURL = snapshot.downloadURL;
+          console.log("sanpchot");
+          console.log(snapshot.downloadURL);
+
+          // this.dataChangeObserver.next(this.downloadURL);
+          //  console.log("url descarga imagen " + this.downloadURL);
+          //  thiss.generarRegistroFoto();
+          //    this.entra = true ;
+          //  this.downloadURL = snapshot.downloadURL ;
+          //    thiss.updateFotoPerfil(uid , snapshot.downloadURL);
+          //
+          thiss.loading.dismiss();
+          thiss.updateFotoNoticiaAdicional(uid, snapshot.downloadURL , numeroImagen);
+         // thiss.loading.dismiss();
+          //this.imagenSubida = false  ;
+        });
+
+        
+
+
+      }, error => {
+        console.log("error comprimir  " + JSON.stringify(error));
+        //something went wrong
+        //use result.compressedFile or handle specific error cases individually
+      });
+
+      //  this.loading.dismiss();
+    });
 
   }
+  
   
   //funcion que convierte el 
   blobToFile(theBlob: Blob, fileName: string) {
@@ -425,10 +548,6 @@ export class CrearNoticiaPage {
 
 
 
-
-
-
-
  filee:any;
   /*upload2() {
 
@@ -492,18 +611,23 @@ readimage(url) {
       this.camera.getPicture(options).then((imageData) => {
         if(numero === 1){
           this.foto1 = 'data:image/jpeg;base64,' + imageData;
+          this.foto1Pura = imageData;
         }
         if(numero === 2){
           this.foto2 = 'data:image/jpeg;base64,' + imageData;
+          this.foto2Pura = imageData;
         }
         if(numero === 3){
           this.foto3 = 'data:image/jpeg;base64,' + imageData;
+          this.foto3Pura = imageData;
         }
         if(numero === 4){
           this.foto4 = 'data:image/jpeg;base64,' + imageData;
+          this.foto4Pura = imageData;
         }
         if(numero === 5){
           this.foto5 = 'data:image/jpeg;base64,' + imageData;
+          this.foto5Pura = imageData;
         }
         
         //this.fotoEventoPura = imageData;

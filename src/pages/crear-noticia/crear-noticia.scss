@@ -28,3 +28,50 @@ page-crear-noticia {
 
   align-items:center;
 }
+/*
+.descripcionNoticia {
+
+  border-style: 1px solid;
+  border-radius :10px;
+  font-size :4pt;
+  border-left: 1px solid red;
+  border-right: 1px solid red;
+  border-bottom: 1px solid red;
+  border-top: 1px solid red;
+  width:100% !important;
+}*/
+
+.padding-0 {
+  padding-left:0px;
+}
+
+.descripcionCrearNoticia{
+  border-left: 1px solid #838383;
+  border-right: 1px solid #838383;
+  border-bottom: 1px solid #838383;
+  border-top: 1px solid #838383;
+  
+}
+
+
+
+/*
+textarea {
+    width: 198px;
+    height: 20px;
+    line-height: 20px;
+    top: -12px;
+    border: none;
+    resize: none;
+    margin-left: 2px;
+    position: relative;
+    padding: 0 2px;
+}*/
+/*div {
+    border-left: 2px solid red;
+    border-right: 2px solid red;
+    border-bottom: 2px solid red;
+    height: 10px;
+    width: 204px;
+    margin-top: 20px;
+}*/

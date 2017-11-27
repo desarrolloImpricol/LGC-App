@@ -23,10 +23,30 @@
    
 
 	 <div class="content-fotos-departamento">
+    
+    
+      
+      <div class="image-cropper">
+        <img  [src]="dataDepartamento.urlBandera" (click)="zoom(dataDepartamento.urlBandera)" />
+      </div>
+
+<!--      <img class="img-circle-departamento" [src]="dataDepartamento.urlMandatario" (click)="zoom(dataDepartamento.urlMandatario)">-->
+      <div class="image-cropper">
+      <img  [src]="dataDepartamento.urlMandatario" (click)="zoom(dataDepartamento.urlMandatario)" />
+      </div>
+
+
+       <div class="image-cropper">
+         <img  [src]="dataDepartamento.urlEscudo" (click)="zoom(dataDepartamento.urlEscudo)">
+       </div>
+
+ 
+
+
       <!--<button [ngClass]="{'activo' : menuSelect === 'mistatuajes'  }"   (click)="selectTab('mistatuajes')" >Mis tatuajes</button>-->
-      <img [src]="dataDepartamento.urlBandera" />
+      <!--<img [src]="dataDepartamento.urlBandera" />
       <img [src]="dataDepartamento.urlMandatario" />
-      <img [src]="dataDepartamento.urlEscudo" />
+      <img [src]="dataDepartamento.urlEscudo" />-->
       
        
     </div>
@@ -53,6 +73,11 @@
 
   	</ion-item>
 
+
+       <div class="textoTitulo centrado"  >
+            <span class=" fuente-naranja">Eventos</span>    
+        </div>
+
     <ion-slides pager class="eventos">   
          <ion-slide  *ngFor="let noti of eventos">
               <ion-card >
@@ -63,8 +88,8 @@
                 <h2 class="fuente-naranja">{{noti.nombreUsuario}}</h2>
                 <p>{{noti.fechaInicio}} - {{noti.fechaFin}}</p>
               </ion-item>
-                <div class="contenedor-foto-info">
-                    <img (click)="detalleEvento(noti.urlImagen,noti.tituloEvento,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcionEvento,noti.index,noti.fechaInicio,noti.fechaFin)" [src]="noti.urlImagen" />
+                <div class="contenedor-foto-info-resp">
+                    <img (click)="detalleEvento(noti.urlImagen,noti.tituloEvento,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcionEvento,noti.index,noti.fechaInicio,noti.fechaFin,noti.fotos)" [src]="noti.urlImagen" />
                 </div>
                
                 <!--<ion-item>   
@@ -77,7 +102,7 @@
                   {{noti.tituloEvento}}
                 </span>
                 
-                <span class="municipioNoticia">Bogota</span><span class="descripcionNoticia">{{noti.descripcionEvento}} </span>
+                <span class="municipioNoticia">{{noti.nombreMunicipio}}</span><span class="descripcionNoticia">{{noti.descripcionEvento}} </span>
 
               </div>
 
@@ -101,6 +126,10 @@
           </ion-slide>
       </ion-slides>
 
+         <div class="textoTitulo centrado"  >
+            <span class=" fuente-morada">Noticias</span>    
+        </div>
+
       <ion-slides pager class="noticias">
       <ion-slide  *ngFor="let noti of noticias ">
            <ion-card >
@@ -111,8 +140,8 @@
                 <h2 class="fuente-morada">{{noti.nombreUsuario}}</h2>
                 <p> {{noti.fechaNoticia}}</p>
               </ion-item>
-            <div class="contenedor-foto-info">
-              <img (click)="detalleNoticia(noti.urlImagen,noti.tituloNoticia,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcion,noti.index,noti.fechaNoticia)"  [src]="noti.urlImagen" />
+            <div class="contenedor-foto-info-resp">
+              <img (click)="detalleNoticia(noti.urlImagen,noti.tituloNoticia,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcion,noti.index,noti.fechaNoticia,noti.fotos)"  [src]="noti.urlImagen" />
              </div>
 
               <div class="divContenido">
@@ -120,7 +149,7 @@
                   {{noti.tituloNoticia}}
                 </span>
                 
-                <span class="municipioNoticia">Bogota</span><span class="descripcionNoticia">{{noti.descripcion}} </span>
+                <span class="municipioNoticia">{{noti.nombreMunicipio}}</span><span class="descripcionNoticia">{{noti.descripcion}} </span>
 
               </div>
 
@@ -144,6 +173,9 @@
       </ion-slide>
     </ion-slides>
 
+   <div class="textoTitulo centrado"  >
+            <span class=" fuente-amarilla">Sitios de interes</span>    
+        </div>
 
 
     <ion-slides pager class="sitios">
@@ -156,7 +188,7 @@
                 <h2 class="fuente-amarilla">{{noti.nombreUsuario}}</h2>
                 <p> {{noti.direccion}}</p>
               </ion-item>
-            <div class="contenedor-foto-info">
+            <div class="contenedor-foto-info-resp">
               <img (click)="openSitioInteres(noti)"  [src]="noti.urlImagen" />
              </div>
 
@@ -165,7 +197,7 @@
                   {{noti.tituloSitio}}
                 </span>
                 
-                <span class="municipioNoticia">Bogota</span><span class="descripcionNoticia">{{noti.descripcion}} </span>
+                <span class="municipioNoticia">{{noti.nombreMunicipio}}</span><span class="descripcionNoticia">{{noti.descripcion}} </span>
 
               </div>
 

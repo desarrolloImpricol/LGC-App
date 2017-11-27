@@ -21,10 +21,20 @@
 
 	 <div class="content-fotos-departamento">
       <!--<button [ngClass]="{'activo' : menuSelect === 'mistatuajes'  }"   (click)="selectTab('mistatuajes')" >Mis tatuajes</button>-->
-      <img [src]="municipio.urlBandera" />
-      <img [src]="municipio.urlMandatario" />
-      <img [src]="municipio.urlEscudo" />
+      <!--<img class="img-circle-departamento" [src]="municipio.urlBandera" (click)="zoom(municipio.urlBandera)" />
     
+      <img class="img-circle-departamento" [src]="municipio.urlEscudo" (click)="zoom(municipio.urlEscudo)" />-->
+      
+       <div class="image-cropper">
+        <img   [src]="municipio.urlBandera" (click)="zoom(municipio.urlBandera)" />
+      </div>
+      <div class="image-cropper">
+            <img  [src]="municipio.urlMandatario" (click)="zoom(municipio.urlMandatario)" />
+      </div>
+      <div class="image-cropper">
+                
+          <img  [src]="municipio.urlEscudo" (click)="zoom(municipio.urlEscudo)" />
+      </div>
 
     </div>
     <br>
@@ -39,7 +49,11 @@
 	      <span class="eslogan textoMunicipio">{{municipio.web}}</span>  
         <h6></h6>
 
-	      <button  ion-button full color="colorRojo">Escribale a la gobernaciòn</button>
+	      <button  ion-button full color="colorRojo">Escribale a la alcaldia</button>
+         <div class="contenedor-inicio centrado">
+           <button (click)="irTurismo()" class="botonesTurismo" color="colorAmarillo" ion-button>Turismo</button>
+           <button (click)="irFotos()" class="botonesTurismo" color="colorAmarillo" ion-button>Fotos municipales</button>
+          </div>
 
          <ion-row no-padding>
               <ion-col text-right>
@@ -58,8 +72,11 @@
             </ion-col>
           </ion-row>
 
-
-
+        <div class="textoTitulo centrado" *ngIf="mostrarEventos" >
+            <span class=" fuente-naranja">Eventos</span>    
+        </div>
+          
+      
     <ion-slides pager class="eventos" *ngIf="mostrarEventos" >   
          <ion-slide  *ngFor="let noti of eventos">
               <ion-card >
@@ -70,8 +87,8 @@
                 <h2 class="fuente-naranja">{{noti.nombreUsuario}}</h2>
                 <p>{{noti.fechaInicio}} - {{noti.fechaFin}}</p>
               </ion-item>
-                <div class="contenedor-foto-info">
-                    <img (click)="detalleEvento(noti.urlImagen,noti.tituloEvento,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcionEvento,noti.index,noti.fechaInicio,noti.fechaFin)" [src]="noti.urlImagen" />
+                <div class="contenedor-foto-info-resp">
+                    <img (click)="detalleEvento(noti.urlImagen,noti.tituloEvento,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcionEvento,noti.index,noti.fechaInicio,noti.fechaFin ,noti.fotos)" [src]="noti.urlImagen" />
                 </div>
                
                 <!--<ion-item>   
@@ -85,7 +102,7 @@
                   {{noti.tituloEvento}}
                 </span>
                 
-                <span class="municipioNoticia">Bogota</span><span class="descripcionNoticia">{{noti.descripcionEvento}} </span>
+                <span class="municipioNoticia">{{noti.nombreMunicipio}}</span><span class="descripcionNoticia">{{noti.descripcionEvento}} </span>
 
               </div>
 
@@ -109,6 +126,10 @@
           </ion-slide>
       </ion-slides>
 
+       <div class="textoTitulo centrado"  *ngIf="mostrarNoticias" >
+            <span class="fuente-morada">Noticias</span>    
+        </div>
+
     <ion-slides pager class="noticias" *ngIf="mostrarNoticias" >
       <ion-slide  *ngFor="let noti of noticias ">
            <ion-card >
@@ -119,8 +140,8 @@
                 <h2 class="fuente-morada">{{noti.nombreUsuario}}</h2>
                 <p> {{noti.fechaNoticia}}</p>
               </ion-item>
-            <div class="contenedor-foto-info">
-              <img (click)="detalleNoticia(noti.urlImagen,noti.tituloNoticia,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcion,noti.index,noti.fechaNoticia)"  [src]="noti.urlImagen" />
+            <div class="contenedor-foto-info-resp">
+              <img (click)="detalleNoticia(noti.urlImagen,noti.tituloNoticia,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcion,noti.index,noti.fechaNoticia ,noti.fotos)"  [src]="noti.urlImagen" />
              </div>
 
               <div class="divContenido">
@@ -128,7 +149,7 @@
                   {{noti.tituloNoticia}}
                 </span>
                 
-                <span class="municipioNoticia">Bogota</span><span class="descripcionNoticia">{{noti.descripcion}} </span>
+                <span class="municipioNoticia">{{noti.nombreMunicipio}}</span><span class="descripcionNoticia">{{noti.descripcion}} </span>
 
               </div>
 
@@ -152,6 +173,10 @@
       </ion-slide>
     </ion-slides>
 
+     <div class="textoTitulo centrado" *ngIf="mostrarSitios" >
+            <span class=" fuente-amarilla">Sitios de interes</span>    
+        </div>
+
     <ion-slides pager class="sitios" *ngIf="mostrarSitios">
       <ion-slide  *ngFor="let noti of sitiosInteres">
            <ion-card >
@@ -162,7 +187,7 @@
                 <h2 class="fuente-amarilla">{{noti.nombreUsuario}}</h2>
                 <p> {{noti.direccion}}</p>
               </ion-item>
-            <div class="contenedor-foto-info">
+            <div class="contenedor-foto-info-resp">
               <img (click)="openSitioInteres(noti)"  [src]="noti.urlImagen" />
              </div>
 
@@ -171,7 +196,7 @@
                   {{noti.tituloSitio}}
                 </span>
                 
-                <span class="municipioNoticia">Bogota</span><span class="descripcionNoticia">{{noti.descripcion}} </span>
+                <span class="municipioNoticia">{{noti.nombreMunicipio}}</span><span class="descripcionNoticia">{{noti.descripcion}} </span>
 
               </div>
 

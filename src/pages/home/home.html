@@ -13,11 +13,11 @@
 
 <ion-content padding class="fondo">
 
-    <!--<ion-fab top right edge>
+ <!--   <ion-fab top right edge>
     <button ion-fab mini><ion-icon name="add"></ion-icon></button>
     <ion-fab-list>
-      <button ion-fab (click)="irCrearNoticias()"><img  src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FNoticias.png?alt=media&token=0ddfa377-8706-4ab5-aef5-664acfae44bf" /></button>
-       <button ion-fab (click)="irCreaEventos()"><img  src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FEventos.png?alt=media&token=f568b51d-42b8-49ed-b0ec-e6492f860065" /></button>
+      <button ion-fab (click)="irCrearNoticiasFab()"><img  src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FNoticias.png?alt=media&token=0ddfa377-8706-4ab5-aef5-664acfae44bf" /></button>
+       <button ion-fab (click)="irCreaEventosFab()"><img  src="https://firebasestorage.googleapis.com/v0/b/laguiacolombia-5e516.appspot.com/o/artes%2FEventos.png?alt=media&token=f568b51d-42b8-49ed-b0ec-e6492f860065" /></button>
     
     </ion-fab-list>
   </ion-fab> -->
@@ -34,6 +34,26 @@
 
     </div>
     <span class="fuente-10 fuente-centrado  "> {{perfil.nombreUsuario}} </span>
+    <br>
+    <ion-item class="bordeMenu fondo">
+            <ion-label >¿Qué busca?</ion-label>
+            <ion-select [(ngModel)]="queBusca">
+              <ion-option value="noticias">Noticias</ion-option>
+              <ion-option value="eventos">Eventos</ion-option>
+            <!--  <ion-option value="empleos">Empleos</ion-option>
+              <ion-option value="amarillas">Amarillas</ion-option>-->
+              
+              
+            </ion-select>
+          </ion-item>
+
+           <ion-item class="fondo">
+            <ion-label class="fuente-blanco">¿Donde lo busca?</ion-label>
+            <ion-select [(ngModel)]="dondebusca" (ionChange)="busquedaAvanzada()">
+             
+              <ion-option *ngFor="let muni of municipios" value="{{muni.id}}">{{muni.municipio}}</ion-option>                                          
+            </ion-select>
+          </ion-item>
 
    <!--  <ion-item>
     <ion-label floating>Departamento</ion-label>
@@ -82,6 +102,9 @@
 
     <!--<h2 class="fuente-amarilla" >Eventos</h2>-->
 
+        <div class="textoTitulo centrado"  >
+            <span class=" fuente-naranja">Eventos</span>    
+        </div>
        <ion-slides pager class="eventos">   
          <ion-slide  *ngFor="let noti of eventos">
               <ion-card >
@@ -92,8 +115,8 @@
                 <h2 class="fuente-naranja">{{noti.nombreUsuario}}</h2>
                 <p>{{noti.fechaInicio}} - {{noti.fechaFin}}</p>
               </ion-item>
-                <div class="contenedor-foto-info">
-                    <img (click)="detalleEvento(noti.urlImagen,noti.tituloEvento,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcionEvento,noti.index,noti.fechaInicio,noti.fechaFin)" [src]="noti.urlImagen" />
+                <div class="contenedor-foto-info-resp">
+                    <img (click)="detalleEvento(noti.urlImagen,noti.tituloEvento,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcionEvento,noti.index,noti.fechaInicio,noti.fechaFin ,noti.fotos)" [src]="noti.urlImagen" />
                 </div>
                
                 <!--<ion-item>   
@@ -107,7 +130,7 @@
                   {{noti.tituloEvento}}
                 </span>
                 
-                <span class="municipioNoticia">Bogota</span><span class="descripcionNoticia">{{noti.descripcionEvento}} </span>
+                <span class="municipioNoticia">{{noti.nombreMunicipio}}</span><span class="descripcionNoticia">{{noti.descripcionEvento}} </span>
 
               </div>
 
@@ -131,6 +154,10 @@
           </ion-slide>
       </ion-slides>
 
+      <div class="textoTitulo centrado"  >
+            <span class=" fuente-morada">Noticias</span>    
+        </div>
+
       <ion-slides pager class="noticias">
       <ion-slide  *ngFor="let noti of noticias ">
            <ion-card >
@@ -141,8 +168,8 @@
                 <h2 class="fuente-morada">{{noti.nombreUsuario}}</h2>
                 <p> {{noti.fechaNoticia}}</p>
               </ion-item>
-            <div class="contenedor-foto-info">
-              <img (click)="detalleNoticia(noti.urlImagen,noti.tituloNoticia,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcion,noti.index,noti.fechaNoticia)"  [src]="noti.urlImagen" />
+            <div class="contenedor-foto-info-resp">
+              <img (click)="detalleNoticia(noti.urlImagen,noti.tituloNoticia,noti.nombreUsuario,noti.urlImagenCreador,noti.descripcion,noti.index,noti.fechaNoticia,noti.fotos)"  [src]="noti.urlImagen" />
              </div>
 
               <div class="divContenido">
@@ -150,7 +177,7 @@
                   {{noti.tituloNoticia}}
                 </span>
                 
-                <span class="municipioNoticia">Bogota</span><span class="descripcionNoticia">{{noti.descripcion}} </span>
+                <span class="municipioNoticia">{{noti.nombreMunicipio}}</span><span class="descripcionNoticia">{{noti.descripcion}} </span>
 
               </div>
 

@@ -20,10 +20,12 @@ import { auth } from 'firebase';
   selector: 'page-inicio-sesion',
   templateUrl: 'inicio-sesion.html',
 })
+
 export class InicioSesionPage {
 
   email: any;
   clave: any;
+  departamentoApp:any  = "/Cundinamarca";
   //recaptchaVerifier:any;
   public recaptchaVerifier:firebase.auth.RecaptchaVerifier;
   constructor(public navCtrl: NavController, public navParams: NavParams, private fb: Facebook, public af: AngularFireDatabase, public storage: Storage,private twitter: TwitterConnect ,private googlePlus: GooglePlus ,public alertCtrl : AlertController) {
@@ -90,7 +92,7 @@ export class InicioSesionPage {
           console.log("foto perfil =" + fotoPerfil);
           console.log("nombre cliente =" + nombreCliente);
 
-          this.item = this.af.object('/userProfile/' + uidCliente, { preserveSnapshot: true });
+          this.item = this.af.object(this.departamentoApp+'/userProfile/' + uidCliente, { preserveSnapshot: true });
           this.item.subscribe(snapshot => {
             console.log("*****************");
             console.log("*****************");
@@ -103,7 +105,7 @@ export class InicioSesionPage {
 
             if (snapshot.val() === undefined || snapshot.val() === null) {
               console.log("usuario no existe");
-              firebase.database().ref('/userProfile').child(uidCliente)
+              firebase.database().ref(this.departamentoApp+'/userProfile').child(uidCliente)
                 .set(
                 {
                   email: email,
@@ -113,7 +115,7 @@ export class InicioSesionPage {
                 }
                 );
 
-              firebase.database().ref('/notificacionesUsuario').child(uidCliente)
+              firebase.database().ref(this.departamentoApp+'/notificacionesUsuario').child(uidCliente)
                 .set(
                 {
                   uid: uidCliente,
@@ -173,7 +175,7 @@ export class InicioSesionPage {
           console.log("foto perfil =" + fotoPerfil);
           console.log("nombre cliente =" + nombreCliente);
 
-          this.item = this.af.object('/userProfile/' + uidCliente, { preserveSnapshot: true });
+          this.item = this.af.object(this.departamentoApp+'/userProfile/' + uidCliente, { preserveSnapshot: true });
           this.item.subscribe(snapshot => {
             console.log("*****************");
             console.log("*****************");
@@ -185,7 +187,7 @@ export class InicioSesionPage {
 
             if (snapshot.val() === undefined || snapshot.val() === null) {
               console.log("usuario no existe");
-              firebase.database().ref('/userProfile').child(uidCliente)
+              firebase.database().ref(this.departamentoApp+'/userProfile').child(uidCliente)
                 .set(
                 {
                   email: email,
@@ -195,7 +197,7 @@ export class InicioSesionPage {
                 }
                 );
 
-              firebase.database().ref('/notificacionesUsuario').child(uidCliente)
+              firebase.database().ref(this.departamentoApp+'/notificacionesUsuario').child(uidCliente)
                 .set(
                 {
                   uid: uidCliente,
@@ -261,7 +263,8 @@ googleLogin(){
           console.log("foto perfil =" + fotoPerfil);
           console.log("nombre cliente =" + nombreCliente);
 
-          this.item = this.af.object('/userProfile/' + uidCliente, { preserveSnapshot: true });
+
+          this.item = this.af.object(this.departamentoApp+'/userProfile/' + uidCliente, { preserveSnapshot: true });
           this.item.subscribe(snapshot => {
             console.log("*****************");
             console.log("*****************");
@@ -273,7 +276,7 @@ googleLogin(){
 
             if (snapshot.val() === undefined || snapshot.val() === null) {
               console.log("usuario no existe");
-              firebase.database().ref('/userProfile').child(uidCliente)
+              firebase.database().ref(this.departamentoApp+'/userProfile').child(uidCliente)
                 .set(
                 {
                   email: email,
@@ -283,7 +286,7 @@ googleLogin(){
                 }
                 );
 
-              firebase.database().ref('/notificacionesUsuario').child(uidCliente)
+              firebase.database().ref(this.departamentoApp+'/notificacionesUsuario').child(uidCliente)
                 .set(
                 {
                   uid: uidCliente,
