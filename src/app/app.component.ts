@@ -199,12 +199,12 @@ export class MyApp {
   }
 
   irCrearNoticias() {
-    this.navCtrl.setRoot(CrearNoticiaPage);
+    this.navCtrl.push(CrearNoticiaPage);
     this.menu.close();
   }
 
   irCreaEventos() {
-    this.navCtrl.setRoot(CrearEventoPage);
+    this.navCtrl.push(CrearEventoPage);
     this.menu.close();
   }
 

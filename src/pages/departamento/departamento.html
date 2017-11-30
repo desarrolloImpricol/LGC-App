@@ -98,11 +98,23 @@
                 </ion-item> -->
 
               <div class="divContenido">
-                <span class="tituloNoticia">
-                  {{noti.tituloEvento}}
-                </span>
-                
-                <span class="municipioNoticia">{{noti.nombreMunicipio}}</span><span class="descripcionNoticia">{{noti.descripcionEvento}} </span>
+                   <span class="tituloNoticia fuente-naranja">
+                    <ion-icon class="iconoEventosDetalle"></ion-icon>   
+                        {{noti.nombreCategoria}}
+                  </span>  
+                     
+                    <ion-grid>
+                      <ion-row>
+                        <ion-col col-2 class="centrado">
+                           <span style="font-size: 20pt; font-weight: bold;">{{noti.diaEvento}}</span>
+                           <span style="font-size: 8pt; " class="fuente-naranja">{{noti.mesEvento}}</span>
+                        </ion-col>
+                        <ion-col col-8>
+                             <span class="municipioNoticia">{{noti.nombreMunicipio}}</span><span class="descripcionNoticia">{{noti.descripcionEvento}} </span>
+                        </ion-col>
+                      </ion-row>
+                    </ion-grid>
+               
 
               </div>
 

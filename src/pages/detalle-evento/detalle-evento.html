@@ -54,17 +54,48 @@
          </ion-slide>
 </ion-slides>
 
-
    
    <!--<img  [src]="urlImagen"/>-->
     <div class="divContenido">
-                <span class="tituloNoticia">
-                  {{tituloEvento}}
-                </span>
-                
-                <span class="municipioNoticia">Bogota</span><span class="descripcionNoticia">{{descripcion}} </span>
+            
+                    
+                    <ion-grid no-padding>
+                      <ion-row>
+                        <ion-col col-2 class="centrado">
+                           <span style="font-size: 20pt; font-weight: bold;">{{objetoEvento.diaEvento}}</span>
+                           <span style="font-size: 8pt; " class="fuente-naranja">{{objetoEvento.mesEvento}}</span>
+                        </ion-col>
+                        <ion-col col-8>
+                          <span class="tituloEvento">{{objetoEvento.tituloEvento}}</span>
+                          <br>
+                          <span class="descripcionEvento">{{objetoEvento.descripcionEvento}}</span>
+            <!--                 <span class="municipioNoticia">{{objetoEvento.nombreMunicipio}}</span><span class="descripcionNoticia">{{objetoEvento.descripcionEvento}} </span>-->
+                        </ion-col>
+                      </ion-row>
+                    </ion-grid>
 
               </div>
+
+                <span class="tituloNoticia tituloDetalle fuente-gris">
+                    <ion-icon class="iconoFechaEvento"></ion-icon>   
+                        {{objetoEvento.fechaInicio}} - {{objetoEvento.fechaFin}}
+                  </span>  
+                  <br>
+
+                   <span class="tituloNoticia tituloDetalle fuente-gris">
+                    <ion-icon class="iconoHorarioEvento"></ion-icon>   
+                        {{objetoEvento.horario}}
+                  </span>  
+                  <br>
+                   <span class="tituloNoticia tituloDetalle fuente-gris">
+                    <ion-icon class="iconoTipoEvento"></ion-icon>   
+                        {{objetoEvento.nombreCategoria}}
+                  </span>  
+                  <br>
+                   <span class="tituloNoticia  tituloDetalle fuente-gris">
+                    <ion-icon class="iconoDatosContactoEvento"></ion-icon>   
+                        {{objetoEvento.datosContacto }} - {{objetoEvento.telefonoContacto}}
+                  </span>  
 
               
 
@@ -73,7 +104,7 @@
             <h2>Institute of Fine Cocktails</h2>
             <p>14 S. Hop Avenue, Madison, WI 53703</p>
           </ion-item>-->
-          <ion-row no-padding class="centrado">
+                <ion-row no-padding class="centrado">
                 <!--  <ion-col text-right>
                     <button (click)="compartir(noti.urlImagen)" ion-button clear small color="colorEvento" icon-start>
                       <img  class="iconoGuardadoEvento" />
@@ -81,21 +112,24 @@
                     </button>
                     
                   </ion-col>-->
-                <ion-col text-right>
-                    <button (click)="guardarEvento(noti)" ion-button clear small color="colorEvento" icon-start>
-                      <img  *ngIf="guardado"  class="iconoGuardadoEvento" />
-                      <img  *ngIf="!guardado" class="iconoNoGuardadoEvento" />
-                       Favorito
-                    </button>
-                    
-                  </ion-col>
-                  <ion-col>
-                  <button (click)="compartir(noti.urlImagen)" ion-button clear small color="colorEvento" icon-start>
-                     <img class="iconoCompartirEvento" />
-                      Compartir
-                    </button>
-                  </ion-col>
+                  <ion-col text-right>
+                      <button (click)="guardarEvento(noti)" ion-button clear small color="colorEvento" icon-start>
+                        <img  *ngIf="guardado"  class="iconoGuardadoEvento" />
+                        <img  *ngIf="!guardado" class="iconoNoGuardadoEvento" />
+                         Favorito
+                      </button>
+                      
+                    </ion-col>
+                    <ion-col>
+                    <button (click)="compartir(noti.urlImagen)" ion-button clear small color="colorEvento" icon-start>
+                       <img class="iconoCompartirEvento" />
+                        Compartir
+                      </button>
+                    </ion-col>
                 </ion-row>
+
+                
+                     
  </ion-card>
 
 </ion-content>

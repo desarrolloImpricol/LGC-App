@@ -1,3 +1,45 @@
 page-detalle-evento {
 
 }
+
+
+.iconoFechaEvento{
+    padding:2px;
+	width:12pt;
+	height:12pt;
+	content :url('../assets/icon/Gris/fecha.png');
+}
+
+.iconoHorarioEvento{
+    padding:2px;
+	width:12pt;
+	height:12pt;
+	content :url('../assets/icon/Gris/horario.png');
+}
+
+.iconoTipoEvento{
+    padding:2px;
+	width:12pt;
+	height:12pt;
+	content :url('../assets/icon/Gris/tipoEvento.png');
+}
+
+.iconoDatosContactoEvento{
+    padding:2px;
+	width:12pt;
+	height:12pt;
+	content :url('../assets/icon/Gris/datosContacto.png');
+}
+
+.tituloDetalle {
+	font-size:8pt;
+}
+
+.tituloEvento{
+	font-size:16pt;
+	font-weight :bold 	;
+}
+
+.descripcionEvento{
+	font-size:8pt;
+}

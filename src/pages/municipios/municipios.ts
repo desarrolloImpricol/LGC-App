@@ -37,11 +37,13 @@ export class MunicipiosPage {
     mostrarNoticias :any ;
     mostrarSitios :any ;
     itemRefNombre:any;
+    itemRefNombreCategoria:any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams ,public af: AngularFireDatabase ,public storage:Storage ,private photoViewer: PhotoViewer) {
 
   	console.log("data " + this.navParams.data.municipioInfo);
-    this.idMunicipio = this.navParams.data.municipioInfo ; 
+    this.idMunicipio = this.navParams.data.municipioInfo -1 ; 
+    console.log("id municipio " + this.idMunicipio) ;
   this.mostrarEventos =false;
   this.mostrarNoticias =false;
   this.mostrarSitios =false;
@@ -77,7 +79,7 @@ export class MunicipiosPage {
                   console.log("entraa municipio ");
                   console.log(JSON.stringify(this.municipio));
                  // console.log("Municipio =  " + this.municipio.eslogan);
-                 let id = this.municipio.id-1; 
+                 let id = this.municipio.id; 
                     console.log('url ='  +  this.departamentoApp+'/MunicipiosGuardadosUsuario/'+this.perfil.uid+"/"+ id);
                  let infoGuardado = this.af.object(this.departamentoApp+'/MunicipiosGuardadosUsuario/'+this.perfil.uid+"/"+id, { preserveSnapshot: true });
                                               infoGuardado.subscribe(snapshot => {
@@ -96,22 +98,22 @@ export class MunicipiosPage {
                 });
 
                 // trigger the query
-                subject.next(parseInt(this.idMunicipio));
+                subject.next(parseInt(this.idMunicipio + 1 ));
 
 
 
 
                 //consulta de eventos 
 
-           let newMunicipio =this.idMunicipio-1; 
-            console.log("id municipio " +newMunicipio);
+           //let newMunicipio =this.idMunicipio-1; 
+           // console.log("id municipio " +newMunicipio);
             //arreglo de municipios
             this.eventos=[];
             let subjectEvento = new Subject();
-            const queryObservableEvento = this.af.list(this.departamentoApp+'/Eventos', {
+            const queryObservableEvento = this.af.list(this.departamentoApp+'/Eventos/', {
               query: {
                 orderByChild: 'uidMunicipio',
-                equalTo : subjectEvento
+                equalTo : parseInt(this.idMunicipio)
               }
             });
             //manjo de respuesta 
@@ -160,6 +162,15 @@ export class MunicipiosPage {
                                 data.nombreMunicipio = snapshot.val().municipio; 
                             });
                               this.mostrarEventos =true;
+
+                               this.itemRefNombreCategoria = this.af.object(this.departamentoApp+'/CategoriasEventos/' + data.uidCategoriaEvento, { preserveSnapshot: true });
+                              this.itemRefNombreCategoria.subscribe(snapshot => {
+                                
+                                  data.nombreCategoria = snapshot.val().nombre; 
+                              });
+                              let infoData = data.fechaInicio.split("-") ;
+                              data.diaEvento = infoData[1]; 
+                              data.mesEvento = this.obtenerMes(infoData[2]);
                               this.eventos.push(data);
                             });
                            // console.log("key =" + snapshot1.key);
@@ -170,7 +181,8 @@ export class MunicipiosPage {
 
 
 
-            subjectEvento.next(newMunicipio.toString());
+            //subjectEvento.next(newMunicipio.toString());
+          //  subjectEvento.next(this.idMunicipio);
     
           //fin consulta de eventos
 
@@ -246,7 +258,7 @@ export class MunicipiosPage {
             });
 
 
-            subjectNoticias.next(newMunicipio.toString());
+            subjectNoticias.next(parseInt(this.idMunicipio +1 ));
 
           //fin consult de noticias 
 
@@ -311,7 +323,7 @@ export class MunicipiosPage {
 
             });
 
-             subjectSitios.next(newMunicipio.toString());
+             subjectSitios.next(parseInt(this.idMunicipio));
            //finsitios de interes 
 
 
@@ -540,4 +552,48 @@ openSitioInteres(sitio){
   zoom(url){
     this.photoViewer.show(url ,'', {share: false});
   }
+
+   obtenerMes(numero){
+   console.log("entra  numero mes ");
+    console.log(numero);
+     if(numero === '01'){
+       return 'Ene';
+     }
+      if(numero === '02'){
+       return 'Feb';
+     }
+      if(numero === '03'){
+       return 'Mar';
+     }
+      if(numero === '04'){
+       return 'Abr';
+     }
+      if(numero === '05'){
+       return 'May';
+     }
+      if(numero === '06'){
+       return 'Jun';
+     }
+      if(numero === '07'){
+       return 'Jul';
+     }
+      if(numero === '08'){
+       return 'Ago';
+     }
+      if(numero === '09'){
+       return 'Sep';
+     }
+      if(numero === '10'){
+       return 'Oct';
+     }
+      if(numero === '11'){
+       return 'Nov';
+     }
+      if(numero === '12'){
+       return 'Dic';
+     }
+
+
+ }
+
 }

@@ -33,6 +33,7 @@ export class DetalleEventoPage {
   guardado:any  = false ;
   objetoEvento:any;
   fuente :any;
+  itemRefNombreCategoria:any;
 
   
   constructor(public navCtrl: NavController, public navParams: NavParams ,private photoViewer: PhotoViewer ,public storage:Storage ,public af: AngularFireDatabase ) {
@@ -87,14 +88,22 @@ export class DetalleEventoPage {
 
         });
 
-     
+    
 
     let fuenteData = this.af.object(this.departamentoApp+'/Eventos/' + this.uidNoticia, { preserveSnapshot: true });
     fuenteData.subscribe(snapshot => {
       this.objetoEvento = snapshot.val();
       //this.fuente = snapshot.val().fuente; 
       //console.log("fuente noticia" + this.fuente);
-
+        this.itemRefNombreCategoria = this.af.object(this.departamentoApp+'/CategoriasEventos/' + this.objetoEvento.uidCategoriaEvento, { preserveSnapshot: true });
+        this.itemRefNombreCategoria.subscribe(snapshot => {
+          
+            this.objetoEvento.nombreCategoria = snapshot.val().nombre; 
+        });
+        let infoData = this.objetoEvento.fechaInicio.split("-") ;
+        this.objetoEvento.diaEvento = infoData[1]; 
+        this.objetoEvento.mesEvento = this.obtenerMes(infoData[2]);
+                              //thisx.push(data);                           
 
     });
 
@@ -141,5 +150,48 @@ export class DetalleEventoPage {
      }
 
   }
+
+     obtenerMes(numero){
+   console.log("entra  numero mes ");
+    console.log(numero);
+     if(numero === '01'){
+       return 'Ene';
+     }
+      if(numero === '02'){
+       return 'Feb';
+     }
+      if(numero === '03'){
+       return 'Mar';
+     }
+      if(numero === '04'){
+       return 'Abr';
+     }
+      if(numero === '05'){
+       return 'May';
+     }
+      if(numero === '06'){
+       return 'Jun';
+     }
+      if(numero === '07'){
+       return 'Jul';
+     }
+      if(numero === '08'){
+       return 'Ago';
+     }
+      if(numero === '09'){
+       return 'Sep';
+     }
+      if(numero === '10'){
+       return 'Oct';
+     }
+      if(numero === '11'){
+       return 'Nov';
+     }
+      if(numero === '12'){
+       return 'Dic';
+     }
+
+
+ }
 
 }

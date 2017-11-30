@@ -149,14 +149,23 @@ export class InicioSesionPage {
         })
         .catch((error) => {
           console.log("Firebase failure: " + JSON.stringify(error));
-          alert("Firebase failure: " + JSON.stringify(error));
+          //alert("Firebase failure: " + JSON.stringify(error));
+          this.showAlert();
+
         });
     }).catch((error1) => { 
       console.log(error1) ;
       alert("Facebook error : " + JSON.stringify(error1));
     });
   }
-
+   showAlert() {
+    let alert = this.alertCtrl.create({
+      title: 'Mensaje!',
+      subTitle: 'El mail que usas en facebook fue registrado anteriormemte.',
+      buttons: ['OK']
+    });
+    alert.present();
+  }
 
   twLogin(): void {
   this.twitter.login().then( response => {

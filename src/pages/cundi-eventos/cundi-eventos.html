@@ -79,7 +79,7 @@
 
   <div *ngFor="let noti of eventos ">
 
-        <ion-card>
+        <ion-card *ngIf="noti.disponible">
 
           <ion-item>
                 <ion-avatar item-start>
@@ -124,6 +124,12 @@
         </ion-card>
 
   </div>
+
+
+    <ion-infinite-scroll (ionInfinite)="cargarMasEventos($event)">
+         <ion-infinite-scroll-content></ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+
 
 
 </ion-content>

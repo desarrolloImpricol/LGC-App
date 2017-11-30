@@ -7,6 +7,7 @@ import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-nati
 import { File } from '@ionic-native/file';
 import { Storage } from '@ionic/storage';
 import { Subject } from 'rxjs/Subject';
+import firebase from 'firebase';
 
 /**
  * Generated class for the CundiNoticiasPage page.
@@ -24,7 +25,7 @@ import { Subject } from 'rxjs/Subject';
 export class CundiNoticiasPage {
   noticias:any = [] ;
   itemRef :any ;
-  departamentoApp :any = "/Cundinamarca";
+  departamentoApp  = "/Cundinamarca";
   item:any ; 
   perfil :any  = []; 
   mostrarBusqueda :any;
@@ -33,6 +34,11 @@ export class CundiNoticiasPage {
   uidMunicipio:any;
   uidMunicipioCargado :any ;
   itemRefNombre:any; 
+  itemRefNoticias:any;
+  referenceToOldestKey :any;
+  filtro  :any = [];
+  count :any  = 0 ; 
+  enFiltro:any = false  ;
   
   constructor(public navCtrl: NavController, public navParams: NavParams , public af: AngularFireDatabase ,private socialSharing: SocialSharing  ,private transfer: FileTransfer, private file: File ,public storage: Storage) {
     this.uidMunicipioCargado  =  this.navParams.data.uidMunicipio ;
@@ -43,14 +49,14 @@ export class CundiNoticiasPage {
     this.storage.get('userData')
       .then(
       data => {
-        console.log(JSON.stringify(data)),
-        console.log("finaliza");
-        console.log(data.uid);
+       // console.log(JSON.stringify(data)),
+       // console.log("finaliza");
+       // console.log(data.uid);
         //consulta informacion de perfil 
         this.item = this.af.object(this.departamentoApp+'/userProfile/' + data.uid, { preserveSnapshot: true });
         this.item.subscribe(snapshot => {
-          console.log(snapshot.key);
-          console.log(snapshot.val());
+         // console.log(snapshot.key);
+         // console.log(snapshot.val());
           //carga informacion a las variables 
           this.perfil = snapshot.val();
           this.perfil.uid = data.uid;
@@ -60,50 +66,90 @@ export class CundiNoticiasPage {
               this.uidMunicipio = this.uidMunicipioCargado;
               this.filtraMunicipios();
           }else{
-              //consulta la informacion de tdas las noticias 
-              this.af.list(this.departamentoApp+'/Noticias/' ,{ preserveSnapshot: true})
-                  .subscribe(snapshots=>{
-                      this.noticias = [];
-                      snapshots.forEach(snapshot1 => {
-                       let data = snapshot1.val();
-                       console.log("uid creador = " + data.uidCreador);
-                            this.itemRef = this.af.object(this.departamentoApp+'/userProfile/'+data.uidCreador,  { preserveSnapshot: true });
-                            this.itemRef.subscribe(snapshot => {
-                              //console.log(action.type);
-                              console.log("llave" + snapshot.key)
-                              console.log('data ' + JSON.stringify(snapshot.val()));
-                              data.urlImagenCreador  = snapshot.val().photoUrl;
-                              data.nombreUsuario = snapshot.val().nombreUsuario;
-                              data.index =  snapshot1.key ;
-                                //verifica si esa noticia esta guardada  como favorita 
-                               const infoGuardado1 = this.af.object(this.departamentoApp+'/NoticiasGuardadasUsuario/'+this.perfil.uid+"/"+ snapshot1.key, { preserveSnapshot: true });
-                                infoGuardado1.subscribe(snapshot3 => {
-                                 console.log("entra consulta si guardo noticia ");
-                                  console.log(this.departamentoApp+'/NoticiasGuardadasUsuario/'+this.perfil.uid+"/"+ snapshot1.key);
-                                  console.log(snapshot3.val());
-                                //  console.log(snapshot.val());
-                                  if(snapshot3.val() === null ){
-                                     console.log("noticia no guardada");
-                                      data.guardado = false ;
-                                  }else{
-                                    console.log("noticia guardada");
-                                      data.guardado  = true ;
-                                  }
-                                 });
+            this.enFiltro = false ;
+
+            firebase.database().ref(this.departamentoApp+"/Noticias/").once('value').then((snapshot1 ) => {
+               this.count = 0;
+               let thiss = this ; 
+               snapshot1.forEach(function(v) {
+                   thiss.count++;
+               });
+               console.log("total" + this.count); 
+               //count is now safe to use.
+            });
+
+            this.noticias= [];
+              firebase.database().ref(this.departamentoApp+"/Noticias/")
+                 .orderByKey()
+                 .limitToLast(5)
+                 .once("value")
+                 .then((snapshot ) => {
+                      let arrayOfkeys = Object.keys(snapshot.val());
+                      let results = arrayOfkeys
+                         .map(key => snapshot.val()[key])
+                         .reverse();
+
+                         this.referenceToOldestKey = arrayOfkeys[0];
+
+                         console.log("entra  ultima referencia " +this.referenceToOldestKey );
+                        // console.log(JSON.stringify(snapshot.val()));
+
+                         this.filtro  = snapshot.val();
+                         
+                            // console.log("entra for normalito "+ this.filtro.length);
+                             //console.log("entra for normalito "+ this.filtro.length());
+                          let thisInterno = this ; 
+                           snapshot.forEach(function(item) {
+                               console.log("item" );
+                               console.log(JSON.stringify(item)); 
+                               let data = item.val();
+                               //console.log("uid creador = " + item.uidCreador);
+                               console.log("uid creador = " + data.uidCreador);
+                         //      console.log("NOTICIAS");
+                                   console.log(thisInterno.departamentoApp+'/userProfile/'+data.uidCreador);
+                                    thisInterno.itemRefNoticias = thisInterno.af.object(thisInterno.departamentoApp+'/userProfile/'+data.uidCreador,  { preserveSnapshot: true });
+                                    thisInterno.itemRefNoticias.subscribe(snapshot => {
+                                      //console.log(action.type);
+                           //           console.log("llave" + snapshot.key)
+                            //          console.log('data ' + JSON.stringify(snapshot.val()));
+                                      let url = snapshot.val().photoUrl ; 
+                                      data.urlImagenCreador  = url;
+                                      data.nombreUsuario = snapshot.val().nombreUsuario;
+                                      data.index =  data.uid ;
+                                      //verifica si esa noticia esta guardada  como favorita 
+                                      //console.log("url="+this.departamentoApp+'/NoticiasGuardadasUsuario/'+this.perfil.uid+"/"+ snapshot1.key);
+                                       let infoGuardado = thisInterno.af.object(thisInterno.departamentoApp+'/NoticiasGuardadasUsuario/'+thisInterno.perfil.uid+"/"+ data.uid, { preserveSnapshot: true });
+                                        infoGuardado.subscribe(snapshot => {
+                              //            console.log("entra consulta si guardo noticia ");
+                                        //  console.log(snapshot.key);
+                                        //  console.log(snapshot.val());
+                                          if(snapshot.val() === null ){
+                                //             console.log("noticia no guardada");
+                                              data.guardado = false ;
+                                          }else{
+                                  //          console.log("noticia guardada");
+                                              data.guardado  = true ;
+                                          }
+                                         });
+                                            thisInterno.itemRefNombre = thisInterno.af.object(thisInterno.departamentoApp+'/Municipios/' + data.uidMunicipio, { preserveSnapshot: true });
+                                                  thisInterno.itemRefNombre.subscribe(snapshot => {
+                                                    
+                                                      data.nombreMunicipio = snapshot.val().municipio; 
+                                                  });
+
+                                //      console.log("add noticia");
+                                      thisInterno.noticias.push(data);
+                                    });
+
+                           });
+                  })
+                 .catch((error) => {
+                   console.log("error  firebase  nativo " + error);
+                  } );
+               
 
 
-                                this.itemRefNombre = this.af.object(this.departamentoApp+'/Municipios/' + data.uidMunicipio, { preserveSnapshot: true });
-                                this.itemRefNombre.subscribe(snapshot => {
-                                    console.log("NBOMBRE  MUNICIPIO  ^!^!^!^!^!^!^!^!^!^!^!^!^!^!^!" + snapshot.val().municipio);
-                                    data.nombreMunicipio = snapshot.val().municipio; 
-                                });
-                              console.log("add noticia");
-                              this.noticias.push(data);
-                            });
-                       console.log("key ="+snapshot1.key);
-                       console.log("Value ="+ JSON.stringify(snapshot1.val()));
-                      });
-                  });
+            
           }
 
 
@@ -236,7 +282,7 @@ export class CundiNoticiasPage {
 
   filtraMunicipios(){
 
-    
+    this.enFiltro = true ;
 
             let newMunicipio =this.uidMunicipio-1; 
             console.log("id municipio " +newMunicipio);
@@ -316,57 +362,177 @@ export class CundiNoticiasPage {
 
   cargarTodasNoticias (){
 
-              //consulta la informacion de tdas las noticias 
-              this.af.list(this.departamentoApp+'/Noticias/' ,{ preserveSnapshot: true})
-                  .subscribe(snapshots=>{
-                      this.noticias = [];
-                      snapshots.forEach(snapshot1 => {
-                       let data = snapshot1.val();
-                       console.log("uid creador = " + data.uidCreador);
-                            this.itemRef = this.af.object(this.departamentoApp+'/userProfile/'+data.uidCreador,  { preserveSnapshot: true });
-                            this.itemRef.subscribe(snapshot => {
-                              //console.log(action.type);
-                              console.log("llave" + snapshot.key)
-                              console.log('data ' + JSON.stringify(snapshot.val()));
-                              data.urlImagenCreador  = snapshot.val().photoUrl;
-                              data.nombreUsuario = snapshot.val().nombreUsuario;
-                              data.index =  snapshot1.key ;
-                                //verifica si esa noticia esta guardada  como favorita 
-                               const infoGuardado1 = this.af.object(this.departamentoApp+'/NoticiasGuardadasUsuario/'+this.perfil.uid+"/"+ snapshot1.key, { preserveSnapshot: true });
-                                infoGuardado1.subscribe(snapshot3 => {
-                                 console.log("entra consulta si guardo noticia ");
-                                  console.log(this.departamentoApp+'/NoticiasGuardadasUsuario/'+this.perfil.uid+"/"+ snapshot1.key);
-                                  console.log(snapshot3.val());
-                                //  console.log(snapshot.val());
-                                  if(snapshot3.val() === null ){
-                                     console.log("noticia no guardada");
-                                      data.guardado = false ;
-                                  }else{
-                                    console.log("noticia guardada");
-                                      data.guardado  = true ;
-                                  }
-                                 });
+              this.noticias= [];
+              firebase.database().ref(this.departamentoApp+"/Noticias/")
+                 .orderByKey()
+                 .limitToLast(5)
+                 .once("value")
+                 .then((snapshot ) => {
+                      let arrayOfkeys = Object.keys(snapshot.val());
+                      let results = arrayOfkeys
+                         .map(key => snapshot.val()[key])
+                         .reverse();
 
-                                this.itemRefNombre = this.af.object(this.departamentoApp+'/Municipios/' + data.uidMunicipio, { preserveSnapshot: true });
-                                this.itemRefNombre.subscribe(snapshot => {
-                                    console.log("NBOMBRE  MUNICIPIO  ^!^!^!^!^!^!^!^!^!^!^!^!^!^!^!" + snapshot.val().municipio);
-                                    data.nombreMunicipio = snapshot.val().municipio; 
-                                });
-                              console.log("add noticia");
-                              this.noticias.push(data);
-                            });
-                       console.log("key ="+snapshot1.key);
-                       console.log("Value ="+ JSON.stringify(snapshot1.val()));
-                      });
-                  });
+                         this.referenceToOldestKey = arrayOfkeys[0];
+
+                         console.log("entra  ultima referencia " +this.referenceToOldestKey );
+                        // console.log(JSON.stringify(snapshot.val()));
+
+                         this.filtro  = snapshot.val();
+                         
+                            // console.log("entra for normalito "+ this.filtro.length);
+                             //console.log("entra for normalito "+ this.filtro.length());
+                          let thisInterno = this ; 
+                           snapshot.forEach(function(item) {
+                               console.log("item" );
+                               console.log(JSON.stringify(item)); 
+                               let data = item.val();
+                               //console.log("uid creador = " + item.uidCreador);
+                               console.log("uid creador = " + data.uidCreador);
+                         //      console.log("NOTICIAS");
+                                   console.log(thisInterno.departamentoApp+'/userProfile/'+data.uidCreador);
+                                    thisInterno.itemRefNoticias = thisInterno.af.object(thisInterno.departamentoApp+'/userProfile/'+data.uidCreador,  { preserveSnapshot: true });
+                                    thisInterno.itemRefNoticias.subscribe(snapshot => {
+                                      //console.log(action.type);
+                           //           console.log("llave" + snapshot.key)
+                            //          console.log('data ' + JSON.stringify(snapshot.val()));
+                                      let url = snapshot.val().photoUrl ; 
+                                      data.urlImagenCreador  = url;
+                                      data.nombreUsuario = snapshot.val().nombreUsuario;
+                                      data.index =  data.uid ;
+                                      //verifica si esa noticia esta guardada  como favorita 
+                                      //console.log("url="+this.departamentoApp+'/NoticiasGuardadasUsuario/'+this.perfil.uid+"/"+ snapshot1.key);
+                                       let infoGuardado = thisInterno.af.object(thisInterno.departamentoApp+'/NoticiasGuardadasUsuario/'+thisInterno.perfil.uid+"/"+ data.uid, { preserveSnapshot: true });
+                                        infoGuardado.subscribe(snapshot => {
+                              //            console.log("entra consulta si guardo noticia ");
+                                        //  console.log(snapshot.key);
+                                        //  console.log(snapshot.val());
+                                          if(snapshot.val() === null ){
+                                //             console.log("noticia no guardada");
+                                              data.guardado = false ;
+                                          }else{
+                                  //          console.log("noticia guardada");
+                                              data.guardado  = true ;
+                                          }
+                                         });
+                                            thisInterno.itemRefNombre = thisInterno.af.object(thisInterno.departamentoApp+'/Municipios/' + data.uidMunicipio, { preserveSnapshot: true });
+                                                  thisInterno.itemRefNombre.subscribe(snapshot => {
+                                                    
+                                                      data.nombreMunicipio = snapshot.val().municipio; 
+                                                  });
+
+                                //      console.log("add noticia");
+                                      thisInterno.noticias.push(data);
+                                    });
+
+                           });
+                  })
+                 .catch((error) => {
+                   console.log("error  firebase  nativo " + error);
+                  } );
   }
 reiniciarBusqueda(){
 
  
   this.uidMunicipio = undefined;
   this.mostrarBusqueda = false ;
+  this.enFiltro = false ;
   this.cargarTodasNoticias();
 }
+
+
+  finFoto: any = 5;
+  filtro2: any;
+  cargarMasNoticias(infiniteScroll) {
+    if(this.enFiltro){
+        setTimeout(() => {
+          console.log('Async operation has ended');
+          infiniteScroll.complete();
+        }, 2000);
+        return ;
+    }
+  
+ 
+    firebase.database().ref(this.departamentoApp+"/Noticias")
+       .orderByKey()
+       .endAt(this.referenceToOldestKey)
+       .limitToLast(6)
+       .once('value')
+       .then((snapshot) => {
+
+              let arrayOfkeys = Object.keys(snapshot.val());
+              let results = arrayOfkeys
+                 .map(key => snapshot.val()[key])
+                 .reverse()
+                 .slice(1);
+
+                 this.referenceToOldestKey = arrayOfkeys[0];
+
+                   let thisInterno = this ; 
+                           snapshot.forEach(function(item) {
+                               console.log("item" );
+                               console.log(JSON.stringify(item)); 
+                               let data = item.val();
+                               //console.log("uid creador = " + item.uidCreador);
+                               console.log("uid creador = " + data.uidCreador);
+                         //      console.log("NOTICIAS");
+                                   console.log(thisInterno.departamentoApp+'/userProfile/'+data.uidCreador);
+                                    thisInterno.itemRefNoticias = thisInterno.af.object(thisInterno.departamentoApp+'/userProfile/'+data.uidCreador,  { preserveSnapshot: true });
+                                    thisInterno.itemRefNoticias.subscribe(snapshot => {
+                                      //console.log(action.type);
+                           //           console.log("llave" + snapshot.key)
+                            //          console.log('data ' + JSON.stringify(snapshot.val()));
+                                      let url = snapshot.val().photoUrl ; 
+                                      data.urlImagenCreador  = url;
+                                      data.nombreUsuario = snapshot.val().nombreUsuario;
+                                      data.index =  data.uid ;
+                                      //verifica si esa noticia esta guardada  como favorita 
+                                      //console.log("url="+this.departamentoApp+'/NoticiasGuardadasUsuario/'+this.perfil.uid+"/"+ snapshot1.key);
+                                       let infoGuardado = thisInterno.af.object(thisInterno.departamentoApp+'/NoticiasGuardadasUsuario/'+thisInterno.perfil.uid+"/"+ data.uid, { preserveSnapshot: true });
+                                        infoGuardado.subscribe(snapshot => {
+                              //            console.log("entra consulta si guardo noticia ");
+                                        //  console.log(snapshot.key);
+                                        //  console.log(snapshot.val());
+                                          if(snapshot.val() === null ){
+                                //             console.log("noticia no guardada");
+                                              data.guardado = false ;
+                                          }else{
+                                  //          console.log("noticia guardada");
+                                              data.guardado  = true ;
+                                          }
+                                         });
+                                            thisInterno.itemRefNombre = thisInterno.af.object(thisInterno.departamentoApp+'/Municipios/' + data.uidMunicipio, { preserveSnapshot: true });
+                                                  thisInterno.itemRefNombre.subscribe(snapshot => {
+                                                    
+                                                      data.nombreMunicipio = snapshot.val().municipio; 
+                                                  });
+
+                                //      console.log("add noticia");
+                                          if(thisInterno.count >  thisInterno.noticias.length){
+                                            thisInterno.noticias.push(data);
+                                          }
+                                    });
+
+                           });
+
+
+
+        } )
+       .catch((error) => {
+         console.log("error nativo firebase" +error);
+       } );
+
+
+          
+
+
+    setTimeout(() => {
+      console.log('Async operation has ended');
+      infiniteScroll.complete();
+    }, 2000);
+
+
+  }
 
 
 }

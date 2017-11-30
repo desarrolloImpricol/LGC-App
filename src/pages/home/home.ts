@@ -49,6 +49,7 @@ export class HomePage {
   mostrarMenuPerfil :any = false  ;
   dondebusca:any;
   itemRefNombre:any;
+  itemRefNombreCategoria :any ; 
  // file:MediaObject;
   constructor(public navCtrl: NavController, public af: AngularFireDatabase, public secureStorage: SecureStorage, private deeplinks: Deeplinks, public platform: Platform, public storage: Storage ,private media: Media ,private nativeAudio: NativeAudio,public menuCtrl :MenuController) {
 
@@ -94,7 +95,6 @@ export class HomePage {
 
 
 
-
   }
 
 
@@ -106,24 +106,12 @@ export class HomePage {
       let subject = new Subject();
       const queryObservable = this.af.list(this.departamentoApp+'/Municipios', {
         query: {
-          orderByKey: true
+          orderByKey: true,
+
+
         }
       });
-      //manjo de respuesta 
-      // subscribe to changes
-      queryObservable.subscribe(queriedItems => {
-        console.log(JSON.stringify(queriedItems));
-        //alamaenca resultado del filtro en arreglo 
-        this.filtroMunicipios = queriedItems;
-        //recorre arreglo para setelartl en la lista 
-        this.filtroMunicipios.forEach((item, index) => {
-          //         console.log("item municipio = " + JSON.stringify(item));
-
-          let dataI = item;
-
-          this.municipios.push(dataI);
-        });
-      });
+    
 
   }
 
@@ -161,49 +149,32 @@ export class HomePage {
             this.perfil = snapshot.val();
             this.perfil.uid =snapshot.key ;
 
+              //reinicializa el arreglo demunicipios
+      this.eventos = [];
+      let subject = new Subject();
+      const queryObservable = this.af.list(this.departamentoApp+'/Eventos', {
+        query: {
+          orderByChild: 'disponible',
+          equalTo : true,
+          limitToLast :5 
+          
 
-                  //setea  un valor de inicio para la foto
-    //this.perfil.photoUrl = "-";
-
-     //consulta departamentos  
-    this.af.list(this.departamentoApp+'/departamentos/', { preserveSnapshot: true })
-      .subscribe(snapshots => {
-        this.departamentos = [];
-        snapshots.forEach(snapshot1 => {
-          let data = snapshot1.val();
-          data.uid = snapshot1.key;
-          //   console.log("uid creador = " + data.uidCreador);
-          console.log("departamento key  =" + snapshot1.key);
-          console.log("departamento Value =" + JSON.stringify(snapshot1.val()));
-          this.departamentos.push(data);
-        });
+        }
       });
+      //manjo de respuesta 
+      // subscribe to changes
+      queryObservable.subscribe(queriedItems => {
+        console.log(JSON.stringify(queriedItems));
+        //alamaenca resultado del filtro en arreglo 
+        this.filtroMunicipios = queriedItems;
+        //recorre arreglo para setelartl en la lista 
+        this.eventos
+        this.filtroMunicipios.forEach((item, index) => {
+          //         console.log("item municipio = " + JSON.stringify(item));
 
-     this.af.list(this.departamentoApp+'/CategoriasEventos/', { preserveSnapshot: true })
-      .subscribe(snapshots => {
-        this.categoriasEventos = [];
-        snapshots.forEach(snapshot1 => {
-          let data = snapshot1.val();
-          data.uid = snapshot1.key;
-          //   console.log("uid creador = " + data.uidCreador);
-          console.log("departamento key  =" + snapshot1.key);
-          console.log("departamento Value =" + JSON.stringify(snapshot1.val()));
-          this.categoriasEventos.push(data);
-        });
-      });
+          let data = item;
 
-       //recibe informacion de los eventos
-    this.af.list(this.departamentoApp+'/Eventos/', { preserveSnapshot: true })
-      .subscribe(snapshots => {
-        //reinicializa eventos
-        this.eventos = [];
-        //recorre resultado de la consulta 
-        snapshots.forEach(snapshot1 => {
-          let data = snapshot1.val();
-          // console.log("uid creador = " + data.uidCreador);
-          console.log("EVENTOS");
-          //consulta informacion del creador del evento
-          this.itemRef = this.af.object(this.departamentoApp+'/userProfile/' + data.uidCreador, { preserveSnapshot: true });
+          this.itemRef = this.af.object(this.departamentoApp+'/userProfile/' + item.uidCreador, { preserveSnapshot: true });
           this.itemRef.subscribe(snapshot => {
             //console.log(action.type);
 
@@ -211,10 +182,10 @@ export class HomePage {
             console.log('data ' + JSON.stringify(snapshot.val()));
             data.urlImagenCreador = snapshot.val().photoUrl;
             data.nombreUsuario = snapshot.val().nombreUsuario;
-            data.index = snapshot1.key;
+            data.index = item.uid;
 
              //verifica si esa noticia esta guardada  como favorita 
-             let infoGuardado = this.af.object(this.departamentoApp+'/EventosGuardadosUsuario/'+this.perfil.uid+"/"+ snapshot1.key, { preserveSnapshot: true });
+             let infoGuardado = this.af.object(this.departamentoApp+'/EventosGuardadosUsuario/'+this.perfil.uid+"/"+ item.uid, { preserveSnapshot: true });
               infoGuardado.subscribe(snapshot => {
                 console.log("entra consulta si guardo evento ");
               //  console.log(snapshot.key);
@@ -232,62 +203,128 @@ export class HomePage {
                                   
                                     data.nombreMunicipio = snapshot.val().municipio; 
                                 });
+                this.itemRefNombreCategoria = this.af.object(this.departamentoApp+'/CategoriasEventos/' + data.uidCategoriaEvento, { preserveSnapshot: true });
+                this.itemRefNombreCategoria.subscribe(snapshot => {
+                  
+                    data.nombreCategoria = snapshot.val().nombre; 
+                });
+                let infoData = data.fechaInicio.split("-") ;
+                data.diaEvento = infoData[1]; 
+                data.mesEvento = this.obtenerMes(infoData[2]);
+
 
             //setea eventos 
             this.eventos.push(data);
           });
-          console.log("key =" + snapshot1.key);
-          console.log("Value =" + JSON.stringify(snapshot1.val()));
+        //  console.log("key =" + snapshot1.key);
+        //  console.log("Value =" + JSON.stringify(snapshot1.val()));
+
+         // this.municipios.push(dataI);
         });
       });
 
-      //consulta la informacion de tdas las noticias 
-    this.af.list(this.departamentoApp+'/Noticias/' ,{ preserveSnapshot: true})
-        .subscribe(snapshots=>{
-            this.noticias = [];
-            snapshots.forEach(snapshot1 => {
-             let data = snapshot1.val();
+
+        //reinicializa el arreglo demunicipios
+      this.noticias = [];
+      let subjectNoticia = new Subject();
+      const queryObservableNoticias = this.af.list(this.departamentoApp+'/Noticias', {
+        query: {
+          orderByChild: 'disponible',
+          equalTo : true,
+          limitToLast :5 
+          
+        }
+      });
+      
+      //manjo de respuesta 
+      // subscribe to changes
+      queryObservableNoticias.subscribe(queriedItems => {
+
+           console.log(JSON.stringify(queriedItems));
+            //alamaenca resultado del filtro en arreglo 
+            this.filtroMunicipios = queriedItems;
+            //recorre arreglo para setelartl en la lista 
+            this.filtroMunicipios.forEach((item, index) => {
+                   let data = item;
              //console.log("uid creador = " + data.uidCreador);
-             console.log("NOTICIAS");
-                  this.itemRefNoticias = this.af.object(this.departamentoApp+'/userProfile/'+data.uidCreador,  { preserveSnapshot: true });
-                  this.itemRefNoticias.subscribe(snapshot => {
-                    //console.log(action.type);
-                    console.log("llave" + snapshot.key)
-                    console.log('data ' + JSON.stringify(snapshot.val()));
-                    let url = snapshot.val().photoUrl ; 
-                    data.urlImagenCreador  = url;
-                    data.nombreUsuario = snapshot.val().nombreUsuario;
-                    data.index =  snapshot1.key ;
-                    //verifica si esa noticia esta guardada  como favorita 
-                    console.log("url="+this.departamentoApp+'/NoticiasGuardadasUsuario/'+this.perfil.uid+"/"+ snapshot1.key);
-                     let infoGuardado = this.af.object(this.departamentoApp+'/NoticiasGuardadasUsuario/'+this.perfil.uid+"/"+ snapshot1.key, { preserveSnapshot: true });
-                      infoGuardado.subscribe(snapshot => {
-                        console.log("entra consulta si guardo noticia ");
-                      //  console.log(snapshot.key);
-                      //  console.log(snapshot.val());
-                        if(snapshot.val() === null ){
-                           console.log("noticia no guardada");
-                            data.guardado = false ;
-                        }else{
-                          console.log("noticia guardada");
-                            data.guardado  = true ;
-                        }
-                       });
-                          this.itemRefNombre = this.af.object(this.departamentoApp+'/Municipios/' + data.uidMunicipio, { preserveSnapshot: true });
-                                this.itemRefNombre.subscribe(snapshot => {
-                                  
-                                    data.nombreMunicipio = snapshot.val().municipio; 
-                                });
+                   console.log("NOTICIAS");
+                        this.itemRefNoticias = this.af.object(this.departamentoApp+'/userProfile/'+data.uidCreador,  { preserveSnapshot: true });
+                        this.itemRefNoticias.subscribe(snapshot => {
+                          //console.log(action.type);
+                          console.log("llave" + snapshot.key)
+                          console.log('data ' + JSON.stringify(snapshot.val()));
+                          let url = snapshot.val().photoUrl ; 
+                          data.urlImagenCreador  = url;
+                          data.nombreUsuario = snapshot.val().nombreUsuario;
+                          data.index =  item.uid ;
+                          //verifica si esa noticia esta guardada  como favorita 
+                          //console.log("url="+this.departamentoApp+'/NoticiasGuardadasUsuario/'+this.perfil.uid+"/"+ snapshot1.key);
+                           let infoGuardado = this.af.object(this.departamentoApp+'/NoticiasGuardadasUsuario/'+this.perfil.uid+"/"+ item.uid, { preserveSnapshot: true });
+                            infoGuardado.subscribe(snapshot => {
+                              console.log("entra consulta si guardo noticia ");
+                            //  console.log(snapshot.key);
+                            //  console.log(snapshot.val());
+                              if(snapshot.val() === null ){
+                                 console.log("noticia no guardada");
+                                  data.guardado = false ;
+                              }else{
+                                console.log("noticia guardada");
+                                  data.guardado  = true ;
+                              }
+                             });
+                                this.itemRefNombre = this.af.object(this.departamentoApp+'/Municipios/' + data.uidMunicipio, { preserveSnapshot: true });
+                                      this.itemRefNombre.subscribe(snapshot => {
+                                        
+                                          data.nombreMunicipio = snapshot.val().municipio; 
+                                      });
 
-                    console.log("add noticia");
-                    this.noticias.push(data);
-                  });
-             console.log("key ="+snapshot1.key);
-             console.log("Value ="+ JSON.stringify(snapshot1.val()));
+                          console.log("add noticia");
+                          this.noticias.push(data);
+                        });
+                 //  console.log("key ="+snapshot1.key);
+                 //  console.log("Value ="+ JSON.stringify(snapshot1.val()));
             });
-        });
 
-        this.onSelecDepartamento(); 
+
+
+
+      })
+
+
+                          //setea  un valor de inicio para la foto
+            //this.perfil.photoUrl = "-";
+
+             //consulta departamentos  
+            this.af.list(this.departamentoApp+'/departamentos/', { preserveSnapshot: true })
+              .subscribe(snapshots => {
+                this.departamentos = [];
+                snapshots.forEach(snapshot1 => {
+                  let data = snapshot1.val();
+                  data.uid = snapshot1.key;
+                  //   console.log("uid creador = " + data.uidCreador);
+                  console.log("departamento key  =" + snapshot1.key);
+                  console.log("departamento Value =" + JSON.stringify(snapshot1.val()));
+                  this.departamentos.push(data);
+                });
+              });
+
+             this.af.list(this.departamentoApp+'/CategoriasEventos/', { preserveSnapshot: true })
+              .subscribe(snapshots => {
+                this.categoriasEventos = [];
+                snapshots.forEach(snapshot1 => {
+                  let data = snapshot1.val();
+                  data.uid = snapshot1.key;
+                  //   console.log("uid creador = " + data.uidCreador);
+                  console.log("departamento key  =" + snapshot1.key);
+                  console.log("departamento Value =" + JSON.stringify(snapshot1.val()));
+                  this.categoriasEventos.push(data);
+                });
+              });
+
+             
+
+
+                this.onSelecDepartamento(); 
 
           });
         } else {
@@ -541,9 +578,54 @@ export class HomePage {
       }      
       //this.menu.close();
     }
+
+
      
   }
 
+
+ obtenerMes(numero){
+   console.log("entra  numero mes ");
+    console.log(numero);
+     if(numero === '01'){
+       return 'Ene';
+     }
+      if(numero === '02'){
+       return 'Feb';
+     }
+      if(numero === '03'){
+       return 'Mar';
+     }
+      if(numero === '04'){
+       return 'Abr';
+     }
+      if(numero === '05'){
+       return 'May';
+     }
+      if(numero === '06'){
+       return 'Jun';
+     }
+      if(numero === '07'){
+       return 'Jul';
+     }
+      if(numero === '08'){
+       return 'Ago';
+     }
+      if(numero === '09'){
+       return 'Sep';
+     }
+      if(numero === '10'){
+       return 'Oct';
+     }
+      if(numero === '11'){
+       return 'Nov';
+     }
+      if(numero === '12'){
+       return 'Dic';
+     }
+
+
+ }
  
 
 
