@@ -214,7 +214,7 @@ export class CrearNoticiaPage {
     itemRef.push({
       tituloNoticia: this.tituloNoticia,
       descripcion: this.descripcionNoticia,
-      uidMunicipio: uid.toString(),
+      uidMunicipio: uid,
       //uidDepartamento: this.uidDepartamento,
       uidCreador: this.perfil.uid,
       fuente :this.fuente,

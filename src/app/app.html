@@ -18,11 +18,11 @@
     <br>-->
     <ion-list >
     	<button  class="fondoMenu fuenteMenu bordeMenu" ion-item (click)="irHome()">
-        <img class="iconoHome" />
+        <ion-icon class="iconoHome" ></ion-icon>
         Inicio
       </button>
       <button  class="fondoMenu fuenteMenu bordeMenu" ion-item (click)="openPerfilMenu()">
-        <img class="iconoPerfil" />
+        <ion-icon class="iconoPerfil" ></ion-icon>
         Mi perfil
       </button>
 
@@ -42,25 +42,25 @@
       </div>
 
       <button  class="fondoMenu fuenteMenu" ion-item (click)="irFavoritos()">
-        <img class="iconoFavoritos" />
+        <ion-icon class="iconoFavoritos" ></ion-icon>
         Favoritos
       </button>
 
       <button  class="fondoMenu fuenteMenu" ion-item (click)="irNoticias()">
-        <img class="iconoFavoritos" />
+        <ion-icon class="iconoNoticias" ></ion-icon>
         Noticias
       </button>
        <button  class="fondoMenu fuenteMenu" ion-item (click)="irEventos()">
-        <img class="iconoFavoritos" />
+        <ion-icon class="iconoEventos" ></ion-icon>
         Eventos
       </button>
        <button  class="fondoMenu fuenteMenu" ion-item (click)="irColombia()">
-        <img class="iconoFavoritos" />
-        Municipios
+        <ion-icon class="iconoCundinamarca" ></ion-icon>
+        Cundinamarca
       </button>
 
       <button  class="fondoMenu fuenteMenu" ion-item (click)="openBusquedaMenu()">
-        <img class="iconoBusqueda" />
+        <ion-icon class="iconoBusqueda"></ion-icon>
         Busqueda avanzada
       </button>
       <div class="fondoMenu" *ngIf="mostrarBusqueda">
@@ -133,7 +133,7 @@
 
       </div>
       <button   class="fondoMenu fuenteMenu" ion-item (click)="cerrarSesion()" >
-        <img class="iconoCerrarSesion" />
+        <ion-icon class="iconoCerrarSesion"></ion-icon>
         Cerrar sesion
       </button>
       

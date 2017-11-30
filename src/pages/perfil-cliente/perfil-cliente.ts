@@ -67,6 +67,7 @@ export class PerfilClientePage {
             //manjo de respuesta 
             // subscribe to changes
             queryObservable.subscribe(queriedItems => {
+              this.noticias = [];
            //   console.log(JSON.stringify(queriedItems));
               //alamaenca resultado del filtro en arreglo 
               this.filtroMunicipios = queriedItems;
@@ -82,6 +83,8 @@ export class PerfilClientePage {
             subject.next(this.perfil.uid);
 
             let subjectEventos = new Subject();
+            
+
 
 
             const queryObservableEventos = this.af.list(this.departamentoApp+'/Eventos/', {
@@ -96,6 +99,7 @@ export class PerfilClientePage {
            //   console.log(JSON.stringify(queriedItems));
               //alamaenca resultado del filtro en arreglo 
               this.filtroEventos = queriedItems;
+              this.eventos = [];
               //recorre arreglo para setelartl en la lista 
               this.filtroEventos.forEach((item, index) => {
              
@@ -180,7 +184,7 @@ export class PerfilClientePage {
   }
 
   editarNoticia(uid){
-    this.navCtrl.push(EditarNoticiasPage , {uid:uid});
+    this.navCtrl.push(EditarNoticiasPage ,{uid:uid});
 
   }
   editarEvento(uid){

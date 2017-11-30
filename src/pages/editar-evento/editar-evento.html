@@ -6,13 +6,148 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>editarEvento</ion-title>
+  <ion-navbar color="colorEvento">
+    <ion-title>Editar Evento</ion-title>
   </ion-navbar>
 
 </ion-header>
 
+<ion-content padding class="fondo">
+   <ion-item class="fondo"  style="padding-left:5pt;" >
+    <ion-label >Municipio</ion-label>
+    <ion-select multiple="false" [(ngModel)]="evento.uidMunicipio">
+    <ion-option *ngFor="let muni of municipios" value="{{muni.id-1}}">{{muni.municipio}}</ion-option>
+    </ion-select>
+  </ion-item>
 
-<ion-content padding>
+
+ <ion-item class="fondo"  style="padding-left:5pt;"  >
+      <ion-label >Tipo de evento</ion-label>
+      <ion-select multiple="false" [(ngModel)]="evento.uidCategoriaEvento" >
+        <ion-option *ngFor="let muni of categoriasEventos"   value="{{muni.id}}">{{muni.nombre}}</ion-option>
+      </ion-select>
+    </ion-item>
+
+
+    
+
+  <ion-list >
+    <ion-item class="fondo padding-0 ">
+      
+      <!--<ion-label >Titulo evento</ion-label>-->
+      <ion-input [(ngModel)]="evento.tituloEvento" type="text"  placeholder="Titulo evento"></ion-input>
+    </ion-item>
+
+    <ion-item class="fondo padding-0">
+      <!--<ion-label >Descripción del evento</ion-label>-->
+      <ion-textarea [(ngModel)]="evento.descripcionEvento" class="descripcionCrearEvento" placeholder="Descripcion del evento" name="description"></ion-textarea>
+    </ion-item>
+
+    <ion-item class="fondo padding-0"   >
+      <ion-label><ion-icon class="iconFecha"></ion-icon></ion-label>
+    <!--<ion-label >Fecha inicio</ion-label>-->
+    <ion-datetime displayFormat="MM/DD/YYYY" style="padding-left:5pt;" [(ngModel)]="evento.fechaInicio"  placeholder="Fecha inicio"></ion-datetime>
+  </ion-item>
+
+  <ion-item class="fondo padding-0 "  >
+    <!--<ion-label >Finalizacion</ion-label>-->
+    <ion-label><ion-icon class="iconFecha"></ion-icon></ion-label>
+    <ion-datetime displayFormat="MM/DD/YYYY" style="padding-left:5pt;" [(ngModel)]="evento.fechaFin"  placeholder="Finalización"></ion-datetime>
+  </ion-item>
+
+    <ion-item class="fondo padding-0 ">
+      <!--<ion-label >Horario</ion-label>-->
+        <ion-label><ion-icon class="iconHorario"></ion-icon></ion-label>
+      <ion-input [(ngModel)]="evento.horario"  placeholder="Horario" type="text"></ion-input>
+    </ion-item>
+
+    <ion-item class="fondo padding-0 ">
+        <ion-label><ion-icon class="iconUbicacion"></ion-icon></ion-label>
+      <!--<ion-label >ubicacion</ion-label>-->
+      <ion-input [(ngModel)]="evento.ubicacion"   placeholder="Ubicación" type="text"></ion-input>
+    </ion-item>
+
+    <ion-item class="fondo padding-0"  >
+      <ion-label><ion-icon class="iconDatosContacto"></ion-icon></ion-label>
+      <!--<ion-label >Datos de contaco</ion-label>-->
+      <ion-input [(ngModel)]="evento.datosContacto" type="text"  placeholder="Datos de contacto"></ion-input>
+    </ion-item>
+
+     <ion-item class="fondo padding-0">
+      <ion-label><ion-icon class="iconTelefono"></ion-icon></ion-label>
+     <!-- <ion-label >Telonos de contacto</ion-label>-->
+      <ion-input [(ngModel)]="evento.telefonoContacto"  placeholder="Telefonos de contacto" type="text"></ion-input>
+    </ion-item>
+</ion-list>
+
+ <ion-grid class="fotosEditEvento">
+    <ion-row >
+      <ion-col col-8 style="height: 230px;">
+        <div style="height: 100%;"  (click)="cargarImagen()">
+        	<!--1 of 1-->
+        	<img  [src]="evento.urlImagen"/>
+        	<span class="numeroTatuaje" >1</span>
+        	
+        </div>
+      </ion-col>
+      <ion-col col-4 style="height: 230px; padding: 0 !important;">
+        
+
+        	<!--2 of 2-->
+           <ion-grid class="fotosEditEvento2"  style="height: 100%; width: 100%;padding:0 !important; ">
+        		  <ion-col style="height: 100px; margin:0 !important;" >
+			        <div style="height: 100%; width: 99%;" (click)="cargarOtrasImagenes(1)">
+			        	<!--2 of 1-->
+			        	<img *ngIf="foto1 != '-'"  [src]="foto1"/>
+			        	<span class="numeroTatuajeSecundario" >2</span>
+        				<span class="eliminarSecundario" (click)="eliminarImagen(1)">X</span>
+			        </div>
+			      </ion-col>
+			      <ion-col style="height: 100px;">
+			        <div style="height: 100%; width: 99%;" (click)="cargarOtrasImagenes(2)">
+			         <!-- 2 of 2-->
+			          <img *ngIf="foto2 != '-'"  [src]="foto2"/>
+			          <span class="numeroTatuajeSecundario" >3</span>
+        				<span class="eliminarSecundario" (click)="eliminarImagen(2)">X</span>
+			         </div>
+			      </ion-col>
+        	</ion-grid>
+        
+      </ion-col>
+    </ion-row>
+    <ion-row style="padding: 0 !important;">
+      <ion-col style="height: 110px; ">
+         <div style="height: 100%;" (click)="cargarOtrasImagenes(5)">
+          <!--1 of 3-->
+          <img *ngIf="foto5!= '-'" [src]="foto5" />
+          <span class="numeroTatuajeSecundario" >6</span>
+        				<span class="eliminarSecundario" (click)="eliminarImagen(5)">X</span>
+         </div>
+      </ion-col>
+      <ion-col style="height: 110px;">
+        <div style="height: 100%;" (click)="cargarOtrasImagenes(4)">
+         <!-- 2 of 3-->
+         <img *ngIf="foto4 != '-'" [src]="foto4"/>
+         <span class="numeroTatuajeSecundario" >5</span>
+        				<span class="eliminarSecundario" (click)="eliminarImagen(4)">X</span>
+        </div>
+      </ion-col>
+      <ion-col style="height: 110px;">
+        <div style="height: 100%;" (click)="cargarOtrasImagenes(3)">
+        	<!--3 of 3-->
+        	<img *ngIf="foto3 != '-'" [src]="foto3"/>
+        	<span class="numeroTatuajeSecundario" >4</span>
+            <span class="eliminarSecundario" (click)="eliminarImagen(3)">X</span>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div class="centrado">
+     <button ion-button outline item-end icon-left color="colorGris"  (click)="editarEvento()">
+        <ion-icon class="iconPublicar"></ion-icon>
+        Publicar
+      </button>
+  </div>
 
 </ion-content>

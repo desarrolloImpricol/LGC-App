@@ -306,7 +306,7 @@ export class CundiNoticiasPage {
               });
             });
 
-            subject.next(newMunicipio.toString());
+            subject.next(newMunicipio);
 
  
 

@@ -1,3 +1,92 @@
 page-editar-evento {
 
 }
+
+
+
+.fotosEditEvento div{
+	background-color : #eb8636;
+}
+
+.fotosEditEvento img{
+	width :100% !important;
+	height:100% !important;
+	overflow:hidden !important;
+}
+
+.fotosEditEvento2 div{
+	background-color : #eb8636;
+}
+
+.fotosEditEvento2 img{
+	width :100% !important;
+	height:100% !important;
+	overflow:hidden !important;
+}
+
+
+.numeroTatuaje {
+    //background-color: rgba(255, 255, 255, 0.79);
+    color: white ;
+    //padding-top: 1rem;
+    position: absolute;
+    bottom:85%;
+    font-weight : bold ; 
+    left: 4%;
+    font-size: 3rem;
+    line-height: 3rem;
+    //padding: 5px;
+    //border-radius: 3px;
+   // width: 30%;
+    //box-sizing: border-box;
+}
+
+.numeroTatuajeSecundario{
+    //background-color: rgba(255, 255, 255, 0.79);
+    color: white ;
+    //padding-top: 1rem;
+    position: absolute;
+    bottom:78%;
+    font-weight : bold ; 
+    left: 6%;
+    font-size: 2rem;
+    line-height: 2rem;
+    //padding: 5px;
+    //border-radius: 3px;
+   // width: 30%;
+    //box-sizing: border-box;
+}
+
+.eliminar{
+    //background-color: rgba(255, 255, 255, 0.79);
+    color: white ;
+    //padding-top: 1rem;
+    position: absolute;
+    bottom:3%;
+    font-weight : bold ; 
+    left: 88%;
+    font-size: 3rem;
+    line-height: 3rem;
+    //padding: 5px;
+    //border-radius: 3px;
+   // width: 30%;
+    //box-sizing: border-box;
+}
+
+.eliminarSecundario{
+    //background-color: rgba(255, 255, 255, 0.79);
+    color: white ;
+    //padding-top: 1rem;
+    position: absolute;
+    bottom:5%;
+    font-weight : bold ; 
+    left: 80%;
+    font-size: 2rem;
+    line-height: 2rem;
+    //padding: 5px;
+    //border-radius: 3px;
+   // width: 30%;
+    //box-sizing: border-box;
+}
+
+

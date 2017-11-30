@@ -54,7 +54,7 @@ import { FileChooser } from '@ionic-native/file-chooser';
 import { FilePath } from '@ionic-native/file-path';
 import { DireccionamientosProvider } from '../providers/direccionamientos/direccionamientos';
 import { PhotoViewer } from '@ionic-native/photo-viewer';
-
+import { FormGroup, FormBuilder, FormControl  ,FormsModule } from '@angular/forms';
 
 
 //configuracion firebase
@@ -159,7 +159,9 @@ firebase.initializeApp(firebaseConfig)
     FileChooser,
     FilePath,
     DireccionamientosProvider,
-    PhotoViewer
+    PhotoViewer,    
+    FormBuilder
+
 
   ]
 })
